@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserHasRole;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -39,5 +40,10 @@ class AdminSeeder extends Seeder
                 'role_id' => $adminRole->id_role, // Set default jobLvl, ini dapat diubah sesuai kebutuhan Anda
             ]);
         }
+
+        UserHasRole::create([
+            'nik' => '000000000',
+            'id_role' => $adminRole->id_role,
+        ]);
     }
 }
