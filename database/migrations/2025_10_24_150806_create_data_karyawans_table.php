@@ -21,9 +21,7 @@ return new class extends Migration {
             $table->date('empdatestart');
             $table->date('empdateend');
             $table->string('jabatan_id');
-            $table->string('jabatan');
             $table->string('departemen_id');
-            $table->string('departemen');
             $table->string('email');
             $table->string('handphone');
             $table->integer('superiornik');
