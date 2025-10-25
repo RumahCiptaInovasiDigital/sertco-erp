@@ -111,7 +111,7 @@
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            @include('layouts.sidebar.sidebar')
+            @include('layouts.sidebar')
         </aside>
 
         <!-- Content Wrapper. Contains page content -->

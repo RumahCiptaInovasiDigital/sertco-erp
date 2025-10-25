@@ -1,3 +1,6 @@
+@php 
+    $relation = optional(optional(auth()->user()->hasRole)->role)->permission;   
+@endphp
 <!-- Brand Logo -->
 <a href="{{ route('v1.dashboard') }}" class="brand-link">
     <img src="{{ asset('dist/img/sq-logo.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -36,21 +39,6 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            {{-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library --}}
-            @php 
-                // if (auth()->user()->hasRole()) {
-                //     $relation = auth()
-                //         ->user()
-                //         ->hasRole()
-                //         ->map(fn($rel) => $rel->role?->permission)
-                //         ->filter()
-                //         ->flatten();
-                // } else {
-                    $relation = optional(optional(auth()->user()->hasRole)->role)->permission;
-                    // dd($relation);
-                // }
-            @endphp
             <li class="nav-header">NAVIGATION</li>
             <li class="nav-item">
                 <a href="{{ route('v1.dashboard') }}" class="nav-link {{ request()->is('v1') ? 'active' : '' }}">
@@ -60,6 +48,7 @@
                     </p>
                 </a>
             </li>
+
             <li class="nav-header">FORM</li>
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.pes.index', $item->url))
@@ -74,6 +63,9 @@
                     @break
                 @endif
             @endforeach
+
+            @include('layouts.sidebar.hrga')
+
             <li class="nav-header">MASTER</li>
             {{-- Service --}}
             @foreach ($relation ?? [] as $item)
@@ -104,6 +96,7 @@
                     @break
                 @endif
             @endforeach
+
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.departemen.index', $item->url))
                     <li class="nav-item">
@@ -117,6 +110,7 @@
                     @break
                 @endif
             @endforeach
+
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.role.index', $item->url))
                     <li class="nav-item">
@@ -130,6 +124,7 @@
                     @break
                 @endif
             @endforeach
+
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.permission.index', $item->url))
                     <li class="nav-item">
@@ -143,6 +138,7 @@
                     @break
                 @endif
             @endforeach
+
             <li class="nav-header">SETTINGS</li>
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('admin.setting.index', $item->url))
@@ -157,6 +153,7 @@
                     @break
                 @endif
             @endforeach
+
             <li class="nav-header">OTHERS</li>
             <li class="nav-item">
                 <a href="{{ route('v1.contact.index') }}" class="nav-link {{ request()->is('v1/contact*') ? 'active' : '' }}">
@@ -174,31 +171,6 @@
                     </p>
                 </a>
             </li>
-            {{-- add menu-open to show sidebar tree --}}
-            {{-- example: <li class="nav-item menu-open"> --}}
-            {{-- <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        Example Tree Menu
-                        <i class="right fas fa-angle-left"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Active Page</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Inactive Page</p>
-                        </a>
-                    </li>
-                </ul>
-            </li> --}}
         </ul>
     </nav>
     <!-- /.sidebar-menu -->

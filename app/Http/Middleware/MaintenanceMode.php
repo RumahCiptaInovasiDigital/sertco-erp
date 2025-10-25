@@ -33,7 +33,7 @@ class MaintenanceMode
                         'message' => 'Sedang Dalam Perbaikan System',
                     ]);
                 } else {
-                    return response()->view('layout.maintenance', compact('data'));
+                    return response()->view('layouts.maintenance', compact('data'));
                 }
             }
 
