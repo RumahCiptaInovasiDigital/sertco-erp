@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Page\Role;
+namespace App\Http\Controllers\Page\HRGA_IT\Role;
 
 use App\Http\Controllers\Controller;
 use App\Models\Departemen;

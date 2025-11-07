@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Page\Role\Assign;
+namespace App\Http\Controllers\Page\HRGA_IT\Role\Assign;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;

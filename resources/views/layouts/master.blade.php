@@ -27,7 +27,7 @@
 
 @yield('styles')
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
     <!--begin::Page loading(append to body)-->
     <div class="page-loading">
         <div class="preloader flex-column justify-content-center align-items-center">

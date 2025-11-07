@@ -11,7 +11,9 @@
 <!-- Sidebar -->
 <div class="sidebar">
     @if (auth()->user()->hasRole)
-        <button class="btn btn-block btn-info py-1"><h9><b>{{ auth()->user()->hasRole->role->name ?? 'N/A' }}</b></h9></button>
+        <div class="user-panel">
+            <button class="btn btn-block btn-info py-1 info"><h9><b>{{ auth()->user()->hasRole->role->name ?? 'N/A' }}</b></h9></button>
+        </div>
     @else
         <button class="btn btn-block btn-danger py-1"><h9><b>Belum Ada Role</b></h9></button>
     @endif
@@ -125,33 +127,6 @@
                 @endif
             @endforeach
 
-            @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.departemen.index', $item->url))
-                    <li class="nav-item">
-                        <a href="{{ route('v1.departemen.index') }}" class="nav-link {{ request()->is('v1/departemen*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tags"></i>
-                            <p>
-                                Departemen
-                            </p>
-                        </a>
-                    </li>
-                    @break
-                @endif
-            @endforeach
-
-            @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.role.index', $item->url))
-                    <li class="nav-item">
-                        <a href="{{ route('v1.role.index') }}" class="nav-link {{ request()->is('v1/role*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-user-tag"></i>
-                            <p>
-                                Role/Jabatan
-                            </p>
-                        </a>
-                    </li>
-                    @break
-                @endif
-            @endforeach
 
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.permission.index', $item->url))

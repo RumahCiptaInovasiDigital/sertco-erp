@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Page\Departemen;
+namespace App\Http\Controllers\Page\Marketing\Service\Kategori;
 
 use App\Http\Controllers\Controller;
-use App\Models\Departemen;
+use App\Models\KategoriService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class DepartemenController extends Controller
+class ServiceKategoriController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = Departemen::query()->latest()->get();
+        $query = KategoriService::query()->latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.departemen.edit', $row->id_departemen).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_departemen.'\')"><i class="fas fa-trash"></i></button>';
+                return '<a href="'.route('v1.service.kategori.edit', $row->id_kategori_service).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_kategori_service.'\')"><i class="fas fa-trash"></i></button>';
             })
             ->rawColumns([
                 'action',
@@ -27,12 +27,12 @@ class DepartemenController extends Controller
 
     public function index()
     {
-        return view('page.v1.departemen.index');
+        return view('page.v1.service.kategori.index');
     }
 
     public function create()
     {
-        return view('page.v1.departemen.create');
+        return view('page.v1.service.kategori.create');
     }
 
     public function store(Request $request)
@@ -41,19 +41,23 @@ class DepartemenController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
+        $lastSort = KategoriService::max('sort_num');
+        $sortNum = is_null($lastSort) ? 1 : ($lastSort + 1);
+
         try {
             \DB::beginTransaction();
 
-            Departemen::create([
+            KategoriService::create([
                 'name' => $request->name,
+                'sort_num' => $sortNum,
             ]);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Departemen created successfully',
-                'redirect' => route('v1.departemen.index'),
+                'message' => 'Service Kategori created successfully',
+                'redirect' => route('v1.service.kategori.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -67,11 +71,11 @@ class DepartemenController extends Controller
 
     public function edit($id)
     {
-        $data = Departemen::query()
-            ->where('id_departemen', $id)
+        $data = KategoriService::query()
+            ->where('id_kategori_service', $id)
             ->first();
 
-        return view('page.v1.departemen.edit', compact('data'));
+        return view('page.v1.service.kategori.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -83,8 +87,8 @@ class DepartemenController extends Controller
         try {
             \DB::beginTransaction();
 
-            $data = Departemen::query()
-            ->where('id_departemen', $id)
+            $data = KategoriService::query()
+            ->where('id_kategori_service', $id)
             ->first();
             $data->update(['name' => $request->name]);
 
@@ -92,8 +96,8 @@ class DepartemenController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Departemen updated successfully',
-                'redirect' => route('v1.departemen.index'),
+                'message' => 'Service Kategori updated successfully',
+                'redirect' => route('v1.service.kategori.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -116,8 +120,8 @@ class DepartemenController extends Controller
             ]);
         }
 
-        $data = Departemen::query()
-            ->where('id_departemen', $id)
+        $data = KategoriService::query()
+            ->where('id_kategori_service', $id)
             ->first();
 
         // Hapus role

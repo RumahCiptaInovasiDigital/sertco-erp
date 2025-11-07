@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\KaryawanResource;
 use App\Models\DataKaryawan;
 use Illuminate\Http\Request;
 
@@ -10,12 +11,9 @@ class ApiDataKaryawan extends Controller
 {
     public function index(Request $request)
     {
-        $query = DataKaryawan::query();
+        $data = DataKaryawan::query()->latest()->paginate(10);
 
-        return response()->json([
-            'message' => 'Success',
-            'data' => $query->get(),
-        ]);
+        return new KaryawanResource(true, 'List All Employee', $data);
     }
 
     // public function show($id)
@@ -35,7 +33,7 @@ class ApiDataKaryawan extends Controller
             return response()->json(['message' => 'Karyawan dengan NIK tersebut tidak ditemukan'], 404);
         }
 
-        return response()->json($data);
+        return new KaryawanResource(true, 'Employee By NIK', $data);
     }
 
     public function getByName($name)
@@ -45,7 +43,7 @@ class ApiDataKaryawan extends Controller
             return response()->json(['message' => 'Karyawan dengan nama tersebut tidak ditemukan'], 404);
         }
 
-        return response()->json($data);
+        return new KaryawanResource(true, 'Employee By Name', $data);
     }
 
     // public function store(Request $request)

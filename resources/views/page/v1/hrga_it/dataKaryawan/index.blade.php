@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Service Type')
-@section('PageTitle', 'Service Type')
+@section('title', 'Data Karyawan')
+@section('PageTitle', 'Data Karyawan')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Service Type</li>
+    <li class="breadcrumb-item active">Data Karyawan</li>
 </ol>
 @endsection
 @section('content')
@@ -18,10 +18,10 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List of Service Type</h3>
+                <h3 class="card-title">List of Employee</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.service.type.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> New Type
+                    <a href="{{ route('v1.data-karyawan.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Tambah Karyawan
                     </a>
                 </div>
             </div>

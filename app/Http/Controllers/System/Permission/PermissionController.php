@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Page\Permission;
+namespace App\Http\Controllers\System\Permission;
 
 use App\Http\Controllers\Controller;
 use App\Models\Departemen;

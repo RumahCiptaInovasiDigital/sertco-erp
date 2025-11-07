@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Page\Service\Type;
+namespace App\Http\Controllers\Page\HRGA_IT\Departemen;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceType;
+use App\Models\Departemen;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class ServiceTypeController extends Controller
+class DepartemenController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = ServiceType::query()->latest()->get();
+        $query = Departemen::query()->latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.service.type.edit', $row->id_service_type).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_service_type.'\')"><i class="fas fa-trash"></i></button>';
+                return '<a href="'.route('v1.departemen.edit', $row->id_departemen).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_departemen.'\')"><i class="fas fa-trash"></i></button>';
             })
             ->rawColumns([
                 'action',
@@ -27,12 +27,12 @@ class ServiceTypeController extends Controller
 
     public function index()
     {
-        return view('page.v1.service.type.index');
+        return view('page.v1.departemen.index');
     }
 
     public function create()
     {
-        return view('page.v1.service.type.create');
+        return view('page.v1.departemen.create');
     }
 
     public function store(Request $request)
@@ -41,23 +41,19 @@ class ServiceTypeController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $lastSort = ServiceType::max('sort_num');
-        $sortNum = is_null($lastSort) ? 1 : ($lastSort + 1);
-
         try {
             \DB::beginTransaction();
 
-            ServiceType::create([
+            Departemen::create([
                 'name' => $request->name,
-                'sort_num' => $sortNum,
             ]);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service Type created successfully',
-                'redirect' => route('v1.service.type.index'),
+                'message' => 'Departemen created successfully',
+                'redirect' => route('v1.departemen.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -71,11 +67,11 @@ class ServiceTypeController extends Controller
 
     public function edit($id)
     {
-        $data = ServiceType::query()
-            ->where('id_service_type', $id)
+        $data = Departemen::query()
+            ->where('id_departemen', $id)
             ->first();
 
-        return view('page.v1.service.type.edit', compact('data'));
+        return view('page.v1.departemen.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -87,8 +83,8 @@ class ServiceTypeController extends Controller
         try {
             \DB::beginTransaction();
 
-            $data = ServiceType::query()
-            ->where('id_service_type', $id)
+            $data = Departemen::query()
+            ->where('id_departemen', $id)
             ->first();
             $data->update(['name' => $request->name]);
 
@@ -96,8 +92,8 @@ class ServiceTypeController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service Type updated successfully',
-                'redirect' => route('v1.service.type.index'),
+                'message' => 'Departemen updated successfully',
+                'redirect' => route('v1.departemen.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -120,8 +116,8 @@ class ServiceTypeController extends Controller
             ]);
         }
 
-        $data = ServiceType::query()
-            ->where('id_service_type', $id)
+        $data = Departemen::query()
+            ->where('id_departemen', $id)
             ->first();
 
         // Hapus role
