@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'CheckRoleUser' => App\Http\Middleware\CheckRoleUser::class,
             'CheckMaintenance' => App\Http\Middleware\MaintenanceMode::class,
+            'check.api.key' => App\Http\Middleware\CheckApiKey::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

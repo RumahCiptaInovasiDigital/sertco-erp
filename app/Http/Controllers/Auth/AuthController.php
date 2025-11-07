@@ -148,4 +148,14 @@ class AuthController extends Controller
             return null;
         }
     }
+
+    public function fetchData()
+    {
+        $response = \Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'X-API-Key' => 'sq_sxUhbDBq7N+wGnEFAZ9DI8aQRIoxOM2VefhieXOYbVvuSYqo',
+        ])->get('http://127.0.0.1:8090/api/getAllKaryawan');
+
+        return $response->json();
+    }
 }

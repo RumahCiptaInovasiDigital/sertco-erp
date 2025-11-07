@@ -13,3 +13,4 @@ Route::post('/read-notifications', [App\Http\Controllers\System\Notification\Not
 
 require __DIR__.'/admin.php';
 require __DIR__.'/user.php';
+require __DIR__.'/api.php';

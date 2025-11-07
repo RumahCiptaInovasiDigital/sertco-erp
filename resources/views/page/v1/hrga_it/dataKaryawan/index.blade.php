@@ -81,7 +81,7 @@
                     { data: "fullName" },
                     { data: "email" },
                     { data: "phoneNumber" },
-                    { data: "jabatan" },
+                    { data: "namaJabatan" },
                     {
                         data: "action",
                         orderable: false,

@@ -11,13 +11,18 @@ class DataKaryawanController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = DataKaryawan::query()->latest()->get();
+        $query = DataKaryawan::query()
+            ->select([
+                'id',
+                'nik',
+                'fullName',
+                'email',
+                'phoneNumber',
+                'namaJabatan',
+            ])->latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('jabatan', function ($row) {
-                return $row->jabatan ? $row->jabatan->name : '-';
-            })
             ->addColumn('action', function ($row) {
                 return '<a href="'.route('v1.data-karyawan.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                         <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>
