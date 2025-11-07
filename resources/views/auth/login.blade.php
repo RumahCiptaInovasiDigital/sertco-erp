@@ -13,12 +13,12 @@
         <form action="{{ route('authenticate') }}" method="POST" enctype="multipart/form-data" id="loginForm">
             @csrf
             <div class="input-group mb-3">
-                <input type="email" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><b>NIK</b></span>
                     </div>
-                </div>
+                    <input type="text" class="form-control" name="nik" data-inputmask='"mask": "SQ-AAA-999"' data-mask placeholder="SQ-XYZ-000">
+                  </div>
             </div>
             <div class="input-group mb-3">
                 <input type="password" class="form-control" placeholder="Password" name="password" value="{{ old('password') }}">

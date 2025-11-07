@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\DataKaryawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,20 +12,19 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'nik' => 'required',
             'password' => 'required',
         ], [
-            'email.required' => 'Masukan EMail',
-            'email.email' => 'EMail Tidak Valid',
+            'nik.required' => 'Masukan Nomor Induk Karyawan',
             'password.required' => 'Masukan Password',
         ]);
 
         // Membuat array $kredensil langsung
-        $kredensil = $request->only('email', 'password');
+        $kredensil = $request->only('nik', 'password');
 
         // check User
-        $user = User::where('email', $request->email)->first();
-        if (!empty($user) && $user->jobLvl == 'Administrator') {
+        $user = User::where('nik', $request->nik)->first();
+        if (!empty($user) && $user->jabatan == 'Administrator') {
             // code...
             if (\Auth::attempt($kredensil)) {
                 return response()->json([
@@ -40,33 +40,59 @@ class AuthController extends Controller
                 ]);
             }
         } else {
-            if (\Auth::attempt($kredensil)) {
-                // $data = json_decode(auth()->user()->result, true);
-                // (new LogActivityService())->handle([
-                //     'perusahaan' => strtoupper($data['CompName']),
-                //     'user' => strtoupper($request->email),
-                //     'tindakan' => 'Login',
-                //     'catatan' => 'Berhasil Login Account',
-                // ]);
+            $data = DataKaryawan::query()
+                ->select(['nik', 'fullName', 'email', 'namaJabatan'])
+                ->where('nik', $request->nik)
+                ->first();
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Login Berhasil, Selamat Datang di '.env('APP_NAME'),
-                    'redirect' => route('v1.dashboard'),
-                ]);
-            } else {
-                // (new LogActivityService())->handle([
-                //     'perusahaan' => '-',
-                //     'user' => strtoupper($request->email),
-                //     'tindakan' => 'Login',
-                //     'catatan' => 'Salah Password atau Username',
-                // ]);
+            if (empty($data)) {
+                // $logData = [
+                //     'model' => null,
+                //     'model_id' => null,
+                //     'user_id' => null,
+                //     'userEmail' => $kredensil['email'],
+                //     'action' => 'LOGIN',
+                //     'description' => 'Salah Username atau Password',
+                //     'old_data' => null,
+                //     'new_data' => null,
+                // ];
+                // (new LogService())->handle($logData);
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Login Gagal Silahkan Ulangi',
+                    'message' => 'Data Karyawan Tidak Ditemukan di Sistem HR',
                     'redirect' => route('login'),
                 ]);
+            } else {
+                $this->getAccount($request);
+                if (\Auth::attempt($kredensil)) {
+                    // $data = json_decode(auth()->user()->result, true);
+                    // (new LogActivityService())->handle([
+                    //     'perusahaan' => strtoupper($data['CompName']),
+                    //     'user' => strtoupper($request->email),
+                    //     'tindakan' => 'Login',
+                    //     'catatan' => 'Berhasil Login Account',
+                    // ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Login Berhasil, Selamat Datang di '.env('APP_NAME'),
+                        'redirect' => route('v1.dashboard'),
+                    ]);
+                } else {
+                    // (new LogActivityService())->handle([
+                    //     'perusahaan' => '-',
+                    //     'user' => strtoupper($request->email),
+                    //     'tindakan' => 'Login',
+                    //     'catatan' => 'Salah Password atau Username',
+                    // ]);
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Login Gagal Silahkan Ulangi',
+                        'redirect' => route('login'),
+                    ]);
+                }
             }
         }
     }
@@ -76,5 +102,50 @@ class AuthController extends Controller
         \Auth::logout();
 
         return redirect(route('login'));
+    }
+
+    public function getAccount($request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $employee = DataKaryawan::where('nik', $request->nik)->first();
+            $check = User::where('nik', $request->nik)->first();
+
+            if (empty($check)) {
+                // code...
+                User::create([
+                    'nik' => $employee->nik,
+                    'fullname' => $employee->fullName,
+                    'email' => $employee->email,
+                    'jabatan' => $employee->namaJabatan,
+                    'password' => \Hash::make($request->password),
+                ]);
+            } else {
+                $check->update([
+                    'nik' => $employee->nik,
+                    'fullname' => $employee->fullName,
+                    'email' => $employee->email,
+                    'jabatan' => $employee->namaJabatan,
+                    'password' => \Hash::make($request->password),
+                ]);
+            }
+
+            \DB::commit();
+
+            return [
+                'nik' => $employee->nik,
+                'fullname' => $employee->fullName,
+                'email' => $employee->email,
+                'jabatan' => $employee->namaJabatan,
+                'password' => \Hash::make($request->password),
+            ];
+        } catch (\Throwable $th) {
+            // throw $th;
+            \Log::error($th);
+            \DB::rollBack();
+
+            return null;
+        }
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('contract_no')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('ph_no')->nullable();
-            $table->string('fax_no')->nullable();
+            $table->string('email_client')->nullable();
             $table->string('hp_no')->nullable();
             $table->text('contract_description')->nullable();
             $table->string('contract_period')->nullable();

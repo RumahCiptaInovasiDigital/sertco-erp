@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<!-- Select2 -->
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
@@ -15,14 +18,26 @@
 @endsection
 @section('content')
 <div class="row">
+    <div class="col-12 mb-3">
+        <div class="float-right">
+            <a href="{{ route('v1.pes.create') }}" class="btn btn-primary ">
+                <i class="fas fa-plus-circle"></i> New Project
+            </a>
+        </div>
+    </div>
     <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Project Execution Sheet List</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.pes.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> New Project
-                    </a>
+                    Filter: 
+                    <div class="d-inline-block mr-4 ml-1">
+                        <select id="pes_filter" class="form-control" onchange="changePesFilter(this.value)">
+                            <option value="all">All</option>
+                            <option value="draft">Draft</option>
+                            <option value="non-draft">Non-draft</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -54,9 +69,11 @@
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.pes.getData') }}";
+    var _URL = "{{ route('v1.pes.getData', 'all') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -132,5 +149,18 @@
         });
     }
 
+    function changePesFilter(val){
+        if (typeof _URL === 'undefined') return;
+        var newURL = _URL.replace(/\/[^\/]+$/, '/' + val);
+        _URL = newURL;
+        $('#dt_pes').DataTable().ajax.url(newURL).load();
+    }
+
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4',
+        })
+    });
 </script>
 @endsection

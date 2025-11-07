@@ -58,7 +58,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsTo(Role::class, 'jobLvl', 'name');
+        return $this->belongsTo(Role::class, 'jabatan', 'name');
     }
 
     public function sessions()
@@ -68,6 +68,6 @@ class User extends Authenticatable
 
     public function hasRole()
     {
-        return $this->hasOne(UserHasRole::class, 'nik', 'NIK');
+        return $this->hasOne(UserHasRole::class, 'nik', 'nik');
     }
 }

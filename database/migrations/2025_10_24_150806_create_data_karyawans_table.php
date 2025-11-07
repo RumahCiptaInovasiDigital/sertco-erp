@@ -12,20 +12,45 @@ return new class extends Migration {
     {
         Schema::create('data_karyawans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('nik')->unique();
-            $table->string('name');
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('employeetypegroup');
-            $table->date('joindate');
-            $table->date('empdatestart');
-            $table->date('empdateend');
-            $table->string('jabatan_id');
-            $table->string('departemen_id');
-            $table->string('email');
-            $table->string('handphone');
-            $table->integer('superiornik');
-            $table->string('superiorname');
+            // personal related
+            $table->string('fullName');
+            $table->string('firstName');
+            $table->string('lastName');
+            $table->string('pendidikan')->nullable();
+            $table->string('tempatLahir')->nullable();
+            $table->date('tanggalLahir')->nullable();
+            $table->string('noKTP')->nullable();
+            $table->string('noSIM')->nullable();
+            $table->string('noNPWP')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('agama')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phoneNumber')->nullable();
+            $table->string('ijazah')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('statusTK')->nullable();
+            $table->string('statusPTKP')->nullable();
+            $table->string('noRekening')->nullable();
+            // company related
+            $table->string('nik')->unique();
+            $table->string('inisial');
+            $table->string('grade')->nullable();
+            $table->string('nppBpjsTk')->nullable();
+            $table->string('BpjsKes')->nullable();
+            $table->string('AXA')->nullable();
+            $table->uuid('idJabatan');
+            $table->string('namaJabatan');
+            $table->uuid('idDepartemen')->nullable();
+            $table->string('namaDepartemen')->nullable();
+            $table->date('empDateStart');
+            $table->date('empDateEnd')->nullable();
+            $table->date('joinDate');
+            $table->date('resignDate')->nullable();
+            // emergency contact
+            $table->string('emergencyContact')->nullable();
+            $table->string('emergencyName')->nullable();
+            $table->string('emergencyRelation')->nullable();
+            // dbinfo
             $table->timestamps();
             $table->softDeletes();
         });

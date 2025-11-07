@@ -53,8 +53,8 @@
                                     <label for="to">To</label>
                                     <Select class="form-control select2" name="to" id="to">
                                         <option value="" disabled selected>select</option>
-                                        @foreach ($role as $item)
-                                        <option value="{{ $item->id_role }}">{{ $item->name }}</option>
+                                        @foreach ($departemen as $item)
+                                        <option value="{{ $item->id_departemen }}">{{ $item->name }}</option>
                                         @endforeach
                                     </Select>
                                 </div>
@@ -122,8 +122,8 @@
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
-                                            <label for="fax_no">Fax</label>
-                                            <input type="text" class="form-control" name="fax_no" id="fax_no" placeholder="Input Fax No.">
+                                            <label for="email_client">Email</label>
+                                            <input type="text" class="form-control" name="email_client" id="email_client" placeholder="Input email">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
@@ -171,6 +171,11 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-warning" data-widget="control-sidebar" data-controlsidebar-slide="true">Notes / Comments!!</button>
+                            </div>
+                        </div>
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-12 mb-2">
@@ -189,12 +194,53 @@
         </div>
     </div>
 </div>
+
+{{-- Comment Section --}}
+<aside class="control-sidebar control-sidebar-light" style="width: 350px;">
+    <div class="row m-1">
+        <div class="col-12">
+            <label><u>Project Notes / Comments</u></label>
+            <div id="notes-wrapper">
+            </div>
+            <button type="button" class="btn btn-success btn-sm" id="add-note">
+                <i class="fas fa-plus"></i> Tambah Note
+            </button>
+            <br/>
+            <button type="button" class="btn btn-outline-danger btn-sm mt-1" data-widget="control-sidebar" data-controlsidebar-slide="true">
+                tutup
+            </button>
+        </div>
+    </div>
+</aside>
+
 @endsection
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
+    $(document).ready(function () {
+        // Tambah note baru
+        $('#add-note').click(function () {
+            $('#notes-wrapper').append(`
+                <div class="note-item">
+                    <span class="badge badge-info">{{ auth()->user()->fullname }} :</span>
+                    <div class="input-group mb-2">
+                        <textarea name="notes[]" class="form-control" placeholder="Input Note"></textarea>
+                        <button type="button" class="btn btn-danger btn-sm btn-remove-note">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+        });
+
+        // Hapus note tertentu
+        $(document).on('click', '.btn-remove-note', function () {
+            $(this).closest('.note-item').remove();
+        });
+    });
+    
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({

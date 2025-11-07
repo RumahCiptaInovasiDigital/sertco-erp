@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserCredential;
 use App\Models\UserHasRole;
 use Illuminate\Database\Seeder;
 
@@ -24,10 +25,10 @@ class AdminSeeder extends Seeder
 
         // Menambahkan user Administrator
         User::create([
-            'NIK' => '000000000',
+            'nik' => 'SQ-ADM-999',
             'fullname' => 'SuperAdmin',
             'email' => 'admin@mail.com',
-            'jobLvl' => 'Administrator',
+            'jabatan' => 'Administrator',
             'password' => \Hash::make('123'),
         ]);
 
@@ -42,8 +43,13 @@ class AdminSeeder extends Seeder
         }
 
         UserHasRole::create([
-            'nik' => '000000000',
+            'nik' => 'SQ-ADM-999',
             'id_role' => $adminRole->id_role,
+        ]);
+
+        UserCredential::create([
+            'nik' => 'SQ-ADM-999',
+            'pass' => bcrypt('123'),
         ]);
     }
 }

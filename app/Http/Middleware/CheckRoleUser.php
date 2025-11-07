@@ -19,11 +19,11 @@ class CheckRoleUser
         $user = $request->user();
 
         // Cek apakah Administrator
-        if ($user->jobLvl === 'Administrator') {
+        if ($user->jabatan === 'Administrator') {
             return $next($request);
         }
 
-        // Cek apakah pengguna sudah login dan memiliki jobLvl
+        // Cek apakah pengguna sudah login dan memiliki jabatan
         if (!$user) {
             return redirect('/login')->with('error', 'Silakan login untuk melanjutkan.');
         }

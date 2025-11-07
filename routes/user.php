@@ -5,23 +5,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('v1', [App\Http\Controllers\System\DashboardController::class, 'index'])->middleware(['auth', 'CheckMaintenance'])->name('v1.dashboard');
 
 Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMaintenance'])->group(function () {
-    Route::prefix('pes')->name('pes.')->group(function () {
-        Route::get('index', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'index'])->name('index');
-        Route::get('get', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'getData'])->name('getData');
-        Route::get('show/{id}', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'show'])->name('show');
-        Route::get('create', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'create'])->name('create');
-        Route::post('store', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'store'])->name('store');
-        Route::get('edit/{id}', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'edit'])->name('edit');
-        Route::post('update/{id}', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'update'])->name('update');
-        Route::post('delete', [App\Http\Controllers\Page\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'destroy'])->name('destroy');
-        Route::prefix('service')->name('service.')->group(function () {
-            Route::get('{project_no}', [App\Http\Controllers\Page\ProjectExecutionSheet\Service\ServicePESController::class, 'index'])->name('index');
-            Route::post('store', [App\Http\Controllers\Page\ProjectExecutionSheet\Service\ServicePESController::class, 'store'])->name('store');
-            Route::get('edit/{project_no}', [App\Http\Controllers\Page\ProjectExecutionSheet\Service\ServicePESController::class, 'edit'])->name('edit');
-            Route::post('update/{project_no}', [App\Http\Controllers\Page\ProjectExecutionSheet\Service\ServicePESController::class, 'update'])->name('update');
-        });
-    });
-
     Route::prefix('service')->name('service.')->group(function () {
         Route::prefix('kategori')->name('kategori.')->group(function () {
             Route::get('get', [App\Http\Controllers\Page\Service\Kategori\ServiceKategoriController::class, 'getData'])->name('getData');
@@ -93,3 +76,4 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
 });
 
 require __DIR__.'/user/hrga.php';
+require __DIR__.'/user/marketing.php';

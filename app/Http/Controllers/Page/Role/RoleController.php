@@ -64,6 +64,7 @@ class RoleController extends Controller
         try {
             \DB::beginTransaction();
 
+            // diubah
             $role = Role::create([
                 'name' => $request->name,
             ]);
@@ -77,6 +78,7 @@ class RoleController extends Controller
 
             \DB::commit();
 
+            // diubah
             return response()->json([
                 'success' => true,
                 'message' => 'Role created successfully',

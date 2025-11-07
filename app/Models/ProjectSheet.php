@@ -39,9 +39,9 @@ class ProjectSheet extends Model
         return $this->belongsTo(User::class, 'prepared_by', 'id_user');
     }
 
-    public function toRole()
+    public function toDepartemen()
     {
-        return $this->belongsTo(Role::class, 'to', 'id_role');
+        return $this->belongsTo(Departemen::class, 'to', 'id_departemen');
     }
 
     public function attnRole()

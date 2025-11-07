@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Page\ProjectExecutionSheet\Service;
+namespace App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service;
 
 use App\Http\Controllers\Controller;
 use App\Models\KategoriService;
@@ -16,8 +16,8 @@ class ServicePESController extends Controller
         $projectSheet = ProjectSheet::query()
             ->where('project_no', strtoupper($project_no))
             ->first();
-        $serviceKategori = KategoriService::all();
-        $serviceType = ServiceType::all();
+        $serviceKategori = KategoriService::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
+        $serviceType = ServiceType::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
 
         return view('page.v1.pes.service.index', compact('projectSheet', 'serviceKategori', 'serviceType'));
     }
@@ -146,8 +146,8 @@ class ServicePESController extends Controller
         $projectSheet = ProjectSheet::query()
             ->where('project_no', strtoupper($project_no))
             ->first();
-        $serviceKategori = KategoriService::all();
-        $serviceType = ServiceType::all();
+        $serviceKategori = KategoriService::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
+        $serviceType = ServiceType::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
 
         $serviceData = ServiceFormData::query()->where('project_no', strtoupper($project_no));
 

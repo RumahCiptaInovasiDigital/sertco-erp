@@ -54,8 +54,9 @@
                                     <label for="to">To</label>
                                     <Select class="form-control select2" name="to" id="to">
                                         <option disabled selected></option>
-                                        <option value="a" {{ $data->to === 'a' ? 'selected' : '' }}>a</option>
-                                        <option value="b" {{ $data->to === 'b' ? 'selected' : '' }}>b</option>
+                                        @foreach ($departemen as $item)
+                                        <option value="{{ $item->id_departemen }}" {{ $data->to === $item->id_departemen ? 'selected' : '' }}>{{ $item->name }}</option>
+                                        @endforeach
                                     </Select>
                                 </div>
                             </div>
@@ -64,8 +65,9 @@
                                     <label for="attn">Attention</label>
                                     <Select class="form-control select2" name="attn" id="attn">
                                         <option disabled selected></option>
-                                        <option value="a" {{ $data->attn === 'a' ? 'selected' : '' }}>a</option>
-                                        <option value="b" {{ $data->attn === 'b' ? 'selected' : '' }}>b</option>
+                                        @foreach ($role as $item)
+                                        <option value="{{ $item->id_role }}" {{ $data->attn === $item->id_role ? 'selected' : '' }}>{{ $item->name }}</option>
+                                        @endforeach
                                     </Select>
                                 </div>
                             </div>
@@ -80,19 +82,19 @@
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="project_no">Project No.</label>
-                                    <input type="text" class="form-control" id="project_no" value="{{ $data->project_no ?? 'NA' }}" placeholder="Input Project No." readonly>
+                                    <input type="text" class="form-control" id="project_no" value="{{ $data->project_no ?? '' }}" placeholder="Input Project No." readonly>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="client">Client</label>
-                                    <input type="text" class="form-control" name="client" value="{{ $data->project_sheet_detail->client ?? 'NA' }}" placeholder="Input Client">
+                                    <input type="text" class="form-control" name="client" value="{{ $data->project_sheet_detail->client ?? '' }}" placeholder="Input Client">
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="owner">Owner</label>
-                                    <input type="text" class="form-control" name="owner" value="{{ $data->project_sheet_detail->owner ?? 'NA' }}" placeholder="Input Owner">
+                                    <input type="text" class="form-control" name="owner" value="{{ $data->project_sheet_detail->owner ?? '' }}" placeholder="Input Owner">
                                 </div>
                             </div>
                         </div>
@@ -100,7 +102,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="contract_no">Contract/SO/LOI/WA No.</label>
-                                    <input type="text" class="form-control" name="contract_no" value="{{ $data->project_sheet_detail->contract_no ?? 'NA' }}" placeholder="Input Contract No.">
+                                    <input type="text" class="form-control" name="contract_no" value="{{ $data->project_sheet_detail->contract_no ?? '' }}" placeholder="Input Contract No.">
                                 </div>
                             </div>
                         </div>
@@ -108,7 +110,7 @@
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="contact_person">Contact Person</label>
-                                    <input type="text" class="form-control" name="contact_person" value="{{ $data->project_sheet_detail->contact_person ?? 'NA' }}" placeholder="Input Contact Person">
+                                    <input type="text" class="form-control" name="contact_person" value="{{ $data->project_sheet_detail->contact_person ?? '' }}" placeholder="Input Contact Person">
                                 </div>
                             </div>
                             <div class="col-12 col-md-8">
@@ -116,19 +118,19 @@
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label for="ph_no">Ph.</label>
-                                            <input type="text" class="form-control" name="ph_no" value="{{ $data->project_sheet_detail->ph_no ?? 'NA' }}" placeholder="Input Ph.">
+                                            <input type="text" class="form-control" name="ph_no" value="{{ $data->project_sheet_detail->ph_no ?? '' }}" placeholder="Input Ph.">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
-                                            <label for="fax_no">Fax</label>
-                                            <input type="text" class="form-control" name="fax_no" value="{{ $data->project_sheet_detail->fax_no ?? 'NA' }}" placeholder="Input Fax No.">
+                                            <label for="email_client">Email</label>
+                                            <input type="text" class="form-control" name="email_client" value="{{ $data->project_sheet_detail->email_client ?? '' }}" placeholder="Input email client">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label for="hp_no">Hp.</label>
-                                            <input type="text" class="form-control" name="hp_no" value="{{ $data->project_sheet_detail->hp_no ?? 'NA' }}" placeholder="Input Hp.">
+                                            <input type="text" class="form-control" name="hp_no" value="{{ $data->project_sheet_detail->hp_no ?? '' }}" placeholder="Input Hp.">
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +140,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="contract_description">Contract Description</label>
-                                    <textarea class="form-control" name="contract_description" id="contract_description" rows="3" placeholder="Input Contract Description">{{ $data->project_sheet_detail->contract_description ?? 'NA' }}</textarea>
+                                    <textarea class="form-control" name="contract_description" id="contract_description" rows="3" placeholder="Input Contract Description">{{ $data->project_sheet_detail->contract_description ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -146,13 +148,13 @@
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="contract_period">Contract Period</label>
-                                    <input type="text" class="form-control" name="contract_period" value="{{ $data->project_sheet_detail->contract_period ?? 'NA' }}" placeholder="Input Contract Period">
+                                    <input type="text" class="form-control" name="contract_period" value="{{ $data->project_sheet_detail->contract_period ?? '' }}" placeholder="Input Contract Period">
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="payment_term">Term of Payment</label>
-                                    <input type="text" class="form-control" name="payment_term" value="{{ $data->project_sheet_detail->payment_term ?? 'NA' }}" placeholder="Input Term of Payment">
+                                    <input type="text" class="form-control" name="payment_term" value="{{ $data->project_sheet_detail->payment_term ?? '' }}" placeholder="Input Term of Payment">
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
@@ -167,7 +169,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="project_detail">Project Detail</label>
-                                    <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail">{{ $data->project_detail ?? 'NA' }}</textarea>
+                                    <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail">{{ $data->project_detail ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>

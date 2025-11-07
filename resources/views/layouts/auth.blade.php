@@ -52,6 +52,9 @@
     <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
     <!-- Toastr -->
     <script src="../../plugins/toastr/toastr.min.js"></script>
+    <!-- InputMask -->
+    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -163,6 +166,13 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            //Initialize InputMask
+            $('[data-mask]').inputmask();
         });
     </script>
 </body>

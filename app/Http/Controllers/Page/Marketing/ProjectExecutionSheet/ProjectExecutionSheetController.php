@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Page\ProjectExecutionSheet;
+namespace App\Http\Controllers\Page\Marketing\ProjectExecutionSheet;
 
 use App\Http\Controllers\Controller;
+use App\Models\Departemen;
 use App\Models\KategoriService;
 use App\Models\ProjectSheet;
 use App\Models\ProjectSheetDetail;
@@ -13,9 +14,25 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProjectExecutionSheetController extends Controller
 {
-    public function getData(Request $request)
+    public function getData(Request $request, $action)
     {
-        $query = ProjectSheet::query()->latest()->get();
+        if (auth()->user()->jobLvl == 'Administrator') {
+            if ($action == 'all') {
+                $query = ProjectSheet::query()->latest()->get();
+            } elseif ($action == 'draft') {
+                $query = ProjectSheet::query()->where('is_draft', 1)->latest()->get();
+            } elseif ($action == 'non-draft') {
+                $query = ProjectSheet::query()->where('is_draft', 0)->latest()->get();
+            }
+        } else {
+            if ($action == 'all') {
+                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->latest()->get();
+            } elseif ($action == 'draft') {
+                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('is_draft', 1)->latest()->get();
+            } elseif ($action == 'non-draft') {
+                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('is_draft', 0)->latest()->get();
+            }
+        }
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -31,7 +48,7 @@ class ProjectExecutionSheetController extends Controller
                 return $row->issued_date ?? '-';
             })
             ->editColumn('to', function ($row) {
-                return $row->toRole->name ?? '-';
+                return $row->toDepartemen->name ?? '-';
             })
             ->editColumn('attn', function ($row) {
                 return $row->attnRole->name ?? '-';
@@ -104,7 +121,9 @@ class ProjectExecutionSheetController extends Controller
 
         $role = Role::orderBy('name')->get();
 
-        return view('page.v1.pes.create', compact('project_no', 'role'));
+        $departemen = Departemen::orderBy('name')->get();
+
+        return view('page.v1.pes.create', compact('project_no', 'role', 'departemen'));
     }
 
     public function store(Request $request)
@@ -124,7 +143,7 @@ class ProjectExecutionSheetController extends Controller
                 'contract_no' => 'required|string|max:255',
                 'contact_person' => 'required|string|max:255',
                 'ph_no' => 'required|string|max:255',
-                'fax_no' => 'required|string|max:255',
+                'email_client' => 'required|string|max:255',
                 'hp_no' => 'required|string|max:255',
                 'contract_description' => 'required|string',
                 'contract_period' => 'required|string',
@@ -156,7 +175,7 @@ class ProjectExecutionSheetController extends Controller
                 'contract_no' => $request->contract_no,
                 'contact_person' => $request->contact_person,
                 'ph_no' => $request->ph_no,
-                'fax_no' => $request->fax_no,
+                'email_client' => $request->email_client,
                 'hp_no' => $request->hp_no,
                 'contract_description' => $request->contract_description,
                 'contract_period' => $request->contract_period,
@@ -170,7 +189,7 @@ class ProjectExecutionSheetController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Draft saved successfully.',
-                    'redirect' => route('v1.pes.index'),
+                    'redirect' => route('v1.pes.edit', strtolower($projectSheet->id_project)),
                 ]);
             }
 
@@ -195,7 +214,11 @@ class ProjectExecutionSheetController extends Controller
             ->where('id_project', $id)
             ->first();
 
-        return view('page.v1.pes.edit', compact('data'));
+        $role = Role::orderBy('name')->get();
+
+        $departemen = Departemen::orderBy('name')->get();
+
+        return view('page.v1.pes.edit', compact('data', 'role', 'departemen'));
     }
 
     public function update(Request $request, $id)
@@ -212,7 +235,7 @@ class ProjectExecutionSheetController extends Controller
                 'contract_no' => 'required|string|max:255',
                 'contact_person' => 'required|string|max:255',
                 'ph_no' => 'required|string|max:255',
-                'fax_no' => 'required|string|max:255',
+                'email_client' => 'required|string|max:255',
                 'hp_no' => 'required|string|max:255',
                 'contract_description' => 'required|string',
                 'contract_period' => 'required|string',
@@ -242,7 +265,7 @@ class ProjectExecutionSheetController extends Controller
                 'contract_no' => $request->contract_no,
                 'contact_person' => $request->contact_person,
                 'ph_no' => $request->ph_no,
-                'fax_no' => $request->fax_no,
+                'email_client' => $request->email_client,
                 'hp_no' => $request->hp_no,
                 'contract_description' => $request->contract_description,
                 'contract_period' => $request->contract_period,

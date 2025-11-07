@@ -18,11 +18,11 @@ class MaintenanceMode
         $user = $request->user();
 
         // Cek apakah pengguna sudah login dan memiliki jobLvl
-        if (!$user || !$user->jobLvl) {
+        if (!$user || !$user->jabatan) {
             return redirect('/login')->with('error', 'Silakan login untuk melanjutkan.');
         }
 
-        if ($user->jobLvl != 'Administrator') {
+        if ($user->jabatan != 'Administrator') {
             // code...
             $data = \App\Models\MaintenanceMode::first();
             // Jika tidak ada izin, tampilkan halaman forbidden

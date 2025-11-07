@@ -15,9 +15,13 @@ class DataKaryawanController extends Controller
 
         return DataTables::of($query)
             ->addIndexColumn()
+            ->addColumn('jabatan', function ($row) {
+                return $row->jabatan ? $row->jabatan->name : '-';
+            })
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.service.type.edit', $row->id_service_type).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_service_type.'\')"><i class="fas fa-trash"></i></button>';
+                return '<a href="'.route('v1.data-karyawan.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>
+                        <a href="'.route('v1.data-karyawan.detail', $row->id).'" class="btn btn-sm btn-primary ms-2">Detail</a>';
             })
             ->rawColumns([
                 'action',
@@ -25,14 +29,21 @@ class DataKaryawanController extends Controller
             ->make(true);
     }
 
+    public function detail($id)
+    {
+        $data = DataKaryawan::find($id);
+        dd($data);
+        // return view('page.v1.hrga_it.dataKaryawan.detail', compact('data'));
+    }
+
     public function index()
     {
-        return view('page.v1.service.type.index');
+        return view('page.v1.hrga_it.dataKaryawan.index');
     }
 
     public function create()
     {
-        return view('page.v1.service.type.create');
+        return view('page.v1.hrga_it.dataKaryawan.create');
     }
 
     public function store(Request $request)
@@ -57,7 +68,7 @@ class DataKaryawanController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Service Type created successfully',
-                'redirect' => route('v1.service.type.index'),
+                'redirect' => route('v1.data-karyawan.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -73,7 +84,7 @@ class DataKaryawanController extends Controller
     {
         $data = DataKaryawan::find($id);
 
-        return view('page.v1.service.type.edit', compact('data'));
+        return view('page.v1.hrga_it.dataKaryawan.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -93,7 +104,7 @@ class DataKaryawanController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Service Type updated successfully',
-                'redirect' => route('v1.service.type.index'),
+                'redirect' => route('v1.data-karyawan.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();

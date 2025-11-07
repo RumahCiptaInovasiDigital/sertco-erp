@@ -7,16 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DataKaryawan extends Model
+class ProjectSheetNote extends Model
 {
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
 
     protected $guarded;
-
-    public function jabatan()
-    {
-        return $this->belongsTo(Role::class, 'idJabatan', 'id_role');
-    }
 }
