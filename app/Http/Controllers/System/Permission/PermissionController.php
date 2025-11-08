@@ -17,7 +17,7 @@ class PermissionController extends Controller
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.permission.edit', $row->id_role).'" class="btn btn-warning btn-sm ms-5"><i class="fas fa-key"></i> Edit Permissions</a>';
+                return '<a href="'.route('admin.permission.edit', $row->id_role).'" class="btn btn-warning btn-sm ms-5"><i class="fas fa-key"></i> Setting Permissions</a>';
             })
             ->rawColumns([
                 'action',
@@ -27,7 +27,7 @@ class PermissionController extends Controller
 
     public function index()
     {
-        return view('page.v1.permission.index');
+        return view('page.admin.permission.index');
     }
 
     public function edit($id)
@@ -39,7 +39,7 @@ class PermissionController extends Controller
         $departemen = Departemen::orderBy('name')->get();
         $routes = \Route::getRoutes()->getRoutesByName();
 
-        return view('page.v1.permission.edit', compact('data', 'departemen', 'routes'));
+        return view('page.admin.permission.edit', compact('data', 'departemen', 'routes'));
     }
 
     public function update(Request $request, $id)
@@ -62,7 +62,7 @@ class PermissionController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Permmissions updated successfully',
-                'redirect' => route('v1.permission.index'),
+                'redirect' => route('admin.permission.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();

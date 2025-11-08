@@ -15,6 +15,7 @@ class DataKaryawanController extends Controller
             ->select([
                 'id',
                 'nik',
+                'inisial',
                 'fullName',
                 'email',
                 'phoneNumber',
@@ -23,6 +24,9 @@ class DataKaryawanController extends Controller
 
         return DataTables::of($query)
             ->addIndexColumn()
+            ->editColumn('fullName', function ($row) {
+                return $row->fullName.' <b>('.$row->inisial.')</b>';
+            })
             ->addColumn('action', function ($row) {
                 return '<a href="'.route('v1.data-karyawan.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                         <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>
@@ -30,6 +34,7 @@ class DataKaryawanController extends Controller
             })
             ->rawColumns([
                 'action',
+                'fullName',
             ])
             ->make(true);
     }

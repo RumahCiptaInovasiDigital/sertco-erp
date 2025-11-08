@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Departemen Manage')
-@section('PageTitle', 'Departemen Manage')
+@section('title', 'Data Karyawan')
+@section('PageTitle', 'Data Karyawan')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Departemen</li>
+    <li class="breadcrumb-item active">Data Karyawan</li>
 </ol>
 @endsection
 @section('content')
@@ -18,20 +18,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List of Departemen</h3>
+                <h3 class="card-title">List of Employee</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.departemen.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> New Departemen
+                    <a href="{{ route('v1.data-karyawan.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Tambah Karyawan
                     </a>
                 </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover">
+                <table id="dt_employee" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Departemen</th>
+                            <th>NIK</th>
+                            <th>Nama Karyawan</th>
+                            <th>Email</th>
+                            <th>No. HP</th>
+                            <th>Jabatan</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -50,50 +54,54 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.departemen.getData') }}";
+    const _URL = "{{ route('v1.data-karyawan.getData') }}";
 
-    $(document).ready(function () {
-        $('.page-loading').fadeIn();
-        setTimeout(function () {
-            $('.page-loading').fadeOut();
-        }, 1000); // Adjust the timeout duration as needed
+        $(document).ready(function () {
+            $('.page-loading').fadeIn();
+            setTimeout(function () {
+                $('.page-loading').fadeOut();
+            }, 1000); // Adjust the timeout duration as needed
 
-        let DT = $("#dt_data").DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: _URL,
-            },
-            columns: [
-                { data: "DT_RowIndex" },
-                { data: "name" },
-                {
-                    data: "action",
-                    orderable: false,
-                    searchable: false,
+            let DT = $("#dt_employee").DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: _URL,
                 },
-            ],
-            columnDefs: [
-                {
-                    targets: 0,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1; // Calculate the row index
+                columns: [
+                    { data: "DT_RowIndex" },
+                    { data: "nik" },
+                    { data: "fullName" },
+                    { data: "email" },
+                    { data: "phoneNumber" },
+                    { data: "namaJabatan" },
+                    {
+                        data: "action",
+                        orderable: false,
+                        searchable: false,
                     },
-                },
-            ],
-        });
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1; // Calculate the row index
+                        },
+                    },
+                ],
+            });
 
-        // $('#search_dt').on('keyup', function () {
-        //     DT.search(this.value).draw();
-        // });
-    });
+            // $('#search_dt').on('keyup', function () {
+            //     DT.search(this.value).draw();
+            // });
+        });
 </script>
 <script>
     function deleteData(id) {
@@ -106,14 +114,14 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.departemen.destroy') }}",
+                    url: "{{ route('v1.data-karyawan.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
                         _token: "{{ csrf_token() }}",
                     },
                     success: function (response) {
-                        $("#dt_data").DataTable().ajax.reload(null, false);
+                        $("#dt_employee").DataTable().ajax.reload(null, false);
                         Swal.fire("Deleted!", response.message, "success");
                     },
                     error: function (xhr) {

@@ -54,17 +54,6 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
         });
     });
 
-    Route::prefix('permission')->name('permission.')->group(function () {
-        Route::get('get', [App\Http\Controllers\System\Permission\PermissionController::class, 'getData'])->name('getData');
-        Route::get('', [App\Http\Controllers\System\Permission\PermissionController::class, 'index'])->name('index');
-        Route::get('create', [App\Http\Controllers\System\Permission\PermissionController::class, 'create'])->name('create');
-        Route::post('store', [App\Http\Controllers\System\Permission\PermissionController::class, 'store'])->name('store');
-        Route::get('edit/{id}', [App\Http\Controllers\System\Permission\PermissionController::class, 'edit'])->name('edit');
-        Route::post('update/{id}', [App\Http\Controllers\System\Permission\PermissionController::class, 'update'])->name('update');
-        Route::post('destroy', [App\Http\Controllers\System\Permission\PermissionController::class, 'destroy'])->name('destroy');
-        Route::post('refresh', [App\Http\Controllers\System\Permission\PermissionController::class, 'refresh'])->name('refresh');
-    });
-
     Route::prefix('audit')->name('auditTrail.')->middleware(['auth'])->group(function () {
         Route::get('', [App\Http\Controllers\System\AuditTrail\AuditController::class, 'index'])->name('index');
         Route::post('pdf', [App\Http\Controllers\System\AuditTrail\AuditController::class, 'generatePdf'])->name('generatePdf');

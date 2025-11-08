@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Role Manage')
-@section('PageTitle', 'Role Manage')
+@section('title', 'Departemen Manage')
+@section('PageTitle', 'Departemen Manage')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Role/Jabatan</li>
+    <li class="breadcrumb-item active">Departemen</li>
 </ol>
 @endsection
 @section('content')
@@ -18,7 +18,12 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List of Role's Permissions</h3>
+                <h3 class="card-title">List of Departemen</h3>
+                <div class="float-right d-none d-sm-inline">
+                    <a href="{{ route('v1.departemen.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> New Departemen
+                    </a>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -26,8 +31,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Role/Jabatan</th>
-                            <th style="width: 20%;">Action</th>
+                            <th>Nama Departemen</th>
+                            <th>Jabatan</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +51,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.permission.getData') }}";
+    const _URL = "{{ route('v1.departemen.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -69,6 +75,7 @@
             columns: [
                 { data: "DT_RowIndex" },
                 { data: "name" },
+                { data: "name" },
                 {
                     data: "action",
                     orderable: false,
@@ -89,5 +96,37 @@
         //     DT.search(this.value).draw();
         // });
     });
+</script>
+<script>
+    function deleteData(id) {
+        Swal.fire({
+            text: "Are you sure you want to delete this Role?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+        }).then(function (result) {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ route('v1.departemen.destroy') }}",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+                        $("#dt_data").DataTable().ajax.reload(null, false);
+                        Swal.fire("Deleted!", response.message, "success");
+                    },
+                    error: function (xhr) {
+                        Swal.fire("Error!", xhr.responseJSON.message, "error");
+                    },
+                });
+            } else if (result.dismiss === "cancel") {
+                Swal.fire("Cancelled", "Your data is safe :)", "error");
+            }
+        });
+    }
+
 </script>
 @endsection

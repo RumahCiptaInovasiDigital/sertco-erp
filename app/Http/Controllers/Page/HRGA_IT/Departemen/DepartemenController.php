@@ -27,12 +27,12 @@ class DepartemenController extends Controller
 
     public function index()
     {
-        return view('page.v1.departemen.index');
+        return view('page.v1.hrga_it.departemen.index');
     }
 
     public function create()
     {
-        return view('page.v1.departemen.create');
+        return view('page.v1.hrga_it.departemen.create');
     }
 
     public function store(Request $request)
@@ -71,7 +71,7 @@ class DepartemenController extends Controller
             ->where('id_departemen', $id)
             ->first();
 
-        return view('page.v1.departemen.edit', compact('data'));
+        return view('page.v1.hrga_it.departemen.edit', compact('data'));
     }
 
     public function update(Request $request, $id)

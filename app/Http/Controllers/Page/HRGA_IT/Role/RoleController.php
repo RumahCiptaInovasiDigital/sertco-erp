@@ -41,7 +41,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        return view('page.v1.role.index');
+        return view('page.v1.hrga_it.jabatan.index');
     }
 
     public function create()
@@ -49,7 +49,7 @@ class RoleController extends Controller
         $departemen = Departemen::orderBy('name')->get();
         $routes = \Route::getRoutes()->getRoutesByName();
 
-        return view('page.v1.role.create', compact('departemen', 'routes'));
+        return view('page.v1.hrga_it.jabatan.create', compact('departemen', 'routes'));
     }
 
     public function store(Request $request)
@@ -102,7 +102,7 @@ class RoleController extends Controller
 
         $departemen = Departemen::orderBy('name')->get();
 
-        return view('page.v1.role.edit', compact('data', 'departemen'));
+        return view('page.v1.hrga_it.jabatan.edit', compact('data', 'departemen'));
     }
 
     public function update(Request $request, $id)

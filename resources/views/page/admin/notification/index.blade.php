@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Role Manage')
-@section('PageTitle', 'Role Manage')
+@section('title', 'Notification Manage')
+@section('PageTitle', 'Notification Manage')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Role/Jabatan</li>
+    <li class="breadcrumb-item active">Notification</li>
 </ol>
 @endsection
 @section('content')
@@ -18,16 +18,25 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List of Role's Permissions</h3>
+                <h3 class="card-title">List of Notifications</h3>
+                <div class="float-right d-none d-sm-inline">
+                    <a href="{{ route('admin.notification.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Buat Notifikasi Baru
+                    </a>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="dt_data" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Nama Role/Jabatan</th>
-                            <th style="width: 20%;">Action</th>
+                            <th width="5%">No</th>
+                            <th width="30%">Pesan</th>
+                            <th width="20%">Penerima</th>
+                            <th>Tanggal Notifikasi</th>
+                            <th width="10%">Jenis</th>
+                            <th width="10%">Status</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +54,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('admin.permission.getData') }}";
+    const _URL = "{{ route('admin.notification.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -68,7 +77,11 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "name" },
+                { data: "pesan" },
+                { data: "penerima" },
+                { data: "tanggal_notifikasi" },
+                { data: "jenis" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,
