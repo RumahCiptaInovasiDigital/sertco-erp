@@ -89,7 +89,7 @@ class EmployeeSeeder extends Seeder
 
             UserCredential::create([
                 'nik' => $nik,
-                'pass' => bcrypt('password123'),
+                'pass' => password_hash('password123', PASSWORD_DEFAULT),
             ]);
         }
     }

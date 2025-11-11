@@ -11,6 +11,10 @@ class Notification extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $primaryKey = 'id_notification';
     protected $guarded;
+
+    public function notifikasi()
+    {
+        return $this->belongsTo(MasterNotifikasi::class, 'notification_id', 'id');
+    }
 }

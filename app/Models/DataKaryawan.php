@@ -15,6 +15,13 @@ class DataKaryawan extends Model
 
     protected $guarded;
 
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'notifications', 'karyawan_id', 'notification_id')
+            ->withPivot(['is_sent', 'sent_at', 'is_read', 'read_at'])
+            ->withTimestamps();
+    }
+
     public function jabatan()
     {
         return $this->belongsTo(Role::class, 'idJabatan', 'id_role');

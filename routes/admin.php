@@ -18,6 +18,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
     // notification
     Route::prefix('notification')->name('notification.')->group(function () {
         Route::get('get', [App\Http\Controllers\System\Notification\NotificationController::class, 'getData'])->name('getData');
+        Route::get('getEmployee', [App\Http\Controllers\System\Notification\NotificationController::class, 'getEmployee'])->name('getEmployee');
         Route::get('', [App\Http\Controllers\System\Notification\NotificationController::class, 'index'])->name('index');
         Route::get('create', [App\Http\Controllers\System\Notification\NotificationController::class, 'create'])->name('create');
         Route::post('store', [App\Http\Controllers\System\Notification\NotificationController::class, 'store'])->name('store');

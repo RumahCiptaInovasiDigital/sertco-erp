@@ -118,7 +118,7 @@
 
         $('#employee').select2({
             theme: 'bootstrap4',
-            minimumInputLength: 2,
+            minimumInputLength: 1,
             placeholder: 'Pilih Employee',
             ajax: {
                 url: "{{ route('v1.role.assign.getEmployee', [strtolower($role->name), $role->id_role]) }}",

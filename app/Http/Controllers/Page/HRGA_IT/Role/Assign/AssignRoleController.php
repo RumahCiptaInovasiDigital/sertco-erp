@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Page\HRGA_IT\Role\Assign;
 
 use App\Http\Controllers\Controller;
+use App\Models\DataKaryawan;
 use App\Models\Role;
-use App\Models\User;
 use App\Models\UserHasRole;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -43,19 +43,19 @@ class AssignRoleController extends Controller
     {
         $role = Role::where('id_role', $id)->first();
 
-        return view('page.v1.role.assign.index', compact('role'));
+        return view('page.v1.hrga_it.jabatan.assign.index', compact('role'));
     }
 
     public function getEmployee(Request $request)
     {
-        $employee = User::all();
+        $employee = DataKaryawan::where('fullName', 'like', "%{$request->q}%")->get();
 
         $data = [];
         foreach ($employee as $item) {
             // code...
             $data[] = [
-                'nik' => $item['NIK'],
-                'fullname' => $item['fullname'],
+                'nik' => $item['nik'],
+                'fullname' => $item['fullName'],
             ];
         }
 

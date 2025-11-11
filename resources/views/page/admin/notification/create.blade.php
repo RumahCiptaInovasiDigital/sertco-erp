@@ -45,17 +45,15 @@
                                         <label for="departemen">Pilih Karyawan</label>
                                         <div class="form-group clearfix">
                                             <div class="icheck-primary d-inline">
-                                                <input type="radio" id="allKaryawan" class="jenis_karyawan" name="jenis_karyawan" checked>
+                                                <input type="radio" id="allKaryawan" class="jenis_karyawan" name="jenis_karyawan" value="all" checked>
                                                 <label for="allKaryawan">Semua</label>
                                             </div>
                                             <div class="icheck-primary d-inline pl-md-4">
-                                                <input type="radio" id="selectKaryawan" class="jenis_karyawan" name="jenis_karyawan">
+                                                <input type="radio" id="selectKaryawan" class="jenis_karyawan" value="selected" name="jenis_karyawan">
                                                 <label for="selectKaryawan">Ditentukan</label>
                                             </div>
                                         </div>
-                                        <select class="form-control selectEmployee" name="karyawan" id="karyawan">
-                                            <option></option>
-                                        </select>
+                                        <select class="form-control selectEmployee" name="karyawan[]" id="karyawan" multiple="multiple" style="width: 100%;"></select>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -95,9 +93,31 @@
         //Initialize Select2 Elements
         $('#karyawan').select2({
             theme: 'bootstrap4',
-            placeholder: 'Select Employee',
-            multiple: true,
-        })
+            minimumInputLength: 2,
+            placeholder: 'Cari dan pilih karyawan...',
+            ajax: {
+                url: "{{ route('admin.notification.getEmployee') }}", // route baru
+                dataType: 'json',
+                delay: 200,
+                data: function (params) {
+                    return {
+                        search: params.term // kirim keyword pencarian
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.id, // UUID atau NIK
+                                text: item.fullName + ' - ' + item.namaJabatan
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
 
         $('#jenis_notifikasi').select2({
             theme: 'bootstrap4',

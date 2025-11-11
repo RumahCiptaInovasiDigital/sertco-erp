@@ -12,7 +12,7 @@ class LogActivityService
     public function handle(array $data)
     {
         // Pastikan array memiliki key yang diharapkan
-        $perusahaan = $data['perusahaan'] ?? 'Unknown';
+        $perusahaan = 'PT SERTCO QUALITY';
         $user = $data['user'] ?? 'Unknown';
         $tindakan = $data['tindakan'] ?? 'Unknown';
         $catatan = $data['catatan'] ?? '';

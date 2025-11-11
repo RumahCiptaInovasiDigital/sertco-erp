@@ -53,15 +53,6 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
             Route::delete('{id}/delete', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'destroy'])->name('destroy');
         });
     });
-
-    Route::prefix('audit')->name('auditTrail.')->middleware(['auth'])->group(function () {
-        Route::get('', [App\Http\Controllers\System\AuditTrail\AuditController::class, 'index'])->name('index');
-        Route::post('pdf', [App\Http\Controllers\System\AuditTrail\AuditController::class, 'generatePdf'])->name('generatePdf');
-    });
-
-    Route::prefix('contact')->name('contact.')->group(function () {
-        Route::get('', [App\Http\Controllers\System\ContactUs\ContactUsController::class, 'index'])->name('index');
-    });
 });
 
 require __DIR__.'/user/hrga.php';

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\DataKaryawan;
 use App\Models\User;
+use App\Models\UserCredential;
+use App\Services\System\LogActivityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -64,15 +67,13 @@ class AuthController extends Controller
                     'redirect' => route('login'),
                 ]);
             } else {
-                $this->getAccount($request);
+                $employee = $this->getAccount($request);
                 if (\Auth::attempt($kredensil)) {
-                    // $data = json_decode(auth()->user()->result, true);
-                    // (new LogActivityService())->handle([
-                    //     'perusahaan' => strtoupper($data['CompName']),
-                    //     'user' => strtoupper($request->email),
-                    //     'tindakan' => 'Login',
-                    //     'catatan' => 'Berhasil Login Account',
-                    // ]);
+                    (new LogActivityService())->handle([
+                        'user' => strtoupper($employee['fullname'].' ('.$employee['inisial'].')'),
+                        'tindakan' => 'Login',
+                        'catatan' => 'Berhasil Login Account',
+                    ]);
 
                     return response()->json([
                         'success' => true,
@@ -89,7 +90,7 @@ class AuthController extends Controller
 
                     return response()->json([
                         'success' => false,
-                        'message' => 'Login Gagal Silahkan Ulangi',
+                        'message' => 'NIK atau Password Salah, Silahkan Coba Lagi',
                         'redirect' => route('login'),
                     ]);
                 }
@@ -97,11 +98,27 @@ class AuthController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        \Auth::logout();
+        // if (auth()->check() && auth()->user()->jobLvl != 'Administrator') {
+        //     (new LogService())->handle([
+        //         'user_id' => auth()->user()->id,
+        //         'userEmail' => auth()->user()->email,
+        //         'action' => 'LogOut',
+        //         'description' => 'User Berhasil LogOut System',
+        //         'old_data' => null,
+        //         'new_data' => null,
+        //     ]);
+        // }
 
-        return redirect(route('login'));
+        auth()->user()->delete();
+
+        \Auth::logout(); // Log out the user
+
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate the session token
+
+        return redirect(route('login'))->with('success', 'Logout Berhasil');
     }
 
     public function getAccount($request)
@@ -112,9 +129,15 @@ class AuthController extends Controller
             $employee = DataKaryawan::where('nik', $request->nik)->first();
             $check = User::where('nik', $request->nik)->first();
 
+            $userCredential = UserCredential::where('nik', $request->nik)->first();
+            if (!Hash::check($request->password, $userCredential->pass)) {
+                return back()->withErrors(['password' => 'Password salah']);
+            }
+
             if (empty($check)) {
                 // code...
                 User::create([
+                    'id_user' => $employee->id,
                     'nik' => $employee->nik,
                     'fullname' => $employee->fullName,
                     'email' => $employee->email,
@@ -136,9 +159,9 @@ class AuthController extends Controller
             return [
                 'nik' => $employee->nik,
                 'fullname' => $employee->fullName,
+                'inisial' => $employee->inisial,
                 'email' => $employee->email,
                 'jabatan' => $employee->namaJabatan,
-                'password' => \Hash::make($request->password),
             ];
         } catch (\Throwable $th) {
             // throw $th;

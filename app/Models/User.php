@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -14,7 +13,6 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use HasUuids;
-    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -48,7 +46,7 @@ class User extends Authenticatable
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'user', 'email');
+        return $this->hasMany(Notification::class, 'karyawan_id', 'id_user');
     }
 
     public function notify()

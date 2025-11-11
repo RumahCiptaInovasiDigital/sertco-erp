@@ -2,35 +2,24 @@
 
 namespace App\Events\Notification;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class NotificationEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+    public $karyawan_id;
+    public $title;
+    public $message;
+    public $url;
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
+    public function __construct($karyawan_id, $title, $message, $url)
     {
-        return [
-            new PrivateChannel('channel-name'),
-        ];
+        $this->karyawan_id = $karyawan_id;  // Bisa null untuk semua user
+        $this->title = $title;
+        $this->message = $message;
+        $this->url = $url;
     }
 }

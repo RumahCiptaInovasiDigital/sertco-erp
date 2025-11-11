@@ -26,7 +26,7 @@ return new class extends Migration {
 
             $table->timestamps();
 
-            $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
+            $table->foreign('notification_id')->references('id')->on('master_notifikasis')->onDelete('cascade');
             $table->foreign('karyawan_id')->references('id')->on('data_karyawans')->onDelete('cascade');
         });
     }

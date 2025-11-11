@@ -80,7 +80,7 @@
                 { data: "pesan" },
                 { data: "penerima" },
                 { data: "tanggal_notifikasi" },
-                { data: "jenis" },
+                { data: "jenis_notifikasi" },
                 { data: "status" },
                 {
                     data: "action",
@@ -102,5 +102,35 @@
         //     DT.search(this.value).draw();
         // });
     });
+
+    function deleteData(id) {
+        Swal.fire({
+            text: "Are you sure you want to delete this Notification?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+        }).then(function (result) {
+            if (result.value) {
+                $.ajax({
+                    url: "{{ route('admin.notification.destroy') }}",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+                        $("#dt_data").DataTable().ajax.reload(null, false);
+                        Swal.fire("Deleted!", response.message, "success");
+                    },
+                    error: function (xhr) {
+                        Swal.fire("Error!", xhr.responseJSON.message, "error");
+                    },
+                });
+            } else if (result.dismiss === "cancel") {
+                Swal.fire("Cancelled", "Your data is safe :)", "error");
+            }
+        });
+    }
 </script>
 @endsection

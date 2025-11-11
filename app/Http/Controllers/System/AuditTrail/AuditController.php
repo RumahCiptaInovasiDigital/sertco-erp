@@ -5,18 +5,17 @@ namespace App\Http\Controllers\System\AuditTrail;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class AuditController extends Controller
 {
-    public function getData(Request $request)
+    public function getData()
     {
-        $query = ActivityLog::query()->orderBy('created_at', 'Desc');
+        $query = ActivityLog::latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->editColumn('created_at', function ($row) {
+            ->editColumn('tanggal', function ($row) {
                 $parse = Carbon::parse($row->created_at);
 
                 return $parse->translatedFormat('l, ').
@@ -27,11 +26,6 @@ class AuditController extends Controller
             })
             ->editColumn('description', function ($row) {
                 return ucwords($row->description) ?? '-';
-            })
-            ->addColumn('user', function ($row) {
-                $email = optional($row->users)->email;
-
-                return strtoupper($email ?? $row->userEmail ?? '-');
             })
             ->addColumn('compName', function ($row) {
                 $resultJson = optional($row->users)->result;
@@ -47,7 +41,7 @@ class AuditController extends Controller
 
                 return strtoupper($resultArray['CompName'] ?? '-');
             })
-            ->rawColumns(['user', 'compName'])
+            ->rawColumns(['compName'])
             ->make(true);
     }
 
