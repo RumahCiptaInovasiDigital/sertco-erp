@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System\Notification;
 use App\Http\Controllers\Controller;
 use App\Models\DataKaryawan;
 use App\Models\MasterNotifikasi;
+use App\Models\Notification;
 use App\Services\SendNotifToEmployee;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -172,10 +173,72 @@ class NotificationController extends Controller
 
     public function edit($id)
     {
+        $data = MasterNotifikasi::find($id);
+
+        return view('page.admin.notification.edit', compact('data'));
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'pesan' => 'required|string',
+            'jenis_karyawan' => 'required|in:all,selected',
+            'jenis_notifikasi' => 'required|in:sekali,daily,weekly,monthly,yearly',
+            'jam_notifikasi' => 'nullable',
+            'hari_notifikasi' => 'nullable|string',
+            'tanggal_notifikasi' => 'nullable|integer',
+            'bulan_notifikasi' => 'nullable|integer',
+            'is_active' => 'boolean',
+            'karyawan' => 'nullable|array',
+        ]);
+
+        \DB::beginTransaction();
+
+        try {
+            $dataNotif = MasterNotifikasi::find($id);
+            // 1️⃣ Simpan ke master_notifikasis
+            $dataNotif->update([
+                'title' => $validated['title'],
+                'pesan' => $validated['pesan'],
+                'jenis_karyawan' => $validated['jenis_karyawan'],
+                'jenis_notifikasi' => $validated['jenis_notifikasi'],
+                'jam_notifikasi' => $validated['jam_notifikasi'] ?? null,
+                'hari_notifikasi' => $validated['hari_notifikasi'] ?? null,
+                'tanggal_notifikasi' => $validated['tanggal_notifikasi'] ?? null,
+                'bulan_notifikasi' => $validated['bulan_notifikasi'] ?? null,
+                'is_active' => $validated['is_active'] ?? true,
+            ]);
+
+            Notification::query()->where('notification_id', $dataNotif->id)->delete();
+
+            $karyawanList = [];
+
+            if ($validated['jenis_karyawan'] === 'all') {
+                $karyawanList = DataKaryawan::pluck('id')->toArray();
+            } elseif (!empty($validated['karyawan'])) {
+                $karyawanList = $validated['karyawan'];
+            }
+
+            if (!empty($karyawanList)) {
+                (new SendNotifToEmployee())->handle($karyawanList, $dataNotif);
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Notifikasi berhasil di Update',
+                'redirect' => route('admin.notification.index'),
+            ]);
+        } catch (\Throwable $e) {
+            \DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat notifikasi: '.$e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy(Request $request)

@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserHasRole::class, 'nik', 'nik');
     }
+
+    public function karyawan()
+    {
+        return $this->hasOne(DataKaryawan::class, 'nik', 'nik');
+    }
 }

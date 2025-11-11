@@ -100,18 +100,14 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // if (auth()->check() && auth()->user()->jobLvl != 'Administrator') {
-        //     (new LogService())->handle([
-        //         'user_id' => auth()->user()->id,
-        //         'userEmail' => auth()->user()->email,
-        //         'action' => 'LogOut',
-        //         'description' => 'User Berhasil LogOut System',
-        //         'old_data' => null,
-        //         'new_data' => null,
-        //     ]);
-        // }
-
-        auth()->user()->delete();
+        if (auth()->check() && auth()->user()->jabatan != 'Administrator') {
+            (new LogActivityService())->handle([
+                'user' => strtoupper(auth()->user()->karyawan->fullName.' ('.auth()->user()->karyawan->inisial.')'),
+                'tindakan' => 'LOGOUT',
+                'catatan' => 'User Berhasil Logout Sistem',
+            ]);
+            auth()->user()->delete();
+        }
 
         \Auth::logout(); // Log out the user
 

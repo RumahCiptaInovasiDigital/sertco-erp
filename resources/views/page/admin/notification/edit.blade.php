@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Create Notification')
-@section('PageTitle', 'Create Notification')
+@section('title', 'Edit Notification')
+@section('PageTitle', 'Edit Notification')
 @section('head')
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
@@ -13,7 +13,7 @@
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{{ route('admin.notification.index') }}">Notification</a></li>
-    <li class="breadcrumb-item active">Create</li>
+    <li class="breadcrumb-item active">Edit</li>
 </ol>
 @endsection
 @section('content')
@@ -21,21 +21,21 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Create a New Notification</h3>
+                <h3 class="card-title">Edit Notification</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('admin.notification.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('admin.notification.update', $data->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="name">Title</label>
-                                <input class="form-control" name="title" id="title" placeholder="Input Judul">
+                                <input class="form-control" name="title" id="title" placeholder="Input Judul" value="{{ $data->title }}">
                             </div>
                             <div class="form-group">
                                 <label for="name">Message</label>
-                                <textarea class="form-control" name="pesan" id="pesan" rows="4" placeholder="Input Message"></textarea>
+                                <textarea class="form-control" name="pesan" id="pesan" rows="4" placeholder="Input Message">{{ $data->pesan }}</textarea>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
@@ -44,11 +44,12 @@
                                     <div class="form-group">
                                         <label for="departemen">Jenis Notifikasi</label>
                                         <select class="form-control select2" name="jenis_notifikasi" id="jenis_notifikasi">
-                                            <option value="sekali">Hanya Sekali</option>
-                                            <option value="daily">Setiap Hari</option>
-                                            <option value="weekly">Setiap Minggu</option>
-                                            <option value="monthly">Setiap Bulan</option>
-                                            <option value="yearly">Setiap Tahun</option>
+                                            <option value=""></option>
+                                            <option value="sekali" {{ $data->jenis_notifikasi == 'sekali' ? 'selected' : ''}}>Hanya Sekali</option>
+                                            <option value="daily" {{ $data->jenis_notifikasi == 'daily' ? 'selected' : ''}}>Setiap Hari</option>
+                                            <option value="weekly" {{ $data->jenis_notifikasi == 'weekly' ? 'selected' : ''}}>Setiap Minggu</option>
+                                            <option value="monthly" {{ $data->jenis_notifikasi == 'monthly' ? 'selected' : ''}}>Setiap Bulan</option>
+                                            <option value="yearly" {{ $data->jenis_notifikasi == 'yearly' ? 'selected' : ''}}>Setiap Tahun</option>
                                         </select>
                                     </div>
                                 </div>
@@ -142,7 +143,7 @@
                 html = `
                     <div class="form-group">
                         <label>Jam Notifikasi</label>
-                        <input type="time" class="form-control" name="jam_notifikasi">
+                        <input type="time" class="form-control" name="jam_notifikasi" value={{ $data->jam_notifikasi }}>
                     </div>
                 `;
             } else if (value === 'weekly') {
@@ -150,13 +151,13 @@
                     <div class="form-group">
                         <label>Pilih Hari</label>
                         <select class="form-control" name="hari_notifikasi">
-                            <option value="Senin">Senin</option>
-                            <option value="Selasa">Selasa</option>
-                            <option value="Rabu">Rabu</option>
-                            <option value="Kamis">Kamis</option>
-                            <option value="Jumat">Jumat</option>
-                            <option value="Sabtu">Sabtu</option>
-                            <option value="Minggu">Minggu</option>
+                            <option value="Senin" {{ $data->hari_notifikasi == 'Senin' ? 'Selected' : '' }}>Senin</option>
+                            <option value="Selasa" {{ $data->hari_notifikasi == 'Selasa' ? 'Selected' : '' }}>Selasa</option>
+                            <option value="Rabu" {{ $data->hari_notifikasi == 'Rabu' ? 'Selected' : '' }}>Rabu</option>
+                            <option value="Kamis" {{ $data->hari_notifikasi == 'Kamis' ? 'Selected' : '' }}>Kamis</option>
+                            <option value="Jumat" {{ $data->hari_notifikasi == 'Jumat' ? 'Selected' : '' }}>Jumat</option>
+                            <option value="Sabtu" {{ $data->hari_notifikasi == 'Sabtu' ? 'Selected' : '' }}>Sabtu</option>
+                            <option value="Minggu" {{ $data->hari_notifikasi == 'Minggu' ? 'Selected' : '' }}>Minggu</option>
                         </select>
                     </div>
                 `;
@@ -164,7 +165,7 @@
                 html = `
                     <div class="form-group">
                         <label>Tanggal Notifikasi</label>
-                        <input type="number" class="form-control" name="tanggal_notifikasi" min="1" max="31" placeholder="Misal: 15">
+                        <input type="number" class="form-control" name="tanggal_notifikasi" min="1" max="31" placeholder="Misal: 15" value={{ $data->tanggal_notifikasi }}>
                     </div>
                 `;
             } else if (value === 'yearly') {
@@ -174,22 +175,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <select class="form-control" name="bulan_notifikasi">
-                                    <option value="1">Januari</option>
-                                    <option value="2">Februari</option>
-                                    <option value="3">Maret</option>
-                                    <option value="4">April</option>
-                                    <option value="5">Mei</option>
-                                    <option value="6">Juni</option>
-                                    <option value="7">Juli</option>
-                                    <option value="8">Agustus</option>
-                                    <option value="9">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
+                                    <option value="1" {{ $data->bulan_notifikasi == '1' ? 'Selected' : '' }}>Januari</option>
+                                    <option value="2" {{ $data->bulan_notifikasi == '2' ? 'Selected' : '' }}>Februari</option>
+                                    <option value="3" {{ $data->bulan_notifikasi == '3' ? 'Selected' : '' }}>Maret</option>
+                                    <option value="4" {{ $data->bulan_notifikasi == '4' ? 'Selected' : '' }}>April</option>
+                                    <option value="5" {{ $data->bulan_notifikasi == '5' ? 'Selected' : '' }}>Mei</option>
+                                    <option value="6" {{ $data->bulan_notifikasi == '6' ? 'Selected' : '' }}>Juni</option>
+                                    <option value="7" {{ $data->bulan_notifikasi == '7' ? 'Selected' : '' }}>Juli</option>
+                                    <option value="8" {{ $data->bulan_notifikasi == '8' ? 'Selected' : '' }}>Agustus</option>
+                                    <option value="9" {{ $data->bulan_notifikasi == '9' ? 'Selected' : '' }}>September</option>
+                                    <option value="10" {{ $data->bulan_notifikasi == '10' ? 'Selected' : '' }}>Oktober</option>
+                                    <option value="11" {{ $data->bulan_notifikasi == '11' ? 'Selected' : '' }}>November</option>
+                                    <option value="12" {{ $data->bulan_notifikasi == '12' ? 'Selected' : '' }}>Desember</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <input type="number" class="form-control" name="tanggal_notifikasi" min="1" max="31" placeholder="Tanggal">
+                                <input type="number" class="form-control" name="tanggal_notifikasi" min="1" max="31" placeholder="Tanggal" value={{ $data->tanggal_notifikasi }}>
                             </div>
                         </div>
                     </div>
