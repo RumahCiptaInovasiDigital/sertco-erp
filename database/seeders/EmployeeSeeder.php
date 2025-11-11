@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\UserCredential;
+use App\Models\UserHasRole;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +88,12 @@ class EmployeeSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
+            UserHasRole::create([
+                'nik' => $nik,
+                'id_role' => $role->id_role,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
             UserCredential::create([
                 'nik' => $nik,
                 'pass' => password_hash('password123', PASSWORD_DEFAULT),

@@ -22,6 +22,6 @@ class UserHasRole extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'nik', 'NIK');
+        return $this->belongsTo(DataKaryawan::class, 'nik', 'nik');
     }
 }

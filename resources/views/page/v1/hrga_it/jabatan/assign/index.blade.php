@@ -54,11 +54,12 @@
 
                     <div class="mb-3">
                         <label for="employee" class="form-label">Cari Employee</label>
-                        <select class="form-control select2" name="employee" id="employee">
+                        <select class="form-control select2 d-block" name="employee" id="employee">
                         </select>
                     </div>
                     <button type="button" class="btn btn-primary btn-block" id="savedata" value="create">Submit
                         Data</button>
+                    <button type="reset" class="btn btn-primary btn-block d-none" id="resetdata" value="reset">Reset Data</button>
                 </form>
             </div>
         </div>
@@ -166,7 +167,10 @@
                             text: data.message,
                             icon: "success"
                         });
-                        $('#employeeForm').trigger("reset");
+                        $('#employee').val(null).trigger('change');
+                        $("input[name='nik']").val('');
+                        $("input[name='fullname']").val('');
+                        $("#employee_id").val('');
                         DT.draw();
                     } else {
                         Swal.fire({
@@ -174,7 +178,10 @@
                             text: data.message,
                             icon: "info"
                         });
-                        $('#employeeForm').trigger("reset");
+                        $('#employee').val(null).trigger('change');
+                        $("input[name='nik']").val('');
+                        $("input[name='fullname']").val('');
+                        $("#employee_id").val('');
                         DT.draw();
                     }
 
@@ -186,8 +193,6 @@
                         text: data.message,
                         icon: "error"
                     });
-
-                    console.log('Error:', data);
                 },
                 complete: function() {
                     $('#savedata').html('Submit Data');

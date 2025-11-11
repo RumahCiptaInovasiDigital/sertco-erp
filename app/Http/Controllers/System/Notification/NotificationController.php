@@ -158,7 +158,7 @@ class NotificationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Notifikasi berhasil dibuat',
-                'redirect' => 'admin.notification.index',
+                'redirect' => route('admin.notification.index'),
             ]);
         } catch (\Throwable $e) {
             \DB::rollBack();

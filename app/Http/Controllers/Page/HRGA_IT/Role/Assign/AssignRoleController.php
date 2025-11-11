@@ -18,7 +18,7 @@ class AssignRoleController extends Controller
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('fullname', function ($row) {
-                return $row->user->fullname;
+                return $row->user->fullName;
             })
             ->addColumn('action', function ($row) {
                 $btn = '<ul class="list-inline me-auto mb-0">
@@ -67,6 +67,7 @@ class AssignRoleController extends Controller
         $role = Role::where('id_role', $id);
         $data = UserHasRole::where('nik', $request->nik)->where('id_role', $id)->first();
         $user = UserHasRole::where('nik', $request->nik)->first();
+        $dataKaryawan = DataKaryawan::where('nik', $request->nik)->first();
 
         if ($user) {
             $is_active = Role::where('id_role', $user->id_role)->first();
@@ -87,6 +88,10 @@ class AssignRoleController extends Controller
                 'nik' => $request->nik,
                 'id_role' => $id,
             ]);
+            $dataKaryawan->update([
+                'idJabatan' => $id,
+                'namaJabatan' => $role->first()->name,
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -98,6 +103,8 @@ class AssignRoleController extends Controller
     public function destroy($id)
     {
         $data = UserHasRole::find($id);
+
+        $dataKaryawan = DataKaryawan::where('nik', $data->nik)->first();
         if (empty($data)) {
             // code...
             return response()->json([
@@ -105,6 +112,10 @@ class AssignRoleController extends Controller
                 'message' => 'Account Tidak Bisa dihapus',
             ]);
         }
+        $dataKaryawan->update([
+            'idJabatan' => '-',
+            'namaJabatan' => '-',
+        ]);
         $data->delete();
 
         return response()->json([
