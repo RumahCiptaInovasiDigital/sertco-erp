@@ -5,7 +5,10 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
@@ -74,8 +77,34 @@
                             </div>
                         </div>
                         <div class="col-12">
+                            <hr class="my-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Karyawan Penerima Notifikasi</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <table id="dt_data" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">No</th>
+                                                <th width="20%">Nama Karaywan</th>
+                                                <th width="10%">Terakhir Dikirim</th>
+                                                <th width="10%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <hr>
-                            <button type="submit" class="btn btn-success">Simpan Data</button>
+                            <button type="submit" class="btn btn-success">Update Data</button>
                             <a href="{{ route('admin.notification.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
@@ -88,17 +117,60 @@
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
-    $(document).ready(function () {
-        $('#karyawan').prop('disabled', true);
+    const _URL = "{{ route('admin.notification.getEmployee', $data->id) }}";
 
+    $(document).ready(function () {
+        $('.page-loading').fadeIn();
+        setTimeout(function () {
+            $('.page-loading').fadeOut();
+        }, 1000); // Adjust the timeout duration as needed
+
+        let DT = $("#dt_data").DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: _URL,
+            },
+            columns: [
+                { data: "DT_RowIndex" },
+                { data: "penerima" },
+                { data: "diterima" },
+                {
+                    data: "action",
+                    orderable: false,
+                    searchable: false,
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Calculate the row index
+                    },
+                },
+            ],
+        });
+
+        $('#karyawan').prop('disabled', true);
         //Initialize Select2 Elements
         $('#karyawan').select2({
             theme: 'bootstrap4',
             minimumInputLength: 2,
             placeholder: 'Cari dan pilih karyawan...',
             ajax: {
-                url: "{{ route('admin.notification.getEmployee') }}", // route baru
+                url: "{{ route('admin.notification.searchEmployee') }}", // route baru
                 dataType: 'json',
                 delay: 200,
                 data: function (params) {
@@ -119,7 +191,6 @@
                 cache: true
             }
         });
-
 
         $('#jenis_notifikasi').select2({
             theme: 'bootstrap4',

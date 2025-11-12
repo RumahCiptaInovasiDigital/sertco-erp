@@ -2,24 +2,39 @@
 
 namespace App\Events\Notification;
 
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationEvent
+class NotificationEvent implements ShouldBroadcastNow
 {
     use Dispatchable;
+    use InteractsWithSockets;
     use SerializesModels;
 
+    public $notification_id;
     public $karyawan_id;
-    public $title;
-    public $message;
+    public $sent_at;
+    public $is_sent;
+    public $read_at;
     public $url;
 
-    public function __construct($karyawan_id, $title, $message, $url)
+    public function __construct($notification_id, $karyawan_id, $url)
     {
-        $this->karyawan_id = $karyawan_id;  // Bisa null untuk semua user
-        $this->title = $title;
-        $this->message = $message;
+        $this->notification_id = $notification_id;
+        $this->karyawan_id = $karyawan_id;
+        $this->sent_at = now();
+        $this->is_sent = true;
+        $this->read_at = null;
         $this->url = $url;
+    }
+
+    public function broadcastOn()
+    {
+        return [
+            new Channel('user-notification-'.$this->karyawan_id),
+        ];
     }
 }

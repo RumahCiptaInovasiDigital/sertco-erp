@@ -17,4 +17,9 @@ class Notification extends Model
     {
         return $this->belongsTo(MasterNotifikasi::class, 'notification_id', 'id');
     }
+
+    public function karyawan()
+    {
+        return $this->hasOne(DataKaryawan::class, 'id', 'karyawan_id');
+    }
 }

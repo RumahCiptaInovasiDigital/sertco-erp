@@ -168,6 +168,8 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <!-- SweetAlert2 -->
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <!-- Pusher -->
+    <script src="{{ asset('dist/js/pusher.min.js') }}"></script>
 
     @include('layouts.alert')
 
@@ -349,6 +351,31 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
+    </script>
+    <script>
+        $(function() {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            @auth    
+            var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+                cluster: '{{ env('PUSHER_APP_CLUSTER') }}',
+            });
+            
+            var user_id = '{{ Auth::id() }}';
+            var channel = pusher.subscribe('user-notification-' + user_id);
+            channel.bind('App\\Events\\Notification\\NotificationEvent', function(data) {
+                $('.notification-area').load(location.href + ' .notification-area');
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'New Notification Received'
+                })
+            });
+            @endauth
+        });
     </script>
     <!--begin::Javascript-->
     @php

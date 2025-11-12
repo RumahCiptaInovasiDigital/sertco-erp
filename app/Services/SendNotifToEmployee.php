@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\Notification\NotificationEvent;
 use App\Models\Notification;
 
 /**
@@ -9,7 +10,7 @@ use App\Models\Notification;
  */
 class SendNotifToEmployee
 {
-    public function handle($Employee, $notification)
+    public function handle($Employee, $notification, $url)
     {
         foreach ($Employee as $item) {
             Notification::create([
@@ -19,8 +20,10 @@ class SendNotifToEmployee
                 'is_sent' => true,
                 'is_read' => false,
                 'read_at' => null,
-                'url' => $url ?? null,
+                'url' => $url,
             ]);
+
+            event(new NotificationEvent($notification->id, $item, $url));
         }
     }
 }

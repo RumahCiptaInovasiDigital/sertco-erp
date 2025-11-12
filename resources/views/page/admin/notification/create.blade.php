@@ -30,11 +30,11 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="name">Title</label>
+                                <label for="title">Title</label>
                                 <input class="form-control" name="title" id="title" placeholder="Input Judul">
                             </div>
                             <div class="form-group">
-                                <label for="name">Message</label>
+                                <label for="pesan">Message</label>
                                 <textarea class="form-control" name="pesan" id="pesan" rows="4" placeholder="Input Message"></textarea>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="departemen">Jenis Notifikasi</label>
+                                        <label for="jenis_notifikasi">Jenis Notifikasi</label>
                                         <select class="form-control select2" name="jenis_notifikasi" id="jenis_notifikasi">
                                             <option value="sekali">Hanya Sekali</option>
                                             <option value="daily">Setiap Hari</option>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="departemen">Pilih Karyawan</label>
+                                <label for="karyawan">Pilih Karyawan</label>
                                 <div class="form-group clearfix">
                                     <div class="icheck-primary d-inline">
                                         <input type="radio" id="allKaryawan" class="jenis_karyawan" name="jenis_karyawan" value="all" checked>
@@ -97,7 +97,7 @@
             minimumInputLength: 2,
             placeholder: 'Cari dan pilih karyawan...',
             ajax: {
-                url: "{{ route('admin.notification.getEmployee') }}", // route baru
+                url: "{{ route('admin.notification.searchEmployee') }}", // route baru
                 dataType: 'json',
                 delay: 200,
                 data: function (params) {

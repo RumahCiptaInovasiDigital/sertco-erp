@@ -84,7 +84,29 @@ class NotificationController extends Controller
             ->make(true);
     }
 
-    public function getEmployee(Request $request)
+    public function getEmployee($id)
+    {
+        $query = Notification::query()->where('notification_id', $id)->latest()->get();
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('penerima', function ($row) {
+                return $row->karyawan->fullName;
+            })
+            ->addColumn('diterima', function ($row) {
+                return $row->sent_at;
+            })
+            ->addColumn('action', function ($row) {
+                return '<a href="'.route('admin.notification.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>';
+            })
+            ->rawColumns([
+                'action',
+            ])
+            ->make(true);
+    }
+
+    public function searchEmployee(Request $request)
     {
         $search = $request->get('search');
 
@@ -151,7 +173,7 @@ class NotificationController extends Controller
             }
 
             if (!empty($karyawanList)) {
-                (new SendNotifToEmployee())->handle($karyawanList, $masterNotif);
+                (new SendNotifToEmployee())->handle($karyawanList, $masterNotif, null);
             }
 
             \DB::commit();
@@ -261,5 +283,9 @@ class NotificationController extends Controller
             'success' => true,
             'message' => 'Notifikasi deleted successfully.',
         ]);
+    }
+
+    public function resend($id)
+    {
     }
 }
