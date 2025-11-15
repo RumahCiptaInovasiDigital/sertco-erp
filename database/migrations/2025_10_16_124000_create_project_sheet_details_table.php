@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->string('payment_term')->nullable();
             $table->dateTime('schedule_start')->nullable();
             $table->dateTime('schedule_end')->nullable();
+            $table->string('pricedoc')->nullable();
+            $table->string('unpricedoc')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

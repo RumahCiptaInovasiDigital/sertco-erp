@@ -132,8 +132,9 @@ class ProjectExecutionSheetController extends Controller
     public function index()
     {
         $data = ProjectSheet::with('project_sheet_detail')->orderBy('created_at', 'desc')->get();
+        $data2 = ProjectSheet::with('project_sheet_detail')->latest()->limit(5)->get();
 
-        return view('page.v1.pes.index', compact('data'));
+        return view('page.v1.pes.index', compact('data', 'data2'));
     }
 
     public function show($id)
@@ -198,8 +199,11 @@ class ProjectExecutionSheetController extends Controller
                 'contract_description' => 'required|string',
                 'contract_period' => 'required|string',
                 'payment_term' => 'required|string',
-                'schedule' => 'required|date',
+                'schedule_start' => 'required|date',
+                'schedule_end' => 'required|date',
                 'project_detail' => 'required|string',
+                'priceDoc' => 'required|file|mimes:pdf',
+                'unpriceDoc' => 'required|file|mimes:pdf',
             ]);
         }
 
@@ -218,6 +222,34 @@ class ProjectExecutionSheetController extends Controller
                 'is_draft' => 1,
             ]);
 
+            // ==== HANDLE FILE UPLOAD ==== //
+            $pricedocPath = null;
+            $unpricedocPath = null;
+
+            // if (!$is_draft) {
+            if ($request->hasFile('priceDoc')) {
+                $pricedoc = $request->file('priceDoc');
+                $pricedocName = time().'_priced_'.$pricedoc->getClientOriginalName();
+
+                $pricedocPath = public_path('assets/project/'.$request->project_no.'/pricedoc');
+                if (!file_exists($pricedocPath)) {
+                    mkdir($pricedocPath, 0755, true);
+                }
+                $pricedoc->move($pricedocPath, $pricedocName);
+            }
+
+            if ($request->hasFile('unpriceDoc')) {
+                $unpricedoc = $request->file('unpriceDoc');
+                $unpricedocName = time().'_priced_'.$unpricedoc->getClientOriginalName();
+
+                $unpricedocPath = public_path('assets/project/'.$request->project_no.'/unpricedoc');
+                if (!file_exists($unpricedocPath)) {
+                    mkdir($unpricedocPath, 0755, true);
+                }
+                $unpricedoc->move($unpricedocPath, $unpricedocName);
+            }
+            // }
+
             ProjectSheetDetail::create([
                 'id_project' => $projectSheet->id_project,
                 'client' => $request->client,
@@ -230,7 +262,10 @@ class ProjectExecutionSheetController extends Controller
                 'contract_description' => $request->contract_description,
                 'contract_period' => $request->contract_period,
                 'payment_term' => $request->payment_term,
-                'schedule' => $request->schedule,
+                'schedule_start' => $request->schedule_start,
+                'schedule_end' => $request->schedule_end,
+                'pricedoc' => $pricedocName,
+                'unpricedoc' => $unpricedocName,
             ]);
 
             \DB::commit();

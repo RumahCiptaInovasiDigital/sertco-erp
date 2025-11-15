@@ -18,11 +18,41 @@
 @endsection
 @section('content')
 <div class="row">
-    <div class="col-12 mb-3">
-        <div class="float-right">
-            <a href="{{ route('v1.pes.create') }}" class="btn btn-primary ">
-                <i class="fas fa-plus-circle"></i> New Project
-            </a>
+    <div class="col-12">
+        {{-- <hr class="mt-3">
+        <h5>Newest Project</h5> --}}
+        <span class="badge badge-success mb-1">Newest Project</span>
+        <div class="row row-cols-2 row-cols-md-5">
+            @foreach ($data2 as $sheet)
+            <div class="col mb-4">
+                <div class="card">
+                    <img src="{{ asset('dist/img/project-img.jpg') }}" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title badge badge-info text-bold mb-2">{{ $sheet->project_no }}</h5>
+                        <div class="float-right">
+                            <i class="fas fa-user"></i> {{ $sheet->karyawan->inisial ?? '-' }}
+                        </div>
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-12">
+                                    Client: {{ $sheet->project_sheet_detail->client ?? '-' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-right">
+                            <a href="#" class="btn btn-sm bg-teal">
+                                <i class="fas fa-comments"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-primary">
+                                <i class="fas fa-user"></i> View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
     <div class="col-12">
@@ -30,13 +60,18 @@
             <div class="card-header">
                 <h3 class="card-title">Project Execution Sheet List</h3>
                 <div class="float-right d-none d-sm-inline">
-                    Filter: 
+                    {{-- Filter: 
                     <div class="d-inline-block mr-4 ml-1">
-                        <select id="pes_filter" class="form-control" onchange="changePesFilter(this.value)">
+                        <select id="pes_filter" class="form-control btn btn-sm" onchange="changePesFilter(this.value)">
                             <option value="all">All</option>
                             <option value="draft">Draft</option>
                             <option value="non-draft">Non-draft</option>
                         </select>
+                    </div> --}}
+                    <div class="float-right">
+                        <a href="{{ route('v1.pes.create') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus-circle"></i> New Project
+                        </a>
                     </div>
                 </div>
             </div>
