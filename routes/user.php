@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('v1', [App\Http\Controllers\System\DashboardController::class, 'index'])->middleware(['auth', 'CheckMaintenance'])->name('v1.dashboard');
 
-Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMaintenance'])->group(function () {
+Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
     Route::prefix('service')->name('service.')->group(function () {
         Route::prefix('kategori')->name('kategori.')->group(function () {
             Route::get('get', [App\Http\Controllers\Page\Marketing\Service\Kategori\ServiceKategoriController::class, 'getData'])->name('getData');
@@ -26,6 +26,36 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
         });
     });
 
+    Route::prefix('barang')->name('barang.')->group(function () {
+        Route::prefix('master')->name('master.')->controller(App\Http\Controllers\Page\MasterData\Barang\BarangMasterController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('kategori')->name('kategori.')->controller(App\Http\Controllers\Page\MasterData\Barang\KategoriBarangController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('satuan')->name('satuan.')->controller(App\Http\Controllers\Page\MasterData\Barang\SatuanBarangController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+    });
+
     Route::prefix('departemen')->name('departemen.')->group(function () {
         Route::get('get', [App\Http\Controllers\Page\HRGA_IT\Departemen\DepartemenController::class, 'getData'])->name('getData');
         Route::get('', [App\Http\Controllers\Page\HRGA_IT\Departemen\DepartemenController::class, 'index'])->name('index');
@@ -36,7 +66,7 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
         Route::post('destroy', [App\Http\Controllers\Page\HRGA_IT\Departemen\DepartemenController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('role')->name('role.')->middleware(['auth'])->group(function () {
+    Route::prefix('role')->name('role.')->group(function () {
         Route::get('get', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'getData'])->name('getData');
         Route::get('', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'index'])->name('index');
         Route::get('create', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'create'])->name('create');

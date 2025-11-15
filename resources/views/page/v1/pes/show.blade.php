@@ -35,13 +35,13 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="nik">NIK</label>
-                                <input type="text" class="form-control" value="{{ $data->user->NIK }}" id="nik" placeholder="Input NIK" readonly>
+                                <input type="text" class="form-control" value="{{ $data->karyawan->nik ?? null }}" id="nik" placeholder="Input NIK" readonly>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="prepared">Prepared By</label>
-                                <input type="text" value="{{ $data->user->fullname }}" class="form-control" id="prepared" placeholder="Input FullName" readonly>
+                                <input type="text" value="{{ $data->karyawan->fullName ?? null }}" class="form-control" id="prepared" placeholder="Input FullName" readonly>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">

@@ -18,22 +18,22 @@ class NotificationController extends Controller
 
         return DataTables::of($query)
             ->addIndexColumn()
-            ->editColumn('jenis_notifikasi', function ($row) {
-                switch ($row->jenis_notifikasi) {
-                    case 'sekali':
-                        return 'Sekali';
-                    case 'daily':
-                        return 'Harian';
-                    case 'weekly':
-                        return 'Mingguan';
-                    case 'monthly':
-                        return 'Bulanan';
-                    case 'yearly':
-                        return 'Tahunan';
-                    default:
-                        return 'Tidak Diketahui';
-                }
-            })
+            // ->editColumn('jenis_notifikasi', function ($row) {
+            //     switch ($row->jenis_notifikasi) {
+            //         case 'sekali':
+            //             return 'Sekali';
+            //         case 'daily':
+            //             return 'Harian';
+            //         case 'weekly':
+            //             return 'Mingguan';
+            //         case 'monthly':
+            //             return 'Bulanan';
+            //         case 'yearly':
+            //             return 'Tahunan';
+            //         default:
+            //             return 'Tidak Diketahui';
+            //     }
+            // })
             ->addColumn('tanggal_notifikasi', function ($row) {
                 $parts = [];
 
@@ -125,6 +125,16 @@ class NotificationController extends Controller
 
     public function index()
     {
+        // $notifikasis = MasterNotifikasi::query()
+        //     ->where('is_active', true)
+        //     ->get();
+
+        // $all = [];
+        // foreach ($notifikasis as $notif) {
+        //     $all = $notif->usersNotifikasi;
+        // }
+        // dd($all);
+
         return view('page.admin.notification.index');
     }
 
@@ -147,6 +157,7 @@ class NotificationController extends Controller
             'is_active' => 'boolean',
             'karyawan' => 'nullable|array',
         ]);
+        $is_sent = false;
 
         \DB::beginTransaction();
 
@@ -164,6 +175,10 @@ class NotificationController extends Controller
                 'is_active' => $validated['is_active'] ?? true,
             ]);
 
+            if ($validated['jenis_notifikasi'] == 'sekali') {
+                $is_sent = true;
+            }
+
             $karyawanList = [];
 
             if ($validated['jenis_karyawan'] === 'all') {
@@ -173,7 +188,7 @@ class NotificationController extends Controller
             }
 
             if (!empty($karyawanList)) {
-                (new SendNotifToEmployee())->handle($karyawanList, $masterNotif, null);
+                (new SendNotifToEmployee())->handle($karyawanList, $masterNotif, $is_sent, null);
             }
 
             \DB::commit();

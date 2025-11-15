@@ -34,9 +34,9 @@ class ProjectSheet extends Model
         return $this->service()->get();
     }
 
-    public function user()
+    public function karyawan()
     {
-        return $this->belongsTo(User::class, 'prepared_by', 'id_user');
+        return $this->belongsTo(DataKaryawan::class, 'prepared_by', 'id');
     }
 
     public function toDepartemen()
@@ -47,5 +47,10 @@ class ProjectSheet extends Model
     public function attnRole()
     {
         return $this->belongsTo(Role::class, 'attn', 'id_role');
+    }
+
+    public function approval()
+    {
+        return $this->belongsTo(ProjectSheetApproval::class, 'id_project', 'id_project');
     }
 }

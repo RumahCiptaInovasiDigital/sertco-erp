@@ -89,8 +89,7 @@
                                             <tr>
                                                 <th width="5%">No</th>
                                                 <th width="20%">Nama Karaywan</th>
-                                                <th width="10%">Terakhir Dikirim</th>
-                                                <th width="10%">Action</th>
+                                                <th width="10%">Waktu Notifikasi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -147,11 +146,6 @@
                 { data: "DT_RowIndex" },
                 { data: "penerima" },
                 { data: "diterima" },
-                {
-                    data: "action",
-                    orderable: false,
-                    searchable: false,
-                },
             ],
             columnDefs: [
                 {

@@ -34,8 +34,8 @@
                             <th width="30%">Pesan</th>
                             <th width="20%">Penerima</th>
                             <th>Tanggal Notifikasi</th>
-                            <th width="10%">Jenis</th>
-                            <th width="10%">Status</th>
+                            {{-- <th width="10%">Jenis</th> --}}
+                            {{-- <th width="10%">Status</th> --}}
                             <th width="10%">Action</th>
                         </tr>
                     </thead>
@@ -80,8 +80,8 @@
                 { data: "pesan" },
                 { data: "penerima" },
                 { data: "tanggal_notifikasi" },
-                { data: "jenis_notifikasi" },
-                { data: "status" },
+                // { data: "jenis_notifikasi" },
+                // { data: "status" },
                 {
                     data: "action",
                     orderable: false,

@@ -5,6 +5,8 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<!-- daterange picker -->
+<link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
@@ -29,7 +31,7 @@
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="nik">NIK</label>
-                                    <input type="text" class="form-control" name="nik" value="{{ auth()->user()->NIK }}" id="nik" placeholder="Input NIK" readonly>
+                                    <input type="text" class="form-control" name="nik" value="{{ auth()->user()->nik }}" id="nik" placeholder="Input NIK" readonly>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
@@ -144,38 +146,55 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="contract_period">Contract Period</label>
-                                    <input type="text" class="form-control" name="contract_period" id="contract_period" placeholder="Input Contract Period">
+                            <div class="col-12 col-md-8">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="contract_period">Contract Period</label>
+                                            <input type="text" class="form-control" name="contract_period" id="contract_period" placeholder="Input Contract Period">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="schedule">Schedule</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control float-right" name="schedule" id="schedule">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="payment_term">Term of Payment</label>
+                                            <textarea class="form-control" name="payment_term" id="payment_term" rows="3" placeholder="Input Term of payment"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="project_detail">Project Detail</label>
+                                            <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="payment_term">Term of Payment</label>
-                                    <input type="text" class="form-control" name="payment_term" id="payment_term" placeholder="Input Term of Payment">
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="schedule">Schedule</label>
-                                    <input type="date" class="form-control" name="schedule" id="schedule" placeholder="Input Schedule">
+                                <div class="row">
+                                    <div class="col-12">
+
+                                    </div>
+                                    <div class="col-12"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="project_detail">Project Detail</label>
-                                    <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-12">
                                 <button type="button" class="btn btn-warning" data-widget="control-sidebar" data-controlsidebar-slide="true">Notes / Comments!!</button>
                             </div>
-                        </div>
+                        </div> --}}
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-12 mb-2">
@@ -196,7 +215,7 @@
 </div>
 
 {{-- Comment Section --}}
-<aside class="control-sidebar control-sidebar-light" style="width: 350px;">
+{{-- <aside class="control-sidebar control-sidebar-light" style="width: 350px;">
     <div class="row m-1">
         <div class="col-12">
             <label><u>Project Notes / Comments</u></label>
@@ -211,41 +230,45 @@
             </button>
         </div>
     </div>
-</aside>
+</aside> --}}
 
 @endsection
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+<!-- date-range-picker -->
+<script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
+<script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 
 <script>
-    $(document).ready(function () {
-        // Tambah note baru
-        $('#add-note').click(function () {
-            $('#notes-wrapper').append(`
-                <div class="note-item">
-                    <span class="badge badge-info">{{ auth()->user()->fullname }} :</span>
-                    <div class="input-group mb-2">
-                        <textarea name="notes[]" class="form-control" placeholder="Input Note"></textarea>
-                        <button type="button" class="btn btn-danger btn-sm btn-remove-note">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `);
-        });
+    // $(document).ready(function () {
+    //     // Tambah note baru
+    //     $('#add-note').click(function () {
+    //         $('#notes-wrapper').append(`
+    //             <div class="note-item">
+    //                 <span class="badge badge-info">{{ auth()->user()->fullname }} :</span>
+    //                 <div class="input-group mb-2">
+    //                     <textarea name="notes[]" class="form-control" placeholder="Input Note"></textarea>
+    //                     <button type="button" class="btn btn-danger btn-sm btn-remove-note">
+    //                         <i class="fas fa-trash"></i>
+    //                     </button>
+    //                 </div>
+    //             </div>
+    //         `);
+    //     });
 
-        // Hapus note tertentu
-        $(document).on('click', '.btn-remove-note', function () {
-            $(this).closest('.note-item').remove();
-        });
-    });
+    //     // Hapus note tertentu
+    //     $(document).on('click', '.btn-remove-note', function () {
+    //         $(this).closest('.note-item').remove();
+    //     });
+    // });
     
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({
             theme: 'bootstrap4'
         })
+        $('input[name="schedule"]').daterangepicker();
     });
 </script>
 @endsection

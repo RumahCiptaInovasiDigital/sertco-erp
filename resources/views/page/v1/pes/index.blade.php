@@ -51,6 +51,7 @@
                             <th>Issued Date</th>
                             <th>To</th>
                             <th>Attention</th>
+                            <th>Created at</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -83,7 +84,7 @@
 
         let DT = $("#dt_pes").DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -101,6 +102,7 @@
                 { data: "issued_date" },
                 { data: "to" },
                 { data: "attn" },
+                { data: "created_at" },
                 { data: "is_draft" },
                 {
                     data: "action",

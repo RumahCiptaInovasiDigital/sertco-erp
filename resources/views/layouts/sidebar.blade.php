@@ -1,5 +1,5 @@
-@php 
-    $relation = optional(optional(auth()->user()->hasRole)->role)->permission;   
+@php
+    $relation = optional(optional(auth()->user()->hasRole)->role)->permission;
 @endphp
 <!-- Brand Logo -->
 <a href="{{ route('v1.dashboard') }}" class="brand-link">
@@ -52,54 +52,13 @@
             </li>
 
             @include('layouts.sidebar.admin')
-
-            <li class="nav-header">Project</li>
-            @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.pes.index', $item->url))
-                    <li class="nav-item">
-                        <a href="{{ route('v1.pes.index') }}" class="nav-link {{ request()->is('v1/registered-pes*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-file-invoice"></i>
-                            <p>
-                                Project Register
-                            </p>
-                        </a>
-                    </li>
-                    @break
-                @endif
-            @endforeach
-            @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.pes.index', $item->url))
-                    <li class="nav-item">
-                        <a href="{{ route('v1.pes.index') }}" class="nav-link {{ request()->is('v1/pes*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-file-contract"></i>
-                            <p>
-                                Project Execution Sheet
-                            </p>
-                        </a>
-                    </li>
-                    @break
-                @endif
-            @endforeach
-
-            <li class="nav-header">Approval</li>
-            @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.pes.index', $item->url))
-                    <li class="nav-item">
-                        <a href="{{ route('v1.pes.index') }}" class="nav-link {{ request()->is('v1/approval-pes*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-check-circle"></i>
-                            <p>
-                                PES Approval (T&O)
-                            </p>
-                        </a>
-                    </li>
-                    @break
-                @endif
-            @endforeach
+            
+            @include('layouts.sidebar.marketing')
 
             @include('layouts.sidebar.hrga')
             @include('layouts.sidebar.hse')
 
-            <li class="nav-header">MASTER</li>
+            <li class="nav-header">MASTER DATA</li>
             {{-- Service --}}
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.service*', $item->url))
@@ -122,6 +81,42 @@
                                 <a href="{{ route('v1.service.type.index') }}" class="nav-link {{ request()->is('v1/service/type*') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Service Type</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @break
+                @endif
+            @endforeach
+
+            {{-- Barang --}}
+            @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.barang*', $item->url))
+                    <li class="nav-item {{ request()->is('v1/barang*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->is('v1/barang*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                Barang
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('v1.barang.master.index') }}" class="nav-link {{ request()->is('v1/barang/master*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Data Barang</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('v1.barang.kategori.index') }}" class="nav-link {{ request()->is('v1/barang/kategori*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Kategori Barang</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('v1.barang.satuan.index') }}" class="nav-link {{ request()->is('v1/barang/satuan*') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Satuan Barang</p>
                                 </a>
                             </li>
                         </ul>

@@ -40,13 +40,13 @@
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label>Prepared by</label>
-                                            <input type="text" class="form-control" value="{{ $projectSheet->user->fullname }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $projectSheet->karyawan->fullname ?? null }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label>Issued Date</label>
-                                            <input type="text" class="form-control" value="{{ $projectSheet->issued_date }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $projectSheet->issued_date ?? null }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                     <div class="col-12 col-md-4">
                                         <div class="form-group">
                                             <label>Project No.</label>
-                                            <input type="text" class="form-control" value="{{ $projectSheet->project_no }}" readonly>
+                                            <input type="text" class="form-control" value="{{ $projectSheet->project_no ?? null }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">

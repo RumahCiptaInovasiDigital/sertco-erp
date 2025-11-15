@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             MaintenanceSeeder::class,
             EmployeeSeeder::class,
+            ServiceSeeder::class,
         ]);
         // User::factory(10)->create();
 

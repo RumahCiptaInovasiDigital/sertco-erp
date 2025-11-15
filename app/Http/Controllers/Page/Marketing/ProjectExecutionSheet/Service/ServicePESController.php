@@ -7,6 +7,7 @@ use App\Models\KategoriService;
 use App\Models\ProjectSheet;
 use App\Models\ServiceFormData;
 use App\Models\ServiceType;
+use App\Services\ProjectExecutionSheet\Approval\SendApproval;
 use Illuminate\Http\Request;
 
 class ServicePESController extends Controller
@@ -25,6 +26,7 @@ class ServicePESController extends Controller
     public function store(Request $request)
     {
         $is_draft = $request->has('is_draft') ? true : false;
+        $id_kategori = [];
 
         // ambil semua input manual
         $project_no = $request->project_no;
@@ -97,37 +99,72 @@ class ServicePESController extends Controller
             // Hapus data lama biar gak dobel kalau update
             ServiceFormData::where('project_no', $project_no)->delete();
 
-            foreach ($id_kategori as $key => $idKategoriService) {
-                $qty = $kategori_qty[$key] ?? 0;
-                $type = $service_type[$key] ?? null;
-                $otherVal = $other_value[$key] ?? null;
+            if (!empty($id_kategori)) {
+                foreach ($id_kategori as $key => $idKategoriService) {
+                    $qty = $kategori_qty[$key] ?? 0;
+                    $type = $service_type[$key] ?? null;
+                    $otherVal = $other_value[$key] ?? null;
 
-                // Cek apakah kategori ini pakai opsi "Other"
-                $isOther = $type == '0' ? true : false;
+                    // Cek apakah kategori ini pakai opsi "Other"
+                    $isOther = $type == '0' ? true : false;
 
-                ServiceFormData::create([
-                    'project_no' => $project_no,
-                    'id_kategori_service' => $idKategoriService,
-                    'id_service_type' => $isOther ? null : $type, // null kalau Other
-                    'other' => $isOther,
-                    'other_value' => $isOther ? $otherVal : null,
-                    'qty' => $qty,
-                ]);
+                    ServiceFormData::create([
+                        'project_no' => $project_no,
+                        'id_kategori_service' => $idKategoriService,
+                        'id_service_type' => $isOther ? null : $type, // null kalau Other
+                        'other' => $isOther,
+                        'other_value' => $isOther ? $otherVal : null,
+                        'qty' => $qty,
+                    ]);
+                }
             }
 
             \DB::commit();
 
+            $project = ProjectSheet::where('project_no', $project_no)->first();
+
             if ($is_draft) {
+                $project->update([
+                    'is_draft' => 1,
+                ]);
+
                 return response()->json([
                     'success' => true,
-                    'message' => $is_draft ? 'Draft saved successfully.' : 'Data saved successfully.',
+                    'message' => 'Draft saved successfully.',
                     'redirect' => route('v1.pes.index'),
                 ]);
             }
 
+            $projectData = $project->toArray();
+
+            unset(
+                $projectData['signature_date'],
+                $projectData['received_by'],
+                $projectData['deleted_at'],
+            );
+
+            $nullFields = [];
+            foreach ($projectData as $field => $value) {
+                if (is_null($value)) {
+                    $nullFields[] = $field;
+                }
+            }
+
+            if (!empty($nullFields)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data Sebelumnya belum lengkap! Silahkan Simpan sebagai draft terlebih dahulu',
+                ]);
+            }
+
+            $project->update([
+                'is_draft' => 0,
+            ]);
+            (new SendApproval())->handle($project->id_project, $project->prepared_by);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Project Service Saved Sucessfully',
+                'message' => 'Project Service Saved Successfully',
                 'redirect' => route('v1.pes.index'),
             ]);
         } catch (\Throwable $th) {
@@ -229,37 +266,72 @@ class ServicePESController extends Controller
             // Hapus data lama biar gak dobel kalau update
             ServiceFormData::where('project_no', $project_no)->delete();
 
-            foreach ($id_kategori as $key => $idKategoriService) {
-                $qty = $kategori_qty[$key] ?? 0;
-                $type = $service_type[$key] ?? null;
-                $otherVal = $other_value[$key] ?? null;
+            if (!empty($id_kategori)) {
+                foreach ($id_kategori as $key => $idKategoriService) {
+                    $qty = $kategori_qty[$key] ?? 0;
+                    $type = $service_type[$key] ?? null;
+                    $otherVal = $other_value[$key] ?? null;
 
-                // Cek apakah kategori ini pakai opsi "Other"
-                $isOther = $type == '0' ? true : false;
+                    // Cek apakah kategori ini pakai opsi "Other"
+                    $isOther = $type == '0' ? true : false;
 
-                ServiceFormData::create([
-                    'project_no' => $project_no,
-                    'id_kategori_service' => $idKategoriService,
-                    'id_service_type' => $isOther ? null : $type, // null kalau Other
-                    'other' => $isOther,
-                    'other_value' => $isOther ? $otherVal : null,
-                    'qty' => $qty,
-                ]);
+                    ServiceFormData::create([
+                        'project_no' => $project_no,
+                        'id_kategori_service' => $idKategoriService,
+                        'id_service_type' => $isOther ? null : $type, // null kalau Other
+                        'other' => $isOther,
+                        'other_value' => $isOther ? $otherVal : null,
+                        'qty' => $qty,
+                    ]);
+                }
             }
 
             \DB::commit();
 
+            $project = ProjectSheet::where('project_no', $project_no)->first();
+
             if ($is_draft) {
+                $project->update([
+                    'is_draft' => 1,
+                ]);
+
                 return response()->json([
                     'success' => true,
-                    'message' => $is_draft ? 'Draft saved successfully.' : 'Data saved successfully.',
+                    'message' => 'Draft saved successfully.',
                     'redirect' => route('v1.pes.index'),
                 ]);
             }
 
+            $projectData = $project->toArray();
+
+            unset(
+                $projectData['signature_date'],
+                $projectData['received_by'],
+                $projectData['deleted_at'],
+            );
+
+            $nullFields = [];
+            foreach ($projectData as $field => $value) {
+                if (is_null($value)) {
+                    $nullFields[] = $field;
+                }
+            }
+
+            if (!empty($nullFields)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data Sebelumnya belum lengkap! Silahkan Simpan sebagai draft terlebih dahulu',
+                ]);
+            }
+
+            $project->update([
+                'is_draft' => 0,
+            ]);
+            (new SendApproval())->handle($project->id_project, $project->prepared_by);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Project Service Saved Sucessfully',
+                'message' => 'Project Service Saved Successfully',
                 'redirect' => route('v1.pes.index'),
             ]);
         } catch (\Throwable $th) {

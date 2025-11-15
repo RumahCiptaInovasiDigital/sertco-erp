@@ -21,4 +21,9 @@ class MasterNotifikasi extends Model
             ->withPivot(['is_sent', 'sent_at', 'is_read', 'read_at'])
             ->withTimestamps();
     }
+
+    public function usersNotifikasi()
+    {
+        return $this->hasMany(Notification::class, 'notification_id', 'id');
+    }
 }

@@ -45,10 +45,10 @@
                                         <label for="jenis_notifikasi">Jenis Notifikasi</label>
                                         <select class="form-control select2" name="jenis_notifikasi" id="jenis_notifikasi">
                                             <option value="sekali">Hanya Sekali</option>
-                                            <option value="daily">Setiap Hari</option>
+                                            {{-- <option value="daily">Setiap Hari</option>
                                             <option value="weekly">Setiap Minggu</option>
                                             <option value="monthly">Setiap Bulan</option>
-                                            <option value="yearly">Setiap Tahun</option>
+                                            <option value="yearly">Setiap Tahun</option> --}}
                                         </select>
                                     </div>
                                 </div>

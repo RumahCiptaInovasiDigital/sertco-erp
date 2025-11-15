@@ -21,12 +21,12 @@ class NotificationEvent implements ShouldBroadcastNow
     public $read_at;
     public $url;
 
-    public function __construct($notification_id, $karyawan_id, $url)
+    public function __construct($notification_id, $karyawan_id, $is_sent, $url)
     {
         $this->notification_id = $notification_id;
         $this->karyawan_id = $karyawan_id;
         $this->sent_at = now();
-        $this->is_sent = true;
+        $this->is_sent = $is_sent;
         $this->read_at = null;
         $this->url = $url;
     }

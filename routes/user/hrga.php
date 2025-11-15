@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMaintenance'])->group(function () {
+Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
     Route::prefix('data-karyawan')->name('data-karyawan.')->group(function () {
         Route::get('get', [App\Http\Controllers\Page\HRGA_IT\DataKaryawan\DataKaryawanController::class, 'getData'])->name('getData');
         Route::get('detail/{id}', [App\Http\Controllers\Page\HRGA_IT\DataKaryawan\DataKaryawanController::class, 'detail'])->name('detail');
