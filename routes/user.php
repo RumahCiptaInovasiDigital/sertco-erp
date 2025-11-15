@@ -29,6 +29,7 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
     Route::prefix('barang')->name('barang.')->group(function () {
         Route::prefix('master')->name('master.')->controller(App\Http\Controllers\Page\MasterData\Barang\BarangMasterController::class)->group(function () {
             Route::get('get', 'getData')->name('getData');
+            Route::get('generate-qr', 'generateQrCode')->name('createQrCode');
             Route::get('', 'index')->name('index');
             Route::get('create', 'create')->name('create');
             Route::post('store', 'store')->name('store');
