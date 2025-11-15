@@ -57,3 +57,4 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
 
 require __DIR__.'/user/hrga.php';
 require __DIR__.'/user/marketing.php';
+require __DIR__.'/user/hse.php';

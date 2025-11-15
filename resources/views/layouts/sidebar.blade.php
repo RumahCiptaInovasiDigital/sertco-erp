@@ -97,6 +97,7 @@
             @endforeach
 
             @include('layouts.sidebar.hrga')
+            @include('layouts.sidebar.hse')
 
             <li class="nav-header">MASTER</li>
             {{-- Service --}}

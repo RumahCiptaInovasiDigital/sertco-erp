@@ -26,4 +26,9 @@ class DataKaryawan extends Model
     {
         return $this->belongsTo(Role::class, 'idJabatan', 'id_role');
     }
+
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class, 'idDepartemen', 'id_departemen');
+    }
 }
