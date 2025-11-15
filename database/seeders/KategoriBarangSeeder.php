@@ -16,14 +16,16 @@ class KategoriBarangSeeder extends Seeder
             'id_kategori_barang' => \Str::uuid(),
             'nama_kategori' => 'Air Conditioner',
             'maintenance' => 'Y',
+            'kode_kategori' => 'AC',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
         \DB::table('kategori_barangs')->insert([
             'id_kategori_barang' => \Str::uuid(),
-            'nama_kategori' => 'ATK',
+            'nama_kategori' => 'Alat Tulis Kantor',
             'maintenance' => 'T',
+            'kode_kategori' => 'ATK',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

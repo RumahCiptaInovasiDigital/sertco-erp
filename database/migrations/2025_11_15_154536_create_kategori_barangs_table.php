@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id_kategori_barang')->primary();
             $table->string('nama_kategori');
             $table->enum('maintenance', ['Y','T'])->default('T');
+            $table->string('kode_kategori',10);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Tambah Kategori Barang')
-@section('PageTitle', 'Tambah Kategori Barang')
+@section('title', 'Edit Kategori Barang')
+@section('PageTitle', 'Edit Kategori Barang')
 @section('head')
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
@@ -10,7 +10,7 @@
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{{ route('v1.barang.kategori.index') }}">Kategori Barang</a></li>
-    <li class="breadcrumb-item active">Tambah Kategori Barang</li>
+    <li class="breadcrumb-item active">Edit Kategori Barang</li>
 </ol>
 @endsection
 @section('content')
@@ -18,24 +18,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Tambah Kategori Barang</h3>
+                <h3 class="card-title">Edit Kategori Barang</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('v1.barang.kategori.store') }}" method="post">
+                <form action="{{ route('v1.barang.kategori.update', $data->id_kategori_barang) }}" method="post">
                     @csrf
                     <div class="col-12">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Kategori Barang</label>
-                                    <input type="text" class="form-control" name="nama" value="{{ old('nama') }}" id="nama" placeholder="Masukkan Nama Kategori">
+                                    <input type="text" class="form-control" name="nama" value="{{ old('nama', $data->nama_kategori) }}" id="nama" placeholder="Masukkan Nama Kategori">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="kode">Kode Kategori</label>
-                                    <input type="text" class="form-control" name="kode" value="{{ old('kode') }}" id="kode" placeholder="Masukkan Kode Kategori">
+                                    <input type="text" class="form-control" name="kode" value="{{ old('kode', $data->kode_kategori) }}" id="kode" placeholder="Masukkan Kode Kategori">
                                 </div>
                             </div>
                         </div>
@@ -44,9 +44,9 @@
                                 <div class="form-group">
                                     <label for="maintenance">Maintenance</label>
                                     <Select class="form-control select2" name="maintenance" id="maintenance">
-                                        <option value="" disabled selected>-- pilih salah satu --</option>
-                                        <option value="Y">Ya</option>
-                                        <option value="T">Tidak</option>
+                                        <option value="" disabled>-- pilih salah satu --</option>
+                                        <option value="Y" {{ $data->maintenance=="Y" ? 'selected' : '' }}>Ya</option>
+                                        <option value="T" {{ $data->maintenance=="T" ? 'selected' : '' }}>Tidak</option>
                                     </Select>
                                 </div>
                             </div>
@@ -54,8 +54,8 @@
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                                <button type="reset" class="btn btn-warning btn-sm">Batal</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                <a href="{{ route('v1.barang.kategori.index') }}"><button type="button" class="btn btn-warning btn-sm">Batal</button></a>
                             </div>
                         </div>
                     </div>
