@@ -26,6 +26,36 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         });
     });
 
+    Route::prefix('barang')->name('barang.')->group(function () {
+        Route::prefix('master')->name('master.')->controller(App\Http\Controllers\Page\MasterData\Barang\BarangMasterController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('kategori')->name('kategori.')->controller(App\Http\Controllers\Page\MasterData\Barang\KategoriBarangController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('satuan')->name('satuan.')->controller(App\Http\Controllers\Page\MasterData\Barang\SatuanBarangController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+    });
+
     Route::prefix('departemen')->name('departemen.')->group(function () {
         Route::get('get', [App\Http\Controllers\Page\HRGA_IT\Departemen\DepartemenController::class, 'getData'])->name('getData');
         Route::get('', [App\Http\Controllers\Page\HRGA_IT\Departemen\DepartemenController::class, 'index'])->name('index');
