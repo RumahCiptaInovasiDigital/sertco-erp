@@ -1,28 +1,25 @@
 @extends('layouts.master')
-@section('title', 'Show PES')
-@section('PageTitle', 'Project Execution Sheet')
+@section('title', 'Review')
+@section('PageTitle', 'Review Project')
 @section('head')
-<!-- Select2 -->
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Project Execution Sheet</a></li>
-    <li class="breadcrumb-item active">Show</li>
+    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Approval PES</a></li>
+    <li class="breadcrumb-item active">View</li>
 </ol>
 @endsection
 @section('content')
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-md-9">
         {{-- Project Information --}}
         <div class="card collapsing-card">
             <div class="card-header">
                 <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
-                    <h3 class="card-title" style="color: black;">Detail</h3>
+                    <h3 class="card-title" style="color: black;">Detail Project</h3>
                     <div class="float-right d-none d-sm-inline">
                         <i class="fas fa-minus"></i>
                     </div>
@@ -166,15 +163,47 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="{{ route('v1.pes.edit', $data) }}" class="btn btn-xs btn-outline-warning" style="border-radius: 10px; color: black;"> <i class="fas fa-edit"></i> edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        {{-- Approval Section --}}
+        <div class="card collapsing-card card-success card-outline">
+            <div class="card-header">
+                <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
+                    <h3 class="card-title" style="color: black;">Komentar</h3>
+                    <div class="float-right d-none d-sm-inline">
+                        <i class="fas fa-minus"></i>
+                    </div>
+                </button>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row m-1">
+                    <div class="col-12">
+                        @foreach($notes as $note)
+                        <div class="note-item">
+                            <span class="badge badge-info">{{ $note->user->fullname }} :</span>
+                            <div class="input-group mb-2">
+                                <textarea class="form-control" readonly>{{ $note->note }}</textarea>
+                            </div>
                         </div>
+                        @endforeach
+                        <div id="notes-wrapper">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="saveNotes('{{ $data->project_no }}')">
+                            Simpan Catatan
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" id="add-note">
+                            <i class="fas fa-plus"></i> Tambah Note
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="col-12">
         {{-- Service Type --}}
         <div class="card collapsed-card">
             <div class="card-header">
@@ -313,15 +342,83 @@
 </div>
 @endsection
 @section('scripts')
-<!-- Select2 -->
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        })
+    $(document).ready(function() {
+        $('#add-note').click(function () {
+            $('#notes-wrapper').append(`
+                <div class="note-item">
+                    <span class="badge badge-info">{{ auth()->user()->fullname }} :</span>
+                    <div class="input-group mb-2">
+                        <textarea name="notes[]" class="form-control" placeholder="Input Note"></textarea>
+                        <button type="button" class="btn btn-danger btn-sm btn-remove-note">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+        });
+
+        // Hapus note tertentu
+        $(document).on('click', '.btn-remove-note', function () {
+            $(this).closest('.note-item').remove();
+        });
+
+        $('.kategori-radio').each(function() {
+            $(this).on('change', function() {
+                var nameParts = this.name.match(/service_type\[(\d+)\]/);
+                if (nameParts && nameParts.length > 1) {
+                    var sortNum = nameParts[1];
+                    var otherInput = $('#other_value_' + sortNum);
+                    
+                    if (otherInput.length) {
+                        if ($(this).val() === '0') {
+                            otherInput.prop('readonly', false);
+                            otherInput.focus();
+                        } else {
+                            otherInput.prop('readonly', true);
+                            otherInput.val('');
+                        }
+                    }
+                }
+            });
+        });
     });
 </script>
+<script>
+    function saveNotes(projectId) {
+        const notes = [];
+        $('textarea[name="notes[]"]').each(function () {
+            const val = $(this).val().trim();
+            if (val) notes.push(val);
+        });
+
+        if (notes.length === 0) {
+            Swal.fire('Oops', 'Catatan tidak boleh kosong.', 'warning');
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('v1.review.pes.store') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                project_no: projectId,
+                notes: notes
+            },
+            success: function (res) {
+                if (res.success) {
+                    Swal.fire('Berhasil', res.message, 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Gagal', res.message, 'error');
+                }
+            },
+            error: function (xhr) {
+                Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan', 'error');
+            }
+        });
+    }
+
+</script>
+    
 @endsection

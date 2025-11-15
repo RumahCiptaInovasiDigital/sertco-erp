@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Notification Manage')
-@section('PageTitle', 'Notification Manage')
+@section('title', 'Approval Project Execution Sheet')
+@section('PageTitle', 'Approval Project Execution Sheet')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Notification</li>
+    <li class="breadcrumb-item active">Approval PES</li>
 </ol>
 @endsection
 @section('content')
@@ -31,12 +31,11 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="30%">Pesan</th>
-                            <th width="20%">Penerima</th>
-                            <th>Tanggal Notifikasi</th>
-                            {{-- <th width="10%">Jenis</th> --}}
-                            {{-- <th width="10%">Status</th> --}}
-                            <th width="10%">Action</th>
+                            <th>Project No.</th>
+                            <th>Submitted by</th> 
+                            <th>Submitted at</th> 
+                            <th width="15%">Status</th> 
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,7 +53,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('admin.notification.getData') }}";
+    const _URL = "{{ route('v1.approval.pes.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -77,11 +76,10 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "pesan" },
-                { data: "penerima" },
-                { data: "tanggal_notifikasi" },
-                // { data: "jenis_notifikasi" },
-                // { data: "status" },
+                { data: "project_no" },
+                { data: "request_by" },
+                { data: "request_at" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,

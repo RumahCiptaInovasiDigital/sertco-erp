@@ -9,6 +9,7 @@ use App\Models\ProjectSheet;
 use App\Models\ProjectSheetDetail;
 use App\Models\Role;
 use App\Models\ServiceType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -16,7 +17,7 @@ class ProjectExecutionSheetController extends Controller
 {
     public function getData(Request $request, $action)
     {
-        if (auth()->user()->jobLvl == 'Administrator') {
+        if (auth()->user()->jabatan == 'Administrator') {
             if ($action == 'all') {
                 $query = ProjectSheet::query()->latest()->get();
             } elseif ($action == 'draft') {
@@ -34,15 +35,19 @@ class ProjectExecutionSheetController extends Controller
             }
         }
 
+        // $query = ProjectSheet::query()->where('is_draft', 0)->latest()->get();
+
         return DataTables::of($query)
             ->addIndexColumn()
             ->editColumn('project_no', function ($row) {
                 return '<div class="text-center">
-                            <h4><span class="badge badge-pill badge-info">'.$row->project_no.'</span></h4>
+                            <a href="'.route('v1.pes.show', $row->id_project).'">
+                                <h5><span class="badge badge-pill badge-info">'.$row->project_no.'</span></h5>
+                            </a>
                         </div>';
             })
             ->editColumn('prepared_by', function ($row) {
-                return $row->user->fullname ?? '-';
+                return $row->karyawan->fullName ?? '-';
             })
             ->editColumn('issued_date', function ($row) {
                 return $row->issued_date ?? '-';
@@ -53,23 +58,68 @@ class ProjectExecutionSheetController extends Controller
             ->editColumn('attn', function ($row) {
                 return $row->attnRole->name ?? '-';
             })
+            ->editColumn('created_at', function ($row) {
+                $parse = Carbon::parse($row->created_at);
+
+                return $parse->translatedFormat('l, ').
+                    $parse->locale('en-ID')->translatedFormat('d M Y H:i');
+            })
             ->editColumn('is_draft', function ($row) {
                 if ($row->is_draft === 1) {
                     return '<div class="text-center">
                                 <button type="button" class="btn btn-block bg-gradient-warning">Draft</button>
                             </div>';
+                } elseif ($row->is_draft === 0) {
+                    if ($row->approval) {
+                        if ($row->approval->is_approved === 1) {
+                            return '<div class="text-center">
+                                        <button type="button" class="btn btn-block bg-gradient-success">Approved</button>
+                                    </div>';
+                        } elseif ($row->approval->is_rejected === 1) {
+                            return '<div class="text-center">
+                                        <button type="button" class="btn btn-block bg-gradient-danger">Rejected</button>
+                                    </div>';
+                        } else {
+                            return '<div class="text-center">
+                                <button type="button" class="btn btn-block bg-gradient-info">Waiting Approval</button>
+                                </div>';
+                        }
+                    } else {
+                        return '<div class="text-center">
+                                <i>data tidak valid</i>
+                            </div>';
+                    }
                 }
-
-                return '<div class="text-center">
-                            -
-                        </div>';
             })
             ->addColumn('action', function ($row) {
-                return '<div class="text-center">
-                            <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
-                            <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                            <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
+                if ($row->is_draft == 0) {
+                    if (!$row->approval) {
+                        return '<div class="text-center">
+                                <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
+                            </div>';
+                    }
+
+                    if ($row->approval->is_approved === 1) {
+                        return '<div class="text-center">
+                            <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
                         </div>';
+                    }
+                    if ($row->approval->is_rejected === 1) {
+                        return '<div class="text-center">
+                            <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
+                        </div>';
+                    }
+
+                    return '<div class="text-center">
+                            <button class="btn btn-sm btn-success me-2" disabled><i>Review Project</i></button>
+                        </div>';
+                } else {
+                    return '<div class="text-center">
+                                <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
+                                <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                                <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
+                            </div>';
+                }
             })
             ->rawColumns([
                 'project_no',
@@ -94,8 +144,8 @@ class ProjectExecutionSheetController extends Controller
         $projectSheet = ProjectSheet::query()
         ->where('id_project', $id)
         ->first();
-        $serviceKategori = KategoriService::all();
-        $serviceType = ServiceType::all();
+        $serviceKategori = KategoriService::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
+        $serviceType = ServiceType::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
 
         return view('page.v1.pes.show', compact('data', 'projectSheet', 'serviceKategori', 'serviceType'));
     }
@@ -165,7 +215,7 @@ class ProjectExecutionSheetController extends Controller
                 'to' => $request->to,
                 'attn' => $request->attn,
                 'received_by' => null,
-                'is_draft' => $is_draft,
+                'is_draft' => 1,
             ]);
 
             ProjectSheetDetail::create([
@@ -189,7 +239,7 @@ class ProjectExecutionSheetController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Draft saved successfully.',
-                    'redirect' => route('v1.pes.edit', strtolower($projectSheet->id_project)),
+                    'redirect' => route('v1.pes.service.index', strtolower($projectSheet->project_no)),
                 ]);
             }
 
@@ -273,6 +323,14 @@ class ProjectExecutionSheetController extends Controller
                 'schedule' => $request->schedule,
             ]);
             \DB::commit();
+
+            if ($is_draft) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Draft saved successfully.',
+                    'redirect' => route('v1.pes.service.edit', strtolower($projectSheet->project_no)),
+                ]);
+            }
 
             return response()->json([
                 'success' => true,

@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Notification Manage')
-@section('PageTitle', 'Notification Manage')
+@section('title', 'Project Register')
+@section('PageTitle', 'Project Register')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Notification</li>
+    <li class="breadcrumb-item active">Project Register</li>
 </ol>
 @endsection
 @section('content')
@@ -18,10 +18,10 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List of Notifications</h3>
+                <h3 class="card-title">Daftar Project Dibuat</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('admin.notification.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> Buat Notifikasi Baru
+                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Buat Project Baru
                     </a>
                 </div>
             </div>
@@ -30,13 +30,14 @@
                 <table id="dt_data" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="5%">No</th>
-                            <th width="30%">Pesan</th>
-                            <th width="20%">Penerima</th>
-                            <th>Tanggal Notifikasi</th>
-                            {{-- <th width="10%">Jenis</th> --}}
-                            {{-- <th width="10%">Status</th> --}}
-                            <th width="10%">Action</th>
+                            <th width="5%">#</th>
+                            <th style="width: 10%;">Project No.</th>
+                            <th>Prepared By</th>
+                            <th>Issued Date</th>
+                            <th>To</th>
+                            <th>Attention</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,8 +81,8 @@
                 { data: "pesan" },
                 { data: "penerima" },
                 { data: "tanggal_notifikasi" },
-                // { data: "jenis_notifikasi" },
-                // { data: "status" },
+                { data: "jenis_notifikasi" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,

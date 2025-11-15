@@ -117,7 +117,7 @@ class AuthController extends Controller
         return redirect(route('login'))->with('success', 'Logout Berhasil');
     }
 
-    public function getAccount($request)
+    private function getAccount($request)
     {
         try {
             \DB::beginTransaction();

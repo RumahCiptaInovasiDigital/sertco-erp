@@ -1,28 +1,25 @@
 @extends('layouts.master')
-@section('title', 'Show PES')
-@section('PageTitle', 'Project Execution Sheet')
+@section('title', 'View Project Execution Sheet')
+@section('PageTitle', 'Request Approval PES')
 @section('head')
-<!-- Select2 -->
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Project Execution Sheet</a></li>
-    <li class="breadcrumb-item active">Show</li>
+    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Approval PES</a></li>
+    <li class="breadcrumb-item active">View</li>
 </ol>
 @endsection
 @section('content')
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-md-9">
         {{-- Project Information --}}
         <div class="card collapsing-card">
             <div class="card-header">
                 <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
-                    <h3 class="card-title" style="color: black;">Detail</h3>
+                    <h3 class="card-title" style="color: black;">Detail Project</h3>
                     <div class="float-right d-none d-sm-inline">
                         <i class="fas fa-minus"></i>
                     </div>
@@ -166,15 +163,66 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href="{{ route('v1.pes.edit', $data) }}" class="btn btn-xs btn-outline-warning" style="border-radius: 10px; color: black;"> <i class="fas fa-edit"></i> edit</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="col-12 col-md-3">
+        {{-- Approval Section --}}
+        <div class="card collapsing-card card-success card-outline">
+            <div class="card-header">
+                <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
+                    <h3 class="card-title" style="color: black;">Approval Section</h3>
+                    <div class="float-right d-none d-sm-inline">
+                        <i class="fas fa-minus"></i>
+                    </div>
+                </button>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    @if ($approvalData->is_approved === 0 && $approvalData->is_rejected === 0)
+                    <div class="col-12 mb-2">
+                        <button class="btn btn-lg bg-gradient-success w-100" onclick="handleApproval('approve')">Approve</button>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <button class="btn bg-gradient-danger w-100" onclick="handleApproval('reject')">Reject</button>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="contract_description">Note/Catatan</label>
+                            <textarea class="form-control" name="approval_note" id="aprroval_note" rows="3" placeholder="Masukkan Catatan"></textarea>
+                        </div>
+                    </div>
+                    @else
+                    <div class="col-12 mb-2">
+                        <button 
+                            class="btn bg-gradient-{{ 
+                                $approvalData->is_approved === 1 
+                                    ? 'success' 
+                                    : ($approvalData->is_rejected === 1 
+                                        ? 'danger' 
+                                        : 'secondary') 
+                            }} w-100">
+                            {{ 
+                                $approvalData->is_approved === 1 
+                                    ? 'Approved' 
+                                    : ($approvalData->is_rejected === 1 
+                                        ? 'Rejected' 
+                                        : 'Reject') 
+                            }}
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        Response by: {{ $approvalData->responseKaryawan->fullName ?? $approvalData->responseUserSession->fullname }} <br>
+                        Response at: {{ $approvalData->response_at }}
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
         {{-- Service Type --}}
         <div class="card collapsed-card">
             <div class="card-header">
@@ -313,15 +361,63 @@
 </div>
 @endsection
 @section('scripts')
-<!-- Select2 -->
-<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2({
-            theme: 'bootstrap4'
-        })
+    $(document).ready(function() {
+        $('.kategori-radio').each(function() {
+            $(this).on('change', function() {
+                var nameParts = this.name.match(/service_type\[(\d+)\]/);
+                if (nameParts && nameParts.length > 1) {
+                    var sortNum = nameParts[1];
+                    var otherInput = $('#other_value_' + sortNum);
+                    
+                    if (otherInput.length) {
+                        if ($(this).val() === '0') {
+                            otherInput.prop('readonly', false);
+                            otherInput.focus();
+                        } else {
+                            otherInput.prop('readonly', true);
+                            otherInput.val('');
+                        }
+                    }
+                }
+            });
+        });
     });
 </script>
+<script>
+    function handleApproval(action) {
+        const note = document.getElementById('aprroval_note').value;
+        const projectId = '{{ $data->id_project ?? '' }}';
+    
+        fetch('{{ route('v1.approval.pes.ApproveOrReject') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                project_id: projectId,
+                action: action,
+                approval_note: note
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = data.redirect;
+                });
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(err => Swal.fire('Error', err.message, 'error'));
+    }
+</script>
+    
 @endsection
