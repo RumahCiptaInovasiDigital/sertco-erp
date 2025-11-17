@@ -18,7 +18,7 @@ class BarangMasterController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = Barang::query()->latest()->get();
+        $query = Barang::query()->latest()->orderBy('nama_barang', 'asc')->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -57,7 +57,7 @@ class BarangMasterController extends Controller
             })
             ->addColumn('action', function ($row) {
                 return '
-                <a href="'.route('v1.barang.master.show', $row->id_barang).'" class="btn btn-sm btn-primary me-2"><i class="fas fa-eye"></i></a>    
+                <a href="'.route('v1.barang.master.show', $row->id_barang).'" class="btn btn-sm btn-primary me-2"><i class="fas fa-eye"></i></a>
                 <a href="'.route('v1.barang.master.edit', $row->id_barang).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_barang.'\')"><i class="fas fa-trash"></i></button>
                 ';
@@ -202,7 +202,7 @@ class BarangMasterController extends Controller
             'status_barang' => 'required|in:1,2,3,4,5,6,7',
             'status_kepemilikan' => 'required|in:1,2',
         ]);
-        
+
         $data = [
             'nama_barang' => $request->nama,
             'deskripsi_barang' => $request->deskripsi_barang,

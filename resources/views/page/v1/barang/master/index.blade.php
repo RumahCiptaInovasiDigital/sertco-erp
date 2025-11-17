@@ -30,7 +30,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover">
+                <table id="dt_data" class="table table-bordered table-hover" style="white-space: nowrap;">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -72,12 +72,18 @@
             "paging": true,
             "lengthChange": true,
             "searching": true,
-            "ordering": true,
+            "ordering": false,
             "info": true,
             "autoWidth": true,
-            "responsive": true,
+            "responsive": false,
             processing: true,
             serverSide: true,
+            fixedColumns:   {
+                start: 1,
+                end: 1
+            },
+            scrollCollapse: true,
+            scrollX: true,
             ajax: {
                 url: _URL,
             },
