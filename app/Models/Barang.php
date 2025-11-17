@@ -16,4 +16,14 @@ class Barang extends Model
     protected $guarded;
 
     protected $primaryKey = 'id_barang';
+
+    public function hasKategori()
+    {
+        return $this->hasOne(KategoriBarang::class, 'id_kategori_barang', 'id_kategori_barang');
+    }
+
+    public function hasSatuan()
+    {
+        return $this->hasOne(SatuanBarang::class, 'id_satuan_barang', 'id_satuan_barang');
+    }
 }

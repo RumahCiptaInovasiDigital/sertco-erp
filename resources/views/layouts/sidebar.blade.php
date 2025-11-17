@@ -56,6 +56,7 @@
             @include('layouts.sidebar.marketing')
 
             @include('layouts.sidebar.hrga')
+            @include('layouts.sidebar.logistik')
             @include('layouts.sidebar.hse')
 
             <li class="nav-header">MASTER DATA</li>

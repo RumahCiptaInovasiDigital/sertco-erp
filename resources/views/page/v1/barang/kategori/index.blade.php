@@ -125,7 +125,7 @@
                     },
                 });
             } else if (result.dismiss === "cancel") {
-                Swal.fire("Cancelled", "Data Anda Aman :)", "error");
+                Swal.fire("Cancelled", "Data Anda Aman :)", "info");
             }
         });
     }

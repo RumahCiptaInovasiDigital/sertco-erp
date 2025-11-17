@@ -19,8 +19,11 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">List Data Barang</h3>
-                <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.barang.master.create') }}" class="btn btn-primary btn-block btn-sm">
+                <div class="float-sm-right d-none d-sm-inline">
+                    <a href="{{ route('v1.barang.master.export') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-download"></i> Rekap (.xlsx)
+                    </a>
+                    <a href="{{ route('v1.barang.master.create') }}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus-circle"></i> Tambah Data
                     </a>
                 </div>
@@ -36,8 +39,9 @@
                             <th>Nama Kategori Barang</th>
                             <th>Jumlah Barang</th>
                             <th>Status Barang</th>
+                            <th>Deskripsi Barang</th>
                             <th>Kepemilikan</th>
-                            <th>Maintenance</th>
+                            <th>Last Maintenance</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -56,7 +60,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.barang.kategori.getData') }}";
+    const _URL = "{{ route('v1.barang.master.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -70,7 +74,7 @@
             "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
             processing: true,
             serverSide: true,
@@ -79,9 +83,14 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
+                { data: "nama_barang" },
+                { data: "kode_barang" },
                 { data: "nama_kategori" },
-                { data: "kode_kategori" },
-                { data: "maintenance" },
+                { data: "qty" },
+                { data: "status_barang" },
+                { data: "deskripsi_barang" },
+                { data: "status_kepemilikan" },
+                { data: "last_maintenance" },
                 {
                     data: "action",
                     orderable: false,
@@ -114,7 +123,7 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.barang.kategori.destroy') }}",
+                    url: "{{ route('v1.barang.master.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
@@ -129,7 +138,7 @@
                     },
                 });
             } else if (result.dismiss === "cancel") {
-                Swal.fire("Cancelled", "Data Anda Aman :)", "error");
+                Swal.fire("Cancelled", "Data Anda Aman :)", "info");
             }
         });
     }

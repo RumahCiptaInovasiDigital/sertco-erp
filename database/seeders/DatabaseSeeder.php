@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             KategoriBarangSeeder::class,
             SatuanBarangSeeder::class,
+            SuplierSeeder::class,
         ]);
         // User::factory(10)->create();
 
