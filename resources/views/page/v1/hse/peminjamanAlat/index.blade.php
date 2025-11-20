@@ -31,14 +31,12 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Peralatan</th>
-                            {{-- <th>Merk</th> --}}
-                            {{-- <th>Tipe</th> --}}
-                            {{-- <th>SN</th> --}}
-                            <th>Tanggal Kalibrasi</th>
-                            <th>Kalibrasi Selanjutnya</th>
-                            {{-- <th>Status Alat</th> --}}
-                            <th>Kondisi Alat</th>
+                            <th>Nama Peminjam</th>
+                            <th>Nama Klien</th>
+                            <th>Tgl Pinjam</th>
+                            {{-- <th>Tgl Pengembalian</th> --}}
+                            <th>Total Alat Dipinjam</th>
+                            <th>Status Persetujuan</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -56,8 +54,8 @@
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
-{{-- <script>
-    const _URL = "{{ route('v1.data-peralatan.getData') }}";
+<script>
+    const _URL = "{{ route('v1.data-peminjaman.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -80,10 +78,12 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "name" },
-                { data: "last_calibration" },
-                { data: "due_calibration" },
-                { data: "kondisi_alat" },
+                { data: "nikUser" },
+                { data: "namaClient" },
+                { data: "tanggal_pinjam" },
+                // { data: "tanggal_kembali" },
+                { data: "total_alat" },
+                { data: "approved" },
                 {
                     data: "action",
                     orderable: false,
@@ -100,8 +100,8 @@
             ],
         });
     });
-</script> --}}
-{{-- <script>
+</script>
+<script>
     function deleteData(id) {
         Swal.fire({
             text: "Are you sure you want to delete this Role?",
@@ -130,7 +130,6 @@
                 Swal.fire("Cancelled", "Your data is safe :)", "error");
             }
         });
-    }
-
-</script> --}}
+    }   
+</script>
 @endsection

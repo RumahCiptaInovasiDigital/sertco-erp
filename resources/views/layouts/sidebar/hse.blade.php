@@ -15,7 +15,7 @@
 @endforeach
 
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.data-peralatan.index', $item->url))
+    @if (Str::is('v1.data-peminjaman.index', $item->url))
         <li class="nav-item">
             <a href="{{ route('v1.data-peminjaman.index') }}" class="nav-link {{ request()->is('v1/data-peminjaman*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-clone"></i>

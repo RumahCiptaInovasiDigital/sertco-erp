@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PeminjamanAlat extends Model
+class PeminjamanAlatDetail extends Model
 {
     use HasFactory;
     use HasUuids;
@@ -15,8 +15,8 @@ class PeminjamanAlat extends Model
 
     protected $guarded = [];
 
-    public function karyawan()
+    public function dataAlat()
     {
-        return $this->belongsTo(DataKaryawan::class, 'nikUser', 'nik');
+        return $this->BelongsTo(DataPeralatan::class, 'idAlat', 'id');
     }
 }

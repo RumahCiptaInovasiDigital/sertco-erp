@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('peminjaman_alats', function (Blueprint $table) {
+        Schema::create('peminjaman_alat_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nikUser');
-            $table->string('namaClient')->nullable();
-            $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali')->nullable();
-            $table->enum('approved', ['0', '1', '2'])->default('0');
-            $table->integer('total_alat')->default(0); 
+            $table->uuid('idPeminjaman');
+            $table->uuid('idAlat');
+            $table->string('merkAlat');
+            $table->string('tipeAlat');
+            $table->string('snAlat');
+            $table->string('kondisiSebelum');
+            $table->string('kondisiSesudah')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman_alats');
+        Schema::dropIfExists('peminjaman_alat_details');
     }
 };
