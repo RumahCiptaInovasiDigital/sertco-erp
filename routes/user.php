@@ -29,9 +29,12 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
     Route::prefix('barang')->name('barang.')->group(function () {
         Route::prefix('master')->name('master.')->controller(App\Http\Controllers\Page\MasterData\Barang\BarangMasterController::class)->group(function () {
             Route::get('get', 'getData')->name('getData');
+            Route::get('export', 'export')->name('export');
+            Route::get('generate-qr', 'generateQrCode')->name('createQrCode');
             Route::get('', 'index')->name('index');
             Route::get('create', 'create')->name('create');
             Route::post('store', 'store')->name('store');
+            Route::get('show/{id}', 'show')->name('show');
             Route::get('edit/{id}', 'edit')->name('edit');
             Route::post('update/{id}', 'update')->name('update');
             Route::post('destroy', 'destroy')->name('destroy');
@@ -54,6 +57,43 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
             Route::post('update/{id}', 'update')->name('update');
             Route::post('destroy', 'destroy')->name('destroy');
         });
+    });
+
+    Route::prefix('logistik')->name('logistik.')->group(function () {
+        Route::prefix('masuk')->name('masuk.')->controller(App\Http\Controllers\Page\Logistik\LogistikMasukController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('export', 'export')->name('export');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('show/{id}', 'show')->name('show');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('keluar')->name('keluar.')->controller(App\Http\Controllers\Page\Logistik\LogistikKeluarController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('export', 'export')->name('export');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+    });
+
+    Route::prefix('suplier')->name('suplier.')->controller(App\Http\Controllers\Page\Logistik\SuplierController::class)->group(function () {
+        Route::get('get', 'getData')->name('getData');
+        Route::get('export', 'export')->name('export');
+        Route::get('import', 'importView')->name('import');
+        Route::post('import', 'import')->name('import');
+        Route::get('', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('destroy', 'destroy')->name('destroy');
     });
 
     Route::prefix('departemen')->name('departemen.')->group(function () {

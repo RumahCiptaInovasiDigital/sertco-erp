@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kategori_barangs', function (Blueprint $table) {
-            $table->uuid('id_kategori_barang')->primary();
-            $table->string('nama_kategori');
-            $table->enum('maintenance', ['Y','T'])->default('T');
-            $table->string('kode_kategori',10);
+        Schema::create('logistik_keluars', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kategori_barangs');
+        Schema::dropIfExists('logistik_keluars');
     }
 };

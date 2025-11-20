@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SatuanBarang extends Model
+class Suplier extends Model
 {
     use HasFactory;
     use HasUuids;
@@ -15,5 +15,5 @@ class SatuanBarang extends Model
 
     protected $guarded;
 
-    protected $primaryKey = 'id_satuan_barang';
+    protected $primaryKey = 'id_suplier';
 }

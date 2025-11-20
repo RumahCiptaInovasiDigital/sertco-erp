@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             MaintenanceSeeder::class,
             EmployeeSeeder::class,
             ServiceSeeder::class,
+            KategoriBarangSeeder::class,
+            SatuanBarangSeeder::class,
+            SuplierSeeder::class,
         ]);
         // User::factory(10)->create();
 

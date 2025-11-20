@@ -5,8 +5,6 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-<!-- daterange picker -->
-<link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
@@ -155,15 +153,18 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <div class="form-group">
-                                            <label for="schedule">Schedule</label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">
-                                                        <i class="far fa-calendar-alt"></i>
-                                                    </span>
+                                        <div class="row row-cols-2">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="schedule_start">Schedule Start</label>
+                                                    <input type="date" class="form-control" name="schedule_start" id="schedule_start">
                                                 </div>
-                                                <input type="text" class="form-control float-right" name="schedule" id="schedule">
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="schedule_start">End</label>
+                                                    <input type="date" class="form-control" name="schedule_end">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -184,9 +185,21 @@
                             <div class="col-12 col-md-4">
                                 <div class="row">
                                     <div class="col-12">
-
+                                        <h5>Lampiran</h5>
                                     </div>
-                                    <div class="col-12"></div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="priceDoc">Upload Price Document</label>
+                                            <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="unpriceDoc">Upload UnPrice Document</label>
+                                            <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +217,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary btn-lg w-100">Selanjutnya</button>
+                                <button type="submit" class="btn btn-primary w-100">Selanjutnya</button>
                             </div>
                         </div>
                     </div>
@@ -236,9 +249,6 @@
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-<!-- date-range-picker -->
-<script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
-<script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 
 <script>
     // $(document).ready(function () {
@@ -268,7 +278,6 @@
         $('.select2').select2({
             theme: 'bootstrap4'
         })
-        $('input[name="schedule"]').daterangepicker();
     });
 </script>
 @endsection

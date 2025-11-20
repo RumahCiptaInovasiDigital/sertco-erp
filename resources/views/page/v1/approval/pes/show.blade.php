@@ -144,19 +144,25 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="payment_term">Term of Payment</label>
-                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->payment_term ?? 'NA' }}" placeholder="Input Term of Payment" readonly>
+                                <label for="schedule">Schedule Start</label>
+                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_start ?? 'NA' }}" placeholder="Input Schedule" readonly>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="schedule">Schedule</label>
-                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule ?? 'NA' }}" placeholder="Input Schedule" readonly>
+                                <label for="schedule">Schedule End</label>
+                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_end ?? 'NA' }}" placeholder="Input Schedule" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="payment_term">Term of Payment</label>
+                                <textarea class="form-control" name="payment_term" id="payment_term" rows="3" placeholder="Input Project Detail" readonly>{{ $data->project_sheet_detail->payment_term ?? 'NA' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="project_detail">Project Detail</label>
                                 <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail" readonly>{{ $data->project_detail ?? 'NA' }}</textarea>

@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Kategori Barang')
-@section('PageTitle', 'Kategori Barang')
+@section('title', 'Satuan Barang')
+@section('PageTitle', 'Satuan Barang')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Kategori Barang</li>
+    <li class="breadcrumb-item active">Satuan Barang</li>
 </ol>
 @endsection
 @section('content')
@@ -18,9 +18,9 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List Kategori Barang</h3>
+                <h3 class="card-title">List Satuan Barang</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.barang.kategori.create') }}" class="btn btn-primary btn-block btn-sm">
+                    <a href="{{ route('v1.barang.satuan.create') }}" class="btn btn-primary btn-block btn-sm">
                         <i class="fas fa-plus-circle"></i> Tambah Data
                     </a>
                 </div>
@@ -31,9 +31,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Kategori Barang</th>
-                            <th>Kode</th>
-                            <th>Maintenance</th>
+                            <th>Satuan Barang</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -52,7 +50,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.barang.kategori.getData') }}";
+    const _URL = "{{ route('v1.barang.satuan.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -75,9 +73,7 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "nama_kategori" },
-                { data: "kode_kategori" },
-                { data: "maintenance" },
+                { data: "satuan" },
                 {
                     data: "action",
                     orderable: false,
@@ -110,7 +106,7 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.barang.kategori.destroy') }}",
+                    url: "{{ route('v1.barang.satuan.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
