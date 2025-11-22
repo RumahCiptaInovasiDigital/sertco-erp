@@ -29,14 +29,14 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
 
     Route::prefix('matrix-personil')->name('matrix-personil.')->controller(App\Http\Controllers\Page\HSE\MatrixPersonil\MatrixPersonilController::class)->group(function () {
         Route::get('get','getData')->name('getData');
-        // Route::get('show/{id','show')->name('show');
-        Route::get('detail/{id}', 'detail')->name('detail');
         Route::get('','index')->name('index');
+        Route::get('detail/{id}', 'detail')->name('detail');
+    });
+
+    Route::prefix('input-sertifikat')->name('input-sertifikat.')->controller(App\Http\Controllers\Page\HSE\MatrixPersonil\MatrixPersonilController::class)->group(function () {
+        Route::get('karyawan/{id}', 'getKaryawan')->name('getKaryawan');
         Route::get('create','create')->name('create');
         Route::post('store', 'store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
         Route::post('update/{id}', 'update')->name('update');
-        Route::post('destroy', 'destroy')->name('destroy');
-        Route::get('karyawan/{id}', 'getKaryawan')->name('getKaryawan');
     });
 });
