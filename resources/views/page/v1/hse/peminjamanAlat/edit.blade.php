@@ -49,7 +49,7 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label>Departemen</label>
-                                <input type="text" value="{{ auth()->user()->karyawan->departemen->name }}" class="form-control" readonly>
+                                <input type="text" value="{{ auth()->user()->karyawan->departemen->name ?? '-' }}" class="form-control" readonly>
                             </div>
                         </div>
 
@@ -86,7 +86,6 @@
                         <div id="alatRows" class="col-12">
                             @foreach ($dataDetail as $detail)
                                 <div class="row alat-row mb-3 p-2 border rounded">
-
                                     <div class="col-12 col-md-3">
                                         <label>Daftar Alat</label>
                                         <select class="form-control select2 alatSelect" name="idAlat[]" required>

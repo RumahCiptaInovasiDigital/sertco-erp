@@ -54,6 +54,7 @@
             @include('layouts.sidebar.admin')
             
             @include('layouts.sidebar.marketing')
+            @include('layouts.sidebar.approval')
 
             @include('layouts.sidebar.hrga')
             @include('layouts.sidebar.logistik')
@@ -89,6 +90,36 @@
                     @break
                 @endif
             @endforeach
+            
+            {{-- Data Peralatan --}}
+            @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.data-peralatan.index', $item->url))
+                    <li class="nav-item">
+                        <a href="{{ route('v1.data-peralatan.index') }}" class="nav-link {{ request()->is('v1/data-peralatan*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                Data Peralatan
+                            </p>
+                        </a>
+                    </li>
+                    @break
+                @endif
+            @endforeach
+            
+            {{-- Jenis Sertifikat --}}
+            {{-- @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.data-peralatan.index', $item->url)) --}}
+                    <li class="nav-item">
+                        <a href="{{ route('v1.jenis-sertifikat.index') }}" class="nav-link {{ request()->is('v1/jenis-sertifikat*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                Jenis Sertifikat
+                            </p>
+                        </a>
+                    </li>
+                    {{-- @break
+                @endif
+            @endforeach --}}
 
             {{-- Barang --}}
             @foreach ($relation ?? [] as $item)
