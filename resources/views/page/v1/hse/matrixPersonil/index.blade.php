@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Data Peminjaman Alat')
-@section('PageTitle', 'Data Peminjaman Alat')
+@section('title', 'Matrix Personil')
+@section('PageTitle', 'Matrix Personil')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Data Peminjaman Alat</li>
+    <li class="breadcrumb-item active">Matrix Personil</li>
 </ol>
 @endsection
 @section('content')
@@ -18,25 +18,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Peminjaman Peralatan</h3>
+                <h3 class="card-title">Daftar Matrix Personil</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.data-peminjaman.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> Tambah Peminjaman
+                    <a href="{{ route('v1.matrix-personil.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Input Sertifikat Personil
                     </a>
                 </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_tools" class="table table-bordered table-hover">
+                <table id="jenis_serti" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Peminjam</th>
-                            <th>Nama Klien</th>
-                            <th>Tgl Pinjam</th>
-                            {{-- <th>Tgl Pengembalian</th> --}}
-                            <th>Total Alat Dipinjam</th>
-                            <th>Status Persetujuan</th>
+                            <th>Nama Personil</th>
+                            <th>Jabatan</th>
+                            @foreach ($jenisSerti as $tipe)
+                                <th style="text-align: center;">{{ $tipe->name }}</th>
+                            @endforeach
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -54,8 +53,8 @@
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
-<script>
-    const _URL = "{{ route('v1.data-peminjaman.getData') }}";
+{{-- <script>
+    const _URL = "{{ route('v1.jenis-sertifikat.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -63,7 +62,7 @@
             $('.page-loading').fadeOut();
         }, 1000); // Adjust the timeout duration as needed
 
-        let DT = $("#dt_tools").DataTable({
+        let DT = $("#jenis_serti").DataTable({
             "paging": true,
             "lengthChange": true,
             "searching": true,
@@ -78,12 +77,8 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "nikUser" },
-                { data: "namaClient" },
-                { data: "tanggal_pinjam" },
-                // { data: "tanggal_kembali" },
-                { data: "total_alat" },
-                { data: "approved" },
+                { data: "name" },
+                { data: "pic" },
                 {
                     data: "action",
                     orderable: false,
@@ -99,27 +94,31 @@
                 },
             ],
         });
+
+        // $('#search_dt').on('keyup', function () {
+        //     DT.search(this.value).draw();
+        // });
     });
-</script>
-<script>
+</script> --}}
+{{-- <script>
     function deleteData(id) {
         Swal.fire({
-            text: "Are you sure you want to delete this Role?",
+            text: "Yakin Ingin Menghapus Jenis Sertifikat Ini?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batal!",
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.data-peminjaman.destroy') }}",
+                    url: "{{ route('v1.jenis-sertifikat.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
                         _token: "{{ csrf_token() }}",
                     },
                     success: function (response) {
-                        $("#dt_tools").DataTable().ajax.reload(null, false);
+                        $("#dt_kategori").DataTable().ajax.reload(null, false);
                         Swal.fire("Deleted!", response.message, "success");
                     },
                     error: function (xhr) {
@@ -130,6 +129,7 @@
                 Swal.fire("Cancelled", "Your data is safe :)", "error");
             }
         });
-    }   
-</script>
+    }
+
+</script> --}}
 @endsection

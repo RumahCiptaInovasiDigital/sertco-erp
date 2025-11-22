@@ -14,7 +14,11 @@ class PeminjamanAlatController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = PeminjamanAlat::query()->latest()->get();
+        if (auth()->user()->jabatan == 'Administrator') {
+            $query = PeminjamanAlat::query()->latest()->get();
+        } else {
+            $query = PeminjamanAlat::query()->where('nikUser', auth()->user()->nik)->latest()->get();
+        }
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -32,13 +36,41 @@ class PeminjamanAlatController extends Controller
                             </div>';
                 } else {
                     return '<div class="text-center">
-                        <span class="badge badge-success w-100 d-block text-center">Disetujui</span>
+                        <span class="badge badge-success text-center">Disetujui</span>
                         </div>';
                 }})
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.data-peminjaman.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>
-                        <a href="'.route('v1.data-peminjaman.detail', $row->id).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>';
+                if ($row->approved === '0') {
+                    // Tombol download surat jalan
+                    return '<button class="btn btn-sm btn-danger me-1" 
+                                onclick="deleteData(\''.$row->id.'\')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+
+                            <a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                                class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>';
+                } elseif ($row->approved === '1') {
+                    return '<a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                                class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+
+                            <a href="'.route('v1.data-peminjaman.edit', $row->id).'" 
+                                class="btn btn-sm btn-warning me-2">
+                                <i class="fas fa-edit"></i>
+                            </a>';
+                } else {
+                    return '<a href="" 
+                                class="btn btn-sm btn-warning">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                                class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>';
+                }
             })
             ->rawColumns([
                 'approved',
@@ -211,5 +243,29 @@ class PeminjamanAlatController extends Controller
         ->get();
 
         return view('page.v1.hse.peminjamanAlat.detail', compact('dataDetail', 'dataPeminjaman'));
+    }
+
+    public function destroy(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!$id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID is required.',
+            ]);
+        }
+
+        $data = PeminjamanAlat::query()
+            ->where('id', $id)
+            ->first();
+
+        // Hapus
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data deleted successfully.',
+        ]);
     }
 }

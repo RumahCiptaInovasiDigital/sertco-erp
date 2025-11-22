@@ -26,7 +26,7 @@
     @endif
 @endforeach
 
-<li class="nav-header">Approval</li>
+{{-- <li class="nav-header">Approval</li>
 @foreach ($relation ?? [] as $item)
     @if (Str::is('v1.pes.index', $item->url))
         <li class="nav-item">
@@ -39,4 +39,4 @@
         </li>
         @break
     @endif
-@endforeach
+@endforeach --}}

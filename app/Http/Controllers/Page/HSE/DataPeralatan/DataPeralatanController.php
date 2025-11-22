@@ -165,7 +165,7 @@ class DataPeralatanController extends Controller
             ->where('id', $id)
             ->first();
 
-        // Hapus role
+        // Hapus 
         $data->delete();
 
         return response()->json([
