@@ -56,7 +56,7 @@
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="prepared">Prepared By</label>
-                                    <input type="text" value="{{ $data->karyawan->fullName ?? null }}" class="form-control" id="prepared" placeholder="Input FullName" readonly>
+                                    <input type="text" value="{{ $data->preparedBy->fullName ?? null }}" class="form-control" id="prepared" placeholder="Input FullName" readonly>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
@@ -310,8 +310,38 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="pricedoc">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <object 
+                                            data="{{ asset('assets/project/'. $data->project_no. '/pricedoc/' . $data->project_sheet_detail->pricedoc) }}" 
+                                            type="application/pdf" 
+                                            width="100%" 
+                                            height="700px">
+                                            <p>Browser tidak bisa menampilkan PDF, <a href="{{ asset('assets/project/'. $data->project_no. '/pricedoc/' . $data->project_sheet_detail->pricedoc) }}">klik di sini untuk buka</a>.</p>
+                                        </object>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane" id="unpricedoc">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <object 
+                                            data="{{ asset('assets/project/'. $data->project_no. '/unpricedoc/' . $data->project_sheet_detail->unpricedoc) }}" 
+                                            type="application/pdf" 
+                                            width="100%" 
+                                            height="700px">
+                                            <p>Browser tidak bisa menampilkan PDF, <a href="{{ asset('assets/project/'. $data->project_no. '/unpricedoc/' . $data->project_sheet_detail->unpricedoc) }}">klik di sini untuk buka</a>.</p>
+                                        </object>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane" id="inspektor">
                     </div>
@@ -332,6 +362,12 @@
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
+    $(document).ready(function () {
+        if (window.location.hash === "#comment") {
+            $('a[href="#comment"]').tab('show');
+        }
+    });
+
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({

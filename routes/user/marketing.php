@@ -3,14 +3,14 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
-    // Route::prefix('register-project')->name('register-project.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
-    //     Route::get('', 'index')->name('index');
-    //     Route::get('get', 'getData')->name('getData');
-    //     Route::get('create', 'create')->name('create');
-    //     Route::post('store', 'store')->name('store');
-    //     Route::get('edit/{project_no}', 'edit')->name('edit');
-    //     Route::post('update/{project_no}', 'update')->name('update');
-    // });
+    Route::prefix('register-project')->name('register-project.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::get('get', 'getData')->name('getData');
+        Route::get('create', 'create')->name('create');
+        Route::post('store/{id_karyawan}/{id_sserti}', 'store')->name('store');
+        Route::get('edit/{project_no}', 'edit')->name('edit');
+        Route::post('update/{project_no}', 'update')->name('update');
+    });
 
     Route::prefix('pes')->name('pes.')->group(function () {
         Route::get('', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'index'])->name('index');
@@ -21,8 +21,20 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         Route::get('edit/{id}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'edit'])->name('edit');
         Route::post('update/{id}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'update'])->name('update');
         Route::post('delete', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'destroy'])->name('destroy');
+        
+        Route::prefix('upload')->name('upload.')->group(function () {
+            Route::post('upload-price-doc', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'uploadPriceDoc'])->name('price-document');
+            Route::post('upload-unprice-doc', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\ProjectExecutionSheetController::class, 'uploadUnpriceDoc'])->name('unprice-document');
+        });
 
         Route::prefix('service')->name('service.')->group(function () {
+            Route::get('{project_no}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'index'])->name('index');
+            Route::post('store', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'store'])->name('store');
+            Route::get('edit/{project_no}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'edit'])->name('edit');
+            Route::post('update/{project_no}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'update'])->name('update');
+        });
+
+        Route::prefix('comment')->name('comment.')->group(function () {
             Route::get('{project_no}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'index'])->name('index');
             Route::post('store', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'store'])->name('store');
             Route::get('edit/{project_no}', [App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service\ServicePESController::class, 'edit'])->name('edit');
