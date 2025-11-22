@@ -47,12 +47,12 @@ class PeminjamanAlatController extends Controller
                                 <i class="fas fa-trash"></i>
                             </button>
 
-                            <a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                            <a href="'.route('v1.data-peminjaman.show', $row->id).'"
                                 class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>';
                 } elseif ($row->approved === '1') {
-                    return '<a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                    return '<a href="'.route('v1.data-peminjaman.show', $row->id).'"
                                 class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -66,7 +66,7 @@ class PeminjamanAlatController extends Controller
                                 class="btn btn-sm btn-warning">
                                 <i class="fas fa-download"></i>
                             </a>
-                            <a href="'.route('v1.data-peminjaman.detail', $row->id).'"
+                            <a href="'.route('v1.data-peminjaman.show', $row->id).'"
                                 class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>';
@@ -232,7 +232,7 @@ class PeminjamanAlatController extends Controller
         }
     }
 
-    public function detail($id)
+    public function show($id)
     {
         $dataPeminjaman = PeminjamanAlat::query()
         ->where('id', $id)
@@ -242,7 +242,7 @@ class PeminjamanAlatController extends Controller
         ->where('idPeminjaman', $id)
         ->get();
 
-        return view('page.v1.hse.peminjamanAlat.detail', compact('dataDetail', 'dataPeminjaman'));
+        return view('page.v1.hse.peminjamanAlat.show', compact('dataDetail', 'dataPeminjaman'));
     }
 
     public function destroy(Request $request)
