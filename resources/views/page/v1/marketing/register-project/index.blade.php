@@ -20,7 +20,10 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Project Dibuat</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-primary btn-block">
+                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-asterisk"></i> Refer Project
+                    </a>
+                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-plus-circle"></i> Buat Project Baru
                     </a>
                 </div>

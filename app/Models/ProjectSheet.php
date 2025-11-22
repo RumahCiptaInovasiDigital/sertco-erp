@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\GenerateProjectNo;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,12 +13,24 @@ class ProjectSheet extends Model
     use HasFactory;
     use HasUuids;
     use SoftDeletes;
+    use GenerateProjectNo;
 
     protected $guarded;
     protected $primaryKey = 'id_project';
 
     public $incrementing = false;
     protected $keyType = 'string';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->project_no)) {
+                $model->project_no = $model->generateProjectNo();
+            }
+        });
+    }
 
     public function project_sheet_detail()
     {
@@ -39,14 +52,14 @@ class ProjectSheet extends Model
         return $this->belongsTo(DataKaryawan::class, 'prepared_by', 'id');
     }
 
-    public function toDepartemen()
+    
+    public function preparedBy()
     {
-        return $this->belongsTo(Departemen::class, 'to', 'id_departemen');
+        return $this->belongsTo(DataKaryawan::class, 'prepared_by', 'id');
     }
-
-    public function attnRole()
+    public function sigantureBy()
     {
-        return $this->belongsTo(Role::class, 'attn', 'id_role');
+        return $this->belongsTo(DataKaryawan::class, 'signature_by', 'id');
     }
 
     public function approval()

@@ -125,7 +125,7 @@ class ServicePESController extends Controller
 
             if ($is_draft) {
                 $project->update([
-                    'is_draft' => 1,
+                    'progress' => 100,
                 ]);
 
                 return response()->json([
@@ -138,8 +138,8 @@ class ServicePESController extends Controller
             $projectData = $project->toArray();
 
             unset(
+                $projectData['signature_by'],
                 $projectData['signature_date'],
-                $projectData['received_by'],
                 $projectData['deleted_at'],
             );
 
@@ -158,7 +158,7 @@ class ServicePESController extends Controller
             }
 
             $project->update([
-                'is_draft' => 0,
+                'progress' => 101,
             ]);
             (new SendApproval())->handle($project->id_project, $project->prepared_by);
 
@@ -292,7 +292,7 @@ class ServicePESController extends Controller
 
             if ($is_draft) {
                 $project->update([
-                    'is_draft' => 1,
+                    'progress' => 100,
                 ]);
 
                 return response()->json([
@@ -305,8 +305,8 @@ class ServicePESController extends Controller
             $projectData = $project->toArray();
 
             unset(
+                $projectData['signature_by'],
                 $projectData['signature_date'],
-                $projectData['received_by'],
                 $projectData['deleted_at'],
             );
 
@@ -325,7 +325,7 @@ class ServicePESController extends Controller
             }
 
             $project->update([
-                'is_draft' => 0,
+                'progress' => 101,
             ]);
             (new SendApproval())->handle($project->id_project, $project->prepared_by);
 

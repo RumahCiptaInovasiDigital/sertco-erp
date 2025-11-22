@@ -5,7 +5,8 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
+<!-- Toastr -->
+<link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
@@ -154,95 +155,14 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Service Type</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-info service-info" onclick="service_info()">
+                                    <i class="fas fa-question-circle"></i>
+                                </button>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
-                            {{-- <div class="row">
-                                <div class="col-12 col-md-5">
-                                    <div class="row mt-3 ml-3">
-                                        <div class="col-2">
-                                            <input type="text" class="form-control" value="NO" style="text-align: center; font-weight: 800;" readonly>
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" class="form-control" value="ITEM" style="text-align: center; font-weight: 800;" readonly>
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" value="QTY" style="text-align: center; font-weight: 800;" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-7">
-                                    <div class="row mt-3 mr-3">
-                                        @foreach ($serviceType as $tipe)
-                                        <div class="col">
-                                            <input type="text" class="form-control" value="{{ $tipe->sort_num }}" style="text-align: center; font-weight: 800;" readonly>
-                                        </div>
-                                        @endforeach
-                                        <div class="col-4">
-                                            <input type="text" class="form-control" value="{{ (int) optional($serviceType->last())->sort_num + 1 }}" style="text-align: center;" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row pb-3">
-                                @foreach ($serviceKategori as $kategori)
-                                    <input value="{{ $kategori->id_kategori_service }}" name="id_kategori[{{ $kategori->sort_num }}]" class="d-none">
-                                    <div class="col-12 col-md-5">
-                                        <div class="row mt-1 ml-3">
-                                            <div class="col-2">
-                                                <input type="text" class="form-control" value="{{ $kategori->sort_num }}" style="text-align: center;" readonly>
-                                            </div>
-                                            <div class="col">
-                                                <input type="text" class="form-control" value="{{ $kategori->name }}" style="text-align: center;" readonly>
-                                            </div>
-                                            <div class="col-3">
-                                                <input type="text" class="form-control" name="kategory_qty[{{ $kategori->sort_num }}]" style="text-align: center;" placeholder="0"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-7">
-                                        <div class="row mt-1 mr-3">
-                                            @foreach ($serviceType as $tipe)
-                                            <div class="col" style="text-align: center;">
-                                                <div class="form-group clearfix form-control m-0">
-                                                    <div class="icheck-primary d-inline">
-                                                        <input type="radio" id="k{{ $kategori->sort_num }}r{{ $tipe->sort_num }}"
-                                                            class="kategori-checkbox"
-                                                            name="service_type[{{ $kategori->sort_num }}]"
-                                                            value="{{ $tipe->sort_num }}">
-                                                        <label for="k{{ $kategori->sort_num }}r{{ $tipe->sort_num }}"></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endforeach
-
-                                            <div class="col-4">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <div class="input-group-text">
-                                                            <input type="checkbox"
-                                                                   class="kategori-checkbox"
-                                                                   data-kategori="{{ (int) optional($serviceKategori->last())->sort_num + 1 }}"
-                                                                   data-tipe="{{ (int) optional($serviceType->last())->sort_num + 1 }}"
-                                                                   name="service_type[{{ (int) optional($serviceKategori->last())->sort_num + 1 }}]"
-                                                                   value="{{ (int) optional($serviceType->last())->sort_num + 1 }}">
-                                                        </div>
-                                                    </div>
-                                                    <input type="text"
-                                                           class="form-control tipe-input"
-                                                           data-kategori="{{ (int) optional($serviceKategori->last())->sort_num + 1 }}"
-                                                           data-tipe="{{ (int) optional($serviceType->last())->sort_num + 1 }}"
-                                                           name="other_value[{{ (int) optional($serviceKategori->last())->sort_num + 1 }}]"
-                                                           placeholder="describe"
-                                                           style="text-align: center;"
-                                                           disabled>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div> --}}
                             <table class="table table-head-fixed text-nowrap table-bordered">
                                 <thead>
                                     <tr>
@@ -364,6 +284,8 @@
 </div>
 @endsection
 @section('scripts')
+<!-- Toastr -->
+<script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('.kategori-radio').each(function() {
@@ -385,6 +307,26 @@
                 }
             });
         });
+
+        // service_info();
     });
+
+    function service_info() {
+        $(document).Toasts('create', {
+            class: 'bg-secondary',
+            title: 'Service Type',
+            position: 'bottomRight',
+            body: ` <div class="row">
+                        @foreach ($serviceList->chunk(ceil($serviceList->count() / 2)) as $chunk)
+                            <div class="col-12">
+                                @foreach ($chunk as $tipe)
+                                    <div>{{ $tipe->sort_num . '. ' . $tipe->name }}</div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>`,
+        })
+    }
+    
 </script>
 @endsection

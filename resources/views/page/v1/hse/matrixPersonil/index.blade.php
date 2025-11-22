@@ -20,7 +20,7 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Matrix Personil</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.matrix-personil.create') }}" class="btn btn-primary btn-block">
+                    <a href="{{ route('v1.input-sertifikat.create') }}" class="btn btn-primary btn-block">
                         <i class="fas fa-plus-circle"></i> Input Sertifikat Personil
                     </a>
                 </div>
@@ -36,10 +36,33 @@
                             @foreach ($jenisSerti as $tipe)
                                 <th style="text-align: center;">{{ $tipe->name }}</th>
                             @endforeach
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($dataKaryawan as $karyawan)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $karyawan->fullName }}</td>
+                                <td>{{ $karyawan->jabatan->name }}</td>
+
+                                @foreach ($jenisSerti as $item)
+                                    @php
+                                        $punya = $karyawan->sertifikat
+                                            ->where('idSertifikat', $item->id_sertifikat)
+                                            ->isNotEmpty();
+                                    @endphp
+
+                                    <td class="text-center">
+                                        @if ($punya)
+                                            <i class="fas fa-check-square text-success"></i>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
             </div>

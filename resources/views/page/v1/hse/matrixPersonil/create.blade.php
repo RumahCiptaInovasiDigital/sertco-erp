@@ -22,8 +22,8 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('v1.jenis-sertifikat.store') }}" method="post" enctype="multipart/form-data">
-                    @csrf
+                {{-- <form action="{{ route('v1.jenis-sertifikat.store') }}" method="post" enctype="multipart/form-data">
+                    @csrf --}}
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -64,40 +64,9 @@
                         <div class="col-12">
                             <hr>
                         </div>
-                        @foreach ($sertifikat as $item)
-                        <div class="col-12 col-md-2">
-                            <div class="form-group">
-                                <label for="pic">PIC</label>
-                                <input type="text" class="form-control" name="pic" id="pic" value="{{ $item->jabatan->name }}" readonly>
-                            </div>
+                        <div id="daftar-sertifikat">
+                            {{-- populate semua data jenis sertifikat disini --}}
                         </div>
-                        <div class="col-12 col-md-3">
-                            <div class="form-group">
-                                <label for="name">Jenis Sertifikat</label>
-                                <input type="text" class="form-control" name="name" id="name" value="{{ $item->name }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-3">
-                            <div class="form-group">
-                                <label for="file_serti">File Sertifikat</label>
-                                <input type="file" class="form-control departemen" name="file_serti" id="file_serti" value="{{ $item->name }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-2">
-                            <div class="form-group">
-                                <label for="due_date">Due Date</label>
-                                <input type="date" class="form-control departemen" name="due_date" id="due_date">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-2 d-flex align-items-end">
-                            <div class="form-group">
-                                <label></label>
-                                <button class="btn btn-md btn-success" type="submit">
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
                         <div class="col-md-12">
                             <small><b><span style="color: #ff0000;">(*)</span> <em>Wajib Diisi</em></b></small>
                         </div>
@@ -109,12 +78,13 @@
                             <a href="{{ route('v1.jenis-sertifikat.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </div>
-                </form>
+                {{-- </form> --}}
             </div>
         </div>
     </div>
 </div>
 @endsection
+
 @section('scripts')
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -138,13 +108,15 @@
 
         if (nik_karyawan) {
             $.ajax({
-                url: '/v1/matrix-personil/karyawan/' + nik_karyawan,
+                url: '/v1/input-sertifikat/karyawan/' + nik_karyawan,
                 type: 'GET',
                 success: function (data) {
-                    $('.email').val(data.email);
-                    $('.nomor').val(data.phoneNumber);
-                    $('.jabatan').val(data.namaJabatan);
-                    $('.departemen').val(data.namaDepartemen);
+                    $('.email').val(data.karyawan.email);
+                    $('.nomor').val(data.karyawan.phoneNumber);
+                    $('.jabatan').val(data.karyawan.namaJabatan);
+                    $('.departemen').val(data.karyawan.namaDepartemen);
+                    $('#daftar-sertifikat').html(data.view);
+                    $('.field-nik').val(data.karyawan.nik);
                 }
             });
         } else {
@@ -152,7 +124,51 @@
             $('.nomor').val('');
             $('.jabatan').val('');
             $('.departemen').val('');
+            $('#nik').val('');
         }
     });
+
+    function SimpanData(id) {
+        let formData = new FormData();
+        formData.append('id', id);
+        formData.append('due_date', $('#due_date_' + id).val());
+        formData.append('nik', $('#nik_' + id).val());
+        formData.append('_token', "{{ csrf_token() }}");
+
+        // ambil file dari input
+        let fileInput = document.getElementById('file_serti_' + id);
+        if (fileInput.files.length > 0) {
+            formData.append('file_serti', fileInput.files[0]);
+        }
+
+        $.ajax({
+            url: "{{ route('v1.input-sertifikat.store') }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+
+                Swal.fire("Success!", response.message, "success");
+
+                // 🔥 Disable input file
+                $('#file_serti_' + id).prop('disabled', true);
+
+                // 🔥 Disable due date
+                $('#due_date_' + id).prop('disabled', true);
+
+                // 🔥 Hapus tombol submit & ganti icon check
+                $('#action_area_' + id).html(`
+                    <i class="fas fa-check-square text-success"></i>
+                `);
+            },
+            error: function (xhr) {
+                Swal.fire("Error!", "Pastikan File Sertifikat dan Due Date diisi dengan benar", "error");
+            },
+        });
+    }
+
+
+
 </script>
 @endsection

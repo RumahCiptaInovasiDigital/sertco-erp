@@ -20,4 +20,9 @@ class JenisSertifikat extends Model
     {
         return $this->belongsTo(Role::class, 'pic', 'id_role');
     }
+    
+    // public function jabatan()
+    // {
+    //     return $this->belongsTo(Role::class, 'pic', 'id_role');
+    // }
 }

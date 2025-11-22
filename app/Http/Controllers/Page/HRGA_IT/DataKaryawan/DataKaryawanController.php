@@ -9,7 +9,6 @@ use App\Models\Role;
 use App\Models\UserCredential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Psy\Util\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class DataKaryawanController extends Controller
@@ -88,20 +87,20 @@ class DataKaryawanController extends Controller
 
         // Pilihan Agama Lainnya
         $agama = $request->agama === 'lainnya' ? $request->agamaLain : $request->agama;
-    
+
         // Buat nama lengkap otomatis
-        $fullName = trim($request->firstName . ' ' . $request->lastName);
+        $fullName = trim($request->firstName.' '.$request->lastName);
 
         // Buat NIK otomatis
         $lastData = DataKaryawan::where('nik', 'LIKE', 'SQ-%')
-                    ->orderByRaw("CAST(RIGHT(nik, 3) AS UNSIGNED) DESC")
+                    ->orderByRaw('CAST(RIGHT(nik, 3) AS UNSIGNED) DESC')
                     ->first();
         $lastNumber = 0;
         if ($lastData && preg_match('/SQ-\w+-(\d{3})$/', $lastData->nik, $matches)) {
             $lastNumber = (int) $matches[1];
         }
         $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        $nik = 'SQ-' . strtoupper($request->inisial) . '-' . $newNumber;
+        $nik = 'SQ-'.strtoupper($request->inisial).'-'.$newNumber;
 
         $departemen = Departemen::where('id_departemen', $request->idDepartemen)->first();
         $role = Role::where('id_role', $request->idJabatan)->first();
@@ -147,42 +146,42 @@ class DataKaryawanController extends Controller
                 'emergencyRelation' => $request->emergencyRelation,
             ]);
 
-            //Upload Foto
+            // Upload Foto
             $fotoPath = null;
             if ($request->hasFile('foto')) {
                 $foto = $request->file('foto');
-                $filename = $data->id . '.jpg';
+                $filename = $data->id.'.jpg';
 
-                $destinationPath = public_path('assets/dokumen/'. $data->id . '/foto-karyawan');
+                $destinationPath = public_path('assets/dokumen/'.$data->id.'/foto-karyawan');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
 
                 $foto->move($destinationPath, $filename);
-                $fotoPath = 'assets/dokumen/' .$data->id . '/foto/' . $filename;
+                $fotoPath = 'assets/dokumen/'.$data->id.'/foto/'.$filename;
             }
 
             // Upload Ijazah (PDF)
             $ijazahPath = null;
             if ($request->hasFile('ijazah')) {
                 $ijazah = $request->file('ijazah');
-                $ijazahFilename = 'ijazah-' . $data->id . '.pdf';
+                $ijazahFilename = 'ijazah-'.$data->id.'.pdf';
 
-                $destinationPath = public_path('assets/dokumen/'. $data->id . '/ijazah-karyawan');
+                $destinationPath = public_path('assets/dokumen/'.$data->id.'/ijazah-karyawan');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
 
                 $ijazah->move($destinationPath, $ijazahFilename);
-                $ijazahPath = 'assets/dokumen/' .$data->id . '/ijazah/' . $ijazahFilename;
+                $ijazahPath = 'assets/dokumen/'.$data->id.'/ijazah/'.$ijazahFilename;
             }
 
             // Upload KTP
             if ($request->hasFile('fileKTP')) {
                 $ktp = $request->file('fileKTP');
-                $ktpFilename = $data->noKTP . '.jpg';
+                $ktpFilename = $data->noKTP.'.jpg';
 
-                $destinationPath = public_path('assets/dokumen/'. $data->id . '/foto-ktp');
+                $destinationPath = public_path('assets/dokumen/'.$data->id.'/foto-ktp');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
@@ -193,9 +192,9 @@ class DataKaryawanController extends Controller
             // Upload SIM
             if ($request->hasFile('fileSIM')) {
                 $sim = $request->file('fileSIM');
-                $simFilename = $data->noSIM . '.jpg';
+                $simFilename = $data->noSIM.'.jpg';
 
-                $destinationPath = public_path('assets/dokumen/'. $data->id . '/foto-sim');
+                $destinationPath = public_path('assets/dokumen/'.$data->id.'/foto-sim');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
@@ -206,9 +205,9 @@ class DataKaryawanController extends Controller
             // Upload NPWP
             if ($request->hasFile('fileNPWP')) {
                 $npwp = $request->file('fileNPWP');
-                $npwpFilename = $data->noNPWP . '.jpg';
+                $npwpFilename = $data->noNPWP.'.jpg';
 
-                $destinationPath = public_path('assets/dokumen/'. $data->id . '/foto-npwp');
+                $destinationPath = public_path('assets/dokumen/'.$data->id.'/foto-npwp');
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
@@ -225,7 +224,7 @@ class DataKaryawanController extends Controller
                 'nik' => $nik,
                 'pass' => password_hash('password123', PASSWORD_DEFAULT),
             ]);
-            
+
             DB::commit();
 
             return response()->json([

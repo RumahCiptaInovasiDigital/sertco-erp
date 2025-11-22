@@ -8,6 +8,7 @@ use App\Models\ProjectSheet;
 use App\Models\ProjectSheetNote;
 use App\Models\ServiceType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -35,24 +36,24 @@ class ReviewController extends Controller
         ]);
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             foreach ($request->notes as $noteText) {
                 ProjectSheetNote::create([
                     'project_no' => $request->project_no,
                     'note' => $noteText,
-                    'id_user' => auth()->id(),
+                    'id_user' => auth()->id,
                 ]);
             }
 
-            \DB::commit();
+            DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Catatan berhasil disimpan.',
             ]);
         } catch (\Throwable $th) {
-            \DB::rollBack();
+            DB::rollBack();
 
             return response()->json([
                 'success' => false,
