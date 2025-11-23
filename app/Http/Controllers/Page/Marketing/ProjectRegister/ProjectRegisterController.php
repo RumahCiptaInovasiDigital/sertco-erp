@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Page\Marketing\ProjectRegister;
 
 use App\Http\Controllers\Controller;
+use App\Traits\GenerateProjectNo;
 
 class ProjectRegisterController extends Controller
 {
+    use GenerateProjectNo;
+
     public function getData()
     {
     }
@@ -17,6 +20,9 @@ class ProjectRegisterController extends Controller
 
     public function create()
     {
+        $project_no = $this->generateProjectNo();
+
+        return view('page.v1.marketing.register-project.create', compact('project_no'));
     }
 
     public function store(\Request $request)

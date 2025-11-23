@@ -26,6 +26,17 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         });
     });
 
+    Route::prefix('jenis-sertifikat')->name('jenis-sertifikat.')->controller(App\Http\Controllers\Page\MasterData\JenisSertifikat\JenisSertifikatController::class)->group(function () {
+        Route::get('get','getData')->name('getData');
+        // Route::get('detail/{id}', 'detail')->name('detail');
+        Route::get('','index')->name('index');
+        Route::get('create','create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}','edit')->name('edit');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('destroy', 'destroy')->name('destroy');
+    });
+
     Route::prefix('barang')->name('barang.')->group(function () {
         Route::prefix('master')->name('master.')->controller(App\Http\Controllers\Page\MasterData\Barang\BarangMasterController::class)->group(function () {
             Route::get('get', 'getData')->name('getData');

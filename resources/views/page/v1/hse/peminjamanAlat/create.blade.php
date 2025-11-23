@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <label for="departemen">Departemen</label>
                                 <input type="text" class="form-control" 
-                                       value="{{ auth()->user()->karyawan->departemen->name }}" readonly>
+                                       value="{{ auth()->user()->karyawan->departemen->name ?? '-' }}" readonly>
                             </div>
                         </div>
 

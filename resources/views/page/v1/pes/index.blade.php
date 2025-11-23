@@ -9,6 +9,7 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
@@ -19,35 +20,71 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        {{-- <hr class="mt-3">
-        <h5>Newest Project</h5> --}}
-        <span class="badge badge-success mb-1">Newest Project</span>
-        <div class="row row-cols-2 row-cols-md-5">
-            @foreach ($data2 as $sheet)
+        <span class="badge badge-success mb-1">Newest Project :</span>
+        <div class="row row-cols-2 row-cols-md-4">
+            @foreach ($data as $sheet)
             <div class="col mb-4">
                 <div class="card">
                     <img src="{{ asset('dist/img/project-img.jpg') }}" class="card-img-top">
                     <div class="card-body">
-                        <h5 class="card-title badge badge-info text-bold mb-2">{{ $sheet->project_no }}</h5>
+                        <h5 class="card-title mb-2"><span class="badge bg-purple">{{ $sheet->project_no }}</span></h5>
                         <div class="float-right">
                             <i class="fas fa-user"></i> {{ $sheet->karyawan->inisial ?? '-' }}
                         </div>
                         <div class="card-text">
                             <div class="row">
-                                <div class="col-12">
-                                    Client: {{ $sheet->project_sheet_detail->client ?? '-' }}
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <button class="btn btn-sm bg-purple w-100">
+                                                Client:
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-sm bg-light w-100">
+                                                {{ $sheet->project_sheet_detail->client ?? '-' }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <button class="btn btn-sm bg-purple w-100">
+                                                Deskripsi:
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-sm bg-light w-100">
+                                                {{ $sheet->project_detail ?? '-' }}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="text-right">
-                            <a href="#" class="btn btn-sm bg-teal">
-                                <i class="fas fa-comments"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-primary">
-                                <i class="fas fa-user"></i> View Profile
-                            </a>
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-left">
+                                    @php
+                                        $parse = Carbon\Carbon::parse($sheet->issued_date)->locale('id');
+                                        $date = $parse->translatedFormat('l, d M Y H:i');
+                                    @endphp
+                                    <span class="badge bg-light">{{ $date }}</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-right">
+                                    <a href="#" class="btn btn-sm bg-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm bg-primary">
+                                        <i class="fas fa-comments"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,11 +119,11 @@
                         <tr>
                             <th>#</th>
                             <th style="width: 10%;">Project No.</th>
+                            <th>Client</th>
+                            <th>Owner</th>
                             <th>Prepared By</th>
+                            <th>Signature By</th>
                             <th>Issued Date</th>
-                            <th>To</th>
-                            <th>Attention</th>
-                            <th>Created at</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -133,12 +170,12 @@
             columns: [
                 { data: "DT_RowIndex" },
                 { data: "project_no" },
+                { data: "client" },
+                { data: "owner" },
                 { data: "prepared_by" },
+                { data: "signature_by" },
                 { data: "issued_date" },
-                { data: "to" },
-                { data: "attn" },
-                { data: "created_at" },
-                { data: "is_draft" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,
@@ -199,5 +236,6 @@
             theme: 'bootstrap4',
         })
     });
+
 </script>
 @endsection

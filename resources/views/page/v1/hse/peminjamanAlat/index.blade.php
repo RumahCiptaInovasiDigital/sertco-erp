@@ -112,7 +112,7 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.data-peralatan.destroy') }}",
+                    url: "{{ route('v1.data-peminjaman.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,

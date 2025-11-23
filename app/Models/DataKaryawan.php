@@ -31,4 +31,9 @@ class DataKaryawan extends Model
     {
         return $this->belongsTo(Departemen::class, 'idDepartemen', 'id_departemen');
     }
+
+    public function sertifikat()
+    {
+        return $this->hasMany(MatrixPersonil::class, 'nik_karyawan', 'nik');
+    }
 }

@@ -24,7 +24,7 @@ class DataPeralatanController extends Controller
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.data-peralatan.detail', $row->id).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
+                return '<a href="'.route('v1.data-peralatan.show', $row->id).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
                         <a href="'.route('v1.data-peralatan.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                         <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>';
             })
@@ -141,13 +141,13 @@ class DataPeralatanController extends Controller
         }
     }
 
-    public function detail($id)
+    public function show($id)
     {
         $data = DataPeralatan::query()
         ->where('id', $id)
         ->first();
 
-        return view('page.v1.hse.dataPeralatan.detail', compact('data'));
+        return view('page.v1.hse.dataPeralatan.show', compact('data'));
     }
 
     public function destroy(Request $request)
@@ -165,7 +165,7 @@ class DataPeralatanController extends Controller
             ->where('id', $id)
             ->first();
 
-        // Hapus role
+        // Hapus 
         $data->delete();
 
         return response()->json([

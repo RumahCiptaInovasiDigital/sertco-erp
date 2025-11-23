@@ -9,8 +9,8 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Project Execution Sheet</a></li>
-    <li class="breadcrumb-item active">Form</li>
+    <li class="breadcrumb-item"><a href="{{ route('v1.pes.index') }}">Register Project</a></li>
+    <li class="breadcrumb-item active">create</li>
 </ol>
 @endsection
 @section('content')
@@ -22,7 +22,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('v1.pes.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('v1.register-project.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-12">
                         <div class="row">
@@ -41,11 +41,36 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
-                                    <label for="issued_date">Date</label>
-                                    <input type="text" name="issued_date" value="{{ now() }}" class="form-control" id="issued_date" placeholder="Input Issued Date" readonly>
+                                    <label for="issued_date">Issued Date</label>
+                                    <input type="date" name="issued_date" value="{{ now()->format('Y-m-d') }}" class="form-control" id="issued_date" placeholder="Input Issued Date">
                                 </div>
                             </div>
                         </div>
+                        {{-- <hr class="my-3">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <div class="form-group">
+                                    <label for="to">To</label>
+                                    <Select class="form-control select2" name="to" id="to">
+                                        <option value="" disabled selected>select</option>
+                                        @foreach ($departemen as $item)
+                                        <option value="{{ $item->id_departemen }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </Select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="form-group">
+                                    <label for="attn">Attention</label>
+                                    <Select class="form-control select2" name="attn" id="attn">
+                                        <option value="" disabled selected>select</option>
+                                        @foreach ($role as $item)
+                                        <option value="{{ $item->id_role }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </Select>
+                                </div>
+                            </div>
+                        </div> --}}
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-12">
@@ -157,6 +182,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Lampiran</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="priceDoc">Upload Price Document</label>
+                                            <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="unpriceDoc">Upload UnPrice Document</label>
+                                            <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {{-- <div class="row">
                             <div class="col-12">
@@ -172,31 +217,11 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary w-100">Halaman Service</button>
+                                <button type="submit" class="btn btn-primary w-100">Selanjutnya</button>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="col-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <h5>Lampiran</h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="priceDoc">Upload Price Document</label>
-                                <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="unpriceDoc">Upload UnPrice Document</label>
-                                <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

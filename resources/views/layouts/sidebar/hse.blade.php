@@ -1,12 +1,12 @@
 <li class="nav-header">HSE</li>
 {{-- Employee Data --}}
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.data-peralatan.index', $item->url))
+    @if (Str::is('v1.data-peminjaman.index', $item->url))
         <li class="nav-item">
-            <a href="{{ route('v1.data-peralatan.index') }}" class="nav-link {{ request()->is('v1/data-peralatan*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-tools"></i>
+            <a href="{{ route('v1.data-peminjaman.index') }}" class="nav-link {{ request()->is('v1/data-peminjaman*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-clone"></i>
                 <p>
-                    Data Peralatan
+                    Peminjaman Alat
                 </p>
             </a>
         </li>
@@ -15,12 +15,12 @@
 @endforeach
 
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.data-peminjaman.index', $item->url))
+    @if (Str::is('v1.matrix-personil.index', $item->url))
         <li class="nav-item">
-            <a href="{{ route('v1.data-peminjaman.index') }}" class="nav-link {{ request()->is('v1/data-peminjaman*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-clone"></i>
+            <a href="{{ route('v1.matrix-personil.index') }}" class="nav-link {{ request()->is('v1/matrix-personil*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-user-check"></i>
                 <p>
-                    Peminjaman Alat
+                    Matrix Personil
                 </p>
             </a>
         </li>

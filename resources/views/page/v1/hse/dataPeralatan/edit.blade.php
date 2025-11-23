@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Role/Jabatan')
-@section('PageTitle', 'Edit Role/Jabatan')
+@section('title', 'Data Peralatan')
+@section('PageTitle', 'Edit Data Peralatan')
 @section('head')
 <!-- Select2 -->
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">

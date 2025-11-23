@@ -9,12 +9,17 @@ use App\Models\ProjectSheet;
 use App\Models\ProjectSheetDetail;
 use App\Models\Role;
 use App\Models\ServiceType;
+use App\Services\ProjectExecutionSheet\ProjectStatusService;
+use App\Traits\GenerateProjectNo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProjectExecutionSheetController extends Controller
 {
+    use GenerateProjectNo;
+
     public function getData(Request $request, $action)
     {
         if (auth()->user()->jabatan == 'Administrator') {
@@ -29,9 +34,9 @@ class ProjectExecutionSheetController extends Controller
             if ($action == 'all') {
                 $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->latest()->get();
             } elseif ($action == 'draft') {
-                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('is_draft', 1)->latest()->get();
+                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('progress', 100)->latest()->get();
             } elseif ($action == 'non-draft') {
-                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('is_draft', 0)->latest()->get();
+                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('progress', '!=',100)->latest()->get();
             }
         }
 
@@ -42,88 +47,95 @@ class ProjectExecutionSheetController extends Controller
             ->editColumn('project_no', function ($row) {
                 return '<div class="text-center">
                             <a href="'.route('v1.pes.show', $row->id_project).'">
-                                <h5><span class="badge badge-pill badge-info">'.$row->project_no.'</span></h5>
+                                <h5><span class="badge badge-success w-100">'.$row->project_no.'</span></h5>
                             </a>
                         </div>';
             })
+            ->addColumn('client', function ($row) {
+                return $row->project_sheet_detail->client ?? '-';
+            })
+            ->addColumn('owner', function ($row) {
+                return $row->project_sheet_detail->owner ?? '-';
+            })
             ->editColumn('prepared_by', function ($row) {
-                return $row->karyawan->fullName ?? '-';
+                return $row->preparedBy->fullName ?? '-';
+            })
+            ->editColumn('signature_by', function ($row) {
+                return $row->signatureBy->fullName ?? '-';
             })
             ->editColumn('issued_date', function ($row) {
-                return $row->issued_date ?? '-';
-            })
-            ->editColumn('to', function ($row) {
-                return $row->toDepartemen->name ?? '-';
-            })
-            ->editColumn('attn', function ($row) {
-                return $row->attnRole->name ?? '-';
-            })
-            ->editColumn('created_at', function ($row) {
-                $parse = Carbon::parse($row->created_at);
+                $parse = Carbon::parse($row->issued_date);
 
                 return $parse->translatedFormat('l, ').
-                    $parse->locale('en-ID')->translatedFormat('d M Y H:i');
+                    $parse->locale('en-ID')->translatedFormat('d M Y');
             })
-            ->editColumn('is_draft', function ($row) {
-                if ($row->is_draft === 1) {
-                    return '<div class="text-center">
-                                <button type="button" class="btn btn-block bg-gradient-warning">Draft</button>
-                            </div>';
-                } elseif ($row->is_draft === 0) {
-                    if ($row->approval) {
-                        if ($row->approval->is_approved === 1) {
-                            return '<div class="text-center">
-                                        <button type="button" class="btn btn-block bg-gradient-success">Approved</button>
-                                    </div>';
-                        } elseif ($row->approval->is_rejected === 1) {
-                            return '<div class="text-center">
-                                        <button type="button" class="btn btn-block bg-gradient-danger">Rejected</button>
-                                    </div>';
-                        } else {
-                            return '<div class="text-center">
-                                <button type="button" class="btn btn-block bg-gradient-info">Waiting Approval</button>
-                                </div>';
-                        }
-                    } else {
-                        return '<div class="text-center">
-                                <i>data tidak valid</i>
-                            </div>';
-                    }
-                }
+            ->editColumn('status', function ($row) {
+                return (new ProjectStatusService())->handle($row->progress);
+                // if ($row->status === 'draft') {
+                // } elseif ($row->status === 'progress') {
+                //     if ($row->approval) {
+                //         if ($row->approval->is_approved === 1) {
+                //             return '<div class="text-center">
+                //                         <button type="button" class="btn btn-block bg-gradient-success">Approved</button>
+                //                     </div>';
+                //         } elseif ($row->approval->is_rejected === 1) {
+                //             return '<div class="text-center">
+                //                         <button type="button" class="btn btn-block bg-gradient-danger">Rejected</button>
+                //                     </div>';
+                //         } else {
+                //             return '<div class="text-center">
+                //                 <button type="button" class="btn btn-block bg-gradient-info">Waiting Approval</button>
+                //                 </div>';
+                //         }
+                //     } else {
+                //         return '<div class="text-center">
+                //                 <i>data tidak valid</i>
+                //             </div>';
+                //     }
+                // }elseif($row->status === 'complete'){
+                //     return '<div class="text-center">
+                //                 <button type="button" class="btn btn-block bg-gradient-success">Selesai</button>
+                //             </div>';
+                // }
             })
             ->addColumn('action', function ($row) {
-                if ($row->is_draft == 0) {
-                    if (!$row->approval) {
-                        return '<div class="text-center">
-                                <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
-                            </div>';
-                    }
+                // if ($row->progres == 0) {
+                //     if (!$row->approval) {
+                //         return '<div class="text-center">
+                //                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
+                //             </div>';
+                //     }
 
-                    if ($row->approval->is_approved === 1) {
-                        return '<div class="text-center">
-                            <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
-                        </div>';
-                    }
-                    if ($row->approval->is_rejected === 1) {
-                        return '<div class="text-center">
-                            <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
-                        </div>';
-                    }
+                //     if ($row->approval->is_approved === 1) {
+                //         return '<div class="text-center">
+                //             <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
+                //         </div>';
+                //     }
+                //     if ($row->approval->is_rejected === 1) {
+                //         return '<div class="text-center">
+                //             <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
+                //         </div>';
+                //     }
 
-                    return '<div class="text-center">
-                            <button class="btn btn-sm btn-success me-2" disabled><i>Review Project</i></button>
-                        </div>';
-                } else {
+                //     return '<div class="text-center">
+                //             <button class="btn btn-sm btn-success me-2" disabled><i>Review Project</i></button>
+                //         </div>';
+                // } else {
+                    if($row->prepared_by !== auth()->id()){
+                        return  '<div class="text-center">
+                        <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2"><i class="fas fa-comment"></i></a>
+                                </div>';
+                    }
                     return '<div class="text-center">
                                 <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
                                 <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
                             </div>';
-                }
+                // }
             })
             ->rawColumns([
                 'project_no',
-                'is_draft',
+                'status',
                 'action',
             ])
             ->make(true);
@@ -131,63 +143,48 @@ class ProjectExecutionSheetController extends Controller
 
     public function index()
     {
-        $data = ProjectSheet::with('project_sheet_detail')->orderBy('created_at', 'desc')->get();
-        $data2 = ProjectSheet::with('project_sheet_detail')->latest()->limit(5)->get();
+        $data = ProjectSheet::with('project_sheet_detail')->where('status', 'draft')->latest()->limit(5)->get();
 
-        return view('page.v1.pes.index', compact('data', 'data2'));
+        return view('page.v1.pes.index', compact('data'));
     }
 
     public function show($id)
     {
+        
         $data = ProjectSheet::query()
-            ->where('id_project', $id)
-            ->first();
+        ->where('id_project', $id)
+        ->first();
         $projectSheet = ProjectSheet::query()
         ->where('id_project', $id)
         ->first();
         $serviceKategori = KategoriService::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         $serviceType = ServiceType::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
-
+        
         return view('page.v1.pes.show', compact('data', 'projectSheet', 'serviceKategori', 'serviceType'));
     }
 
     public function create()
     {
-        $today = now()->format('ymd');
-        $prefix = 'PRJ'.$today;
-
-        // find the latest project_no for today
-        $latest = ProjectSheet::where('project_no', 'like', $prefix.'%')
-            ->orderBy('project_no', 'desc')
-            ->value('project_no');
-
-        // determine next sequence (3 digits, leading zeros)
-        $lastSeq = 0;
-        if ($latest) {
-            $lastSeq = (int) substr($latest, strlen($prefix));
-        }
-        $nextSeq = str_pad($lastSeq + 1, 3, '0', STR_PAD_LEFT);
-
-        $project_no = $prefix.$nextSeq;
-
+        $project_no = $this->generateProjectNo();
         $role = Role::orderBy('name')->get();
-
         $departemen = Departemen::orderBy('name')->get();
 
         return view('page.v1.pes.create', compact('project_no', 'role', 'departemen'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id_karyawan, $id_Serti)
     {
         $is_draft = $request->has('is_draft') ? true : false;
+        $progess = 100;
+        if(!$is_draft){
+            $progess = 101;
+        }
 
         if (!$is_draft) {
             $validated = $request->validate([
                 'nik' => 'required|string|max:255',
                 'prepared_by' => 'required|string|max:255',
                 'issued_date' => 'required|date',
-                'to' => 'required|string|max:255',
-                'attn' => 'required|string|max:255',
                 'project_no' => 'required|string|max:255',
                 'client' => 'required|string|max:255',
                 'owner' => 'required|string|max:255',
@@ -202,24 +199,21 @@ class ProjectExecutionSheetController extends Controller
                 'schedule_start' => 'required|date',
                 'schedule_end' => 'required|date',
                 'project_detail' => 'required|string',
-                'priceDoc' => 'required|file|mimes:pdf',
-                'unpriceDoc' => 'required|file|mimes:pdf',
             ]);
         }
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $projectSheet = ProjectSheet::create([
                 'project_no' => $request->project_no,
                 'project_detail' => $request->project_detail,
                 'prepared_by' => $request->prepared_by,
                 'issued_date' => $request->issued_date,
+                'signature_by' => null,
                 'signature_date' => null,
-                'to' => $request->to,
-                'attn' => $request->attn,
-                'received_by' => null,
-                'is_draft' => 1,
+                'status' => 'draft',
+                'progress' => $progess,
             ]);
 
             // ==== HANDLE FILE UPLOAD ==== //
@@ -268,7 +262,7 @@ class ProjectExecutionSheetController extends Controller
                 'unpricedoc' => $unpricedocName,
             ]);
 
-            \DB::commit();
+            DB::commit();
 
             if ($is_draft) {
                 return response()->json([
@@ -284,7 +278,7 @@ class ProjectExecutionSheetController extends Controller
                 'redirect' => route('v1.pes.service.index', strtolower($projectSheet->project_no)),
             ]);
         } catch (\Throwable $th) {
-            \DB::rollBack();
+            DB::rollBack();
 
             return response()->json([
                 'success' => false,
@@ -313,8 +307,6 @@ class ProjectExecutionSheetController extends Controller
         if (!$is_draft) {
             $validated = $request->validate([
                 'issued_date' => 'required|date',
-                'to' => 'required|string|max:255',
-                'attn' => 'required|string|max:255',
                 'client' => 'required|string|max:255',
                 'owner' => 'required|string|max:255',
                 'contract_no' => 'required|string|max:255',
@@ -325,17 +317,19 @@ class ProjectExecutionSheetController extends Controller
                 'contract_description' => 'required|string',
                 'contract_period' => 'required|string',
                 'payment_term' => 'required|string',
-                'schedule' => 'required|date',
+                'schedule_start' => 'required|date',
+                'schedule_end' => 'required|date',
                 'project_detail' => 'required|string',
             ]);
         }
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $projectSheet = ProjectSheet::query()->where('id_project', $id)->first();
             $projectSheet->update([
                 'project_detail' => $request->project_detail,
                 'issued_date' => $request->issued_date,
+                'signature_by' => null,
                 'signature_date' => null,
                 'to' => $request->to,
                 'attn' => $request->attn,
@@ -355,9 +349,10 @@ class ProjectExecutionSheetController extends Controller
                 'contract_description' => $request->contract_description,
                 'contract_period' => $request->contract_period,
                 'payment_term' => $request->payment_term,
-                'schedule' => $request->schedule,
+                'schedule_start' => $request->schedule_start,
+                'schedule_end' => $request->schedule_end,
             ]);
-            \DB::commit();
+            DB::commit();
 
             if ($is_draft) {
                 return response()->json([
@@ -375,7 +370,7 @@ class ProjectExecutionSheetController extends Controller
         } catch (\Throwable $th) {
             // throw $th;
 
-            \DB::rollBack();
+            DB::rollBack();
         }
     }
 
@@ -401,5 +396,15 @@ class ProjectExecutionSheetController extends Controller
             'success' => true,
             'message' => 'Data deleted successfully.',
         ]);
+    }
+
+
+    public function uploadPriceDoc(Request $request)
+    {
+        
+    }
+    public function uploadUnpriceDoc(Request $request)
+    {
+
     }
 }

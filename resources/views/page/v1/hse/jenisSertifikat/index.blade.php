@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Project Register')
-@section('PageTitle', 'Project Register')
+@section('title', 'Jenis Sertifikat')
+@section('PageTitle', 'Jenis Sertifikat')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Project Register</li>
+    <li class="breadcrumb-item active">Jenis Sertifikat</li>
 </ol>
 @endsection
 @section('content')
@@ -18,29 +18,22 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Project Dibuat</h3>
+                <h3 class="card-title">Daftar Jenis Sertifikat</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-warning">
-                        <i class="fas fa-asterisk"></i> Refer Project
-                    </a>
-                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus-circle"></i> Buat Project Baru
+                    <a href="{{ route('v1.jenis-sertifikat.create') }}" class="btn btn-primary btn-block">
+                        <i class="fas fa-plus-circle"></i> Tambah Jenis Sertifikat
                     </a>
                 </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover">
+                <table id="jenis_serti" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="5%">#</th>
-                            <th style="width: 10%;">Project No.</th>
-                            <th>Prepared By</th>
-                            <th>Issued Date</th>
-                            <th>To</th>
-                            <th>Attention</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Action</th>
+                            <th>No</th>
+                            <th>Nama Sertifikat</th>
+                            <th>PIC</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,7 +51,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('admin.notification.getData') }}";
+    const _URL = "{{ route('v1.jenis-sertifikat.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -66,9 +59,9 @@
             $('.page-loading').fadeOut();
         }, 1000); // Adjust the timeout duration as needed
 
-        let DT = $("#dt_data").DataTable({
+        let DT = $("#jenis_serti").DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -81,11 +74,8 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "pesan" },
-                { data: "penerima" },
-                { data: "tanggal_notifikasi" },
-                { data: "jenis_notifikasi" },
-                { data: "status" },
+                { data: "name" },
+                { data: "pic" },
                 {
                     data: "action",
                     orderable: false,
@@ -106,25 +96,26 @@
         //     DT.search(this.value).draw();
         // });
     });
-
+</script>
+<script>
     function deleteData(id) {
         Swal.fire({
-            text: "Are you sure you want to delete this Notification?",
+            text: "Yakin Ingin Menghapus Jenis Sertifikat Ini?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Tidak, batal!",
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('admin.notification.destroy') }}",
+                    url: "{{ route('v1.jenis-sertifikat.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
                         _token: "{{ csrf_token() }}",
                     },
                     success: function (response) {
-                        $("#dt_data").DataTable().ajax.reload(null, false);
+                        $("#dt_kategori").DataTable().ajax.reload(null, false);
                         Swal.fire("Deleted!", response.message, "success");
                     },
                     error: function (xhr) {
@@ -136,5 +127,6 @@
             }
         });
     }
+
 </script>
 @endsection

@@ -15,12 +15,11 @@ return new class extends Migration {
             $table->string('project_no');
             $table->text('project_detail')->nullable();
             $table->string('prepared_by')->nullable();
-            $table->string('issued_date')->nullable();
-            $table->string('signature_date')->nullable();
-            $table->string('to')->nullable();
-            $table->string('attn')->nullable();
-            $table->string('received_by')->nullable();
-            $table->boolean('is_draft')->default(false);
+            $table->dateTime('issued_date')->nullable();
+            $table->string('signature_by')->nullable();
+            $table->dateTime('signature_date')->nullable();
+            $table->enum('status', ['draft', 'progress', 'complete'])->default('draft');
+            $table->integer('progress')->default(100);
             $table->timestamps();
             $table->softDeletes();
         });
