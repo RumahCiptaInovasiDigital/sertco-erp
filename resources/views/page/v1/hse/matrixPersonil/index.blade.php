@@ -49,12 +49,15 @@
                                     @php
                                         $punya = $karyawan->sertifikat
                                             ->where('idSertifikat', $item->id_sertifikat)
-                                            ->isNotEmpty();
+                                            ->first();
                                     @endphp
 
                                     <td class="text-center">
                                         @if ($punya)
-                                            <i class="fas fa-check-square text-success"></i>
+                                            <a href="javascript:void(0);" onclick="lihatSertifikat('{{ $punya->id }}')">
+                                                <button type="button" class="btn btn-sm btn-info">Lihat Sertifikat</button>
+                                            </a><br>
+                                            <span>due date ({{ $punya->due_date }})</span>
                                         @else
                                             -
                                         @endif
@@ -75,7 +78,19 @@
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-
+<script>
+    $(document).ready(function () {
+        $('#jenis_serti').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
 {{-- <script>
     const _URL = "{{ route('v1.jenis-sertifikat.getData') }}";
 
@@ -155,4 +170,37 @@
     }
 
 </script> --}}
+
+<div class="modal fade" id="modalPdf" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview Sertifikat</h5>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfFrame" style="width:100%;height:600px;" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function lihatSertifikat(id) {
+    $.ajax({
+        url: "/v1/matrix-personil/show/" + id,
+        type: "GET",
+        success: function(res) {
+            if (res.success) {
+                $('#pdfFrame').attr('src', res.url);
+                $('#modalPdf').modal('show');
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
+        },
+        error: function() {
+            Swal.fire("Error", "Tidak dapat membuka file sertifikat", "error");
+        }
+    });
+}
+</script>
 @endsection

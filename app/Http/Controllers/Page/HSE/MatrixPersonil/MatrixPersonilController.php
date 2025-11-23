@@ -49,21 +49,15 @@ class MatrixPersonilController extends Controller
         //     'tanggal_terbit' => 'required|date',
         //     'tanggal_expired' => 'required|date|after:tanggal_terbit',
         // ]);
-
+        $serti = JenisSertifikat::where('id_sertifikat', $request->id)->first();
         if ($request->hasFile('file_serti')) {
-
             $file = $request->file('file_serti');
-        
-            // nama file yang aman & unik
-            $fileName = time() . '_priced_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
-        
+            $fileName = $request->nik. '-' .$serti->name. '.pdf';
             $dest = public_path('assets/sertifikat/' . $request->nik . '/');
-        
-            // buat folder jika belum ada
+
             if (!file_exists($dest)) {
                 mkdir($dest, 0755, true);
             }
-        
             // pindahkan file
             $file->move($dest, $fileName);
         
@@ -85,5 +79,39 @@ class MatrixPersonilController extends Controller
             'message' => 'Sertifikat berhasil ditambahkan',
         ]);
         
+    }
+    public function show($id)
+    {
+        $data = MatrixPersonil::find($id);
+
+        if (!$data || !$data->file_serti) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File sertifikat tidak ditemukan.'
+            ], 404);
+        }
+        
+        $nik = $data->nik_karyawan;
+        $fileName = $data->file_serti;
+        $path = public_path('assets/sertifikat/' .$nik. '/' .$fileName);
+
+        if (!file_exists($path)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak tersedia di server.'
+            ], 404);
+        }
+
+        if (!file_exists($path)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak tersedia di server.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'url' => asset('assets/sertifikat/' .$nik. '/' .$fileName)
+        ]);
     }
 }

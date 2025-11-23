@@ -107,8 +107,8 @@
             @endforeach
             
             {{-- Jenis Sertifikat --}}
-            {{-- @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.data-peralatan.index', $item->url)) --}}
+            @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.jenis-sertifikat.index', $item->url))
                     <li class="nav-item">
                         <a href="{{ route('v1.jenis-sertifikat.index') }}" class="nav-link {{ request()->is('v1/jenis-sertifikat*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tasks"></i>
@@ -117,9 +117,9 @@
                             </p>
                         </a>
                     </li>
-                    {{-- @break
+                    @break
                 @endif
-            @endforeach --}}
+            @endforeach
 
             {{-- Barang --}}
             @foreach ($relation ?? [] as $item)

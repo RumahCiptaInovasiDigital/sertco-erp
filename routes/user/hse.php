@@ -29,7 +29,7 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
     Route::prefix('matrix-personil')->name('matrix-personil.')->controller(App\Http\Controllers\Page\HSE\MatrixPersonil\MatrixPersonilController::class)->group(function () {
         Route::get('get','getData')->name('getData');
         Route::get('','index')->name('index');
-        Route::get('detail/{id}', 'detail')->name('detail');
+        Route::get('show/{id}', 'show')->name('show');
     });
 
     Route::prefix('input-sertifikat')->name('input-sertifikat.')->controller(App\Http\Controllers\Page\HSE\MatrixPersonil\MatrixPersonilController::class)->group(function () {

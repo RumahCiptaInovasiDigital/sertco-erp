@@ -14,8 +14,8 @@
     @endif
 @endforeach
 
-{{-- @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.data-peminjaman.index', $item->url)) --}}
+@foreach ($relation ?? [] as $item)
+    @if (Str::is('v1.matrix-personil.index', $item->url))
         <li class="nav-item">
             <a href="{{ route('v1.matrix-personil.index') }}" class="nav-link {{ request()->is('v1/matrix-personil*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-user-check"></i>
@@ -24,6 +24,6 @@
                 </p>
             </a>
         </li>
-        {{-- @break
+        @break
     @endif
-@endforeach --}}
+@endforeach

@@ -74,8 +74,8 @@
                             <hr>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-success">Simpan</button>
-                            <a href="{{ route('v1.jenis-sertifikat.index') }}" class="btn btn-secondary">Batal</a>
+                            {{-- <button type="submit" class="btn btn-success">Simpan</button> --}}
+                            <a href="{{ route('v1.matrix-personil.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </div>
                 {{-- </form> --}}
