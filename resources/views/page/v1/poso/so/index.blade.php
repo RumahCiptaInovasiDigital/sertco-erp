@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Data Barang')
-@section('PageTitle', 'Data Barang')
+@section('title', 'Data Service Order')
+@section('PageTitle', 'Data Service Order')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Data Barang</li>
+    <li class="breadcrumb-item active">Data Service Order</li>
 </ol>
 @endsection
 @section('content')
@@ -18,30 +18,29 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List Data Barang</h3>
-                <div class="float-sm-right d-none d-sm-inline">
-                    <a href="{{ route('v1.barang.master.export') }}" class="btn btn-success btn-sm">
+                <h3 class="card-title">List Data Service Order</h3>
+                <div class="float-right d-none d-sm-inline">
+                    <a href="{{ route('v1.poso-request.so.export') }}" class="btn btn-success btn-sm">
                         <i class="fas fa-download"></i> Rekap (.xlsx)
                     </a>
-                    <a href="{{ route('v1.barang.master.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus-circle"></i> Tambah Data
+                    <a href="{{ route('v1.poso-request.so.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus-circle"></i> SO Request
                     </a>
                 </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover" style="white-space: nowrap; width:100%;">
+                <table id="dt_data" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Barang</th>
-                            <th>Kode Barang</th>
-                            <th>Nama Kategori Barang</th>
-                            <th>Jumlah Barang</th>
-                            <th>Status Barang</th>
-                            <th>Deskripsi Barang</th>
-                            <th>Kepemilikan</th>
-                            <th>Last Maintenance</th>
+                            <th>Nomor SO</th>
+                            <th>Nama Vendor</th>
+                            <th>Tanggal SO</th>
+                            <th>Tanggal Dibutuhkan</th>
+                            <th>Jenis Pekerjaan</th>
+                            <th>Total Estimasi</th>
+                            <th>Status SO</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -60,7 +59,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.barang.master.getData') }}";
+    const _URL = "{{ route('v1.poso-request.so.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -72,31 +71,24 @@
             "paging": true,
             "lengthChange": true,
             "searching": true,
-            "ordering": false,
+            "ordering": true,
             "info": true,
-            "autoWidth": true,
-            "responsive": false,
+            "autoWidth": false,
+            "responsive": true,
             processing: true,
             serverSide: true,
-            fixedColumns:   {
-                start: 1,
-                end: 1
-            },
-            scrollCollapse: true,
-            scrollX: true,
             ajax: {
                 url: _URL,
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "nama_barang" },
-                { data: "kode_barang" },
-                { data: "nama_kategori" },
-                { data: "qty" },
-                { data: "status_barang" },
-                { data: "deskripsi_barang" },
-                { data: "status_kepemilikan" },
-                { data: "last_maintenance" },
+                { data: "no_so" },
+                { data: "nama_vendor" },
+                { data: "tanggal_so" },
+                { data: "tanggal_dibutuhkan" },
+                { data: "jenis_pekerjaan" },
+                { data: "total_estimasi" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,
@@ -129,7 +121,7 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.barang.master.destroy') }}",
+                    url: "{{ route('v1.poso-request.so.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,

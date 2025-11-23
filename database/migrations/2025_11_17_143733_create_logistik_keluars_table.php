@@ -12,8 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('logistik_keluars', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id_logistik_keluar')->primary();
+            $table->string('no_logistik_keluar')->unique();
+            $table->text('keterangan');
+            $table->integer('total_item')->default(0);
+            $table->integer('jumlah_barang_total')->default(0);
+            $table->dateTime('tanggal_keluar');
+            $table->string('nik')->index();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -83,7 +83,45 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         });
     });
 
+    Route::prefix('poso-request')->name('poso-request.')->group(function () {
+        Route::prefix('po')->name('po.')->controller(App\Http\Controllers\Page\Purchasing\PurchaseOrderController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('export', 'export')->name('export');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('show/{id}', 'show')->name('show');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+        Route::prefix('so')->name('so.')->controller(App\Http\Controllers\Page\Purchasing\ServiceOrderController::class)->group(function () {
+            Route::get('get', 'getData')->name('getData');
+            Route::get('export', 'export')->name('export');
+            Route::get('', 'index')->name('index');
+            Route::get('create', 'create')->name('create');
+            Route::post('store', 'store')->name('store');
+            Route::get('show/{id}', 'show')->name('show');
+            Route::get('edit/{id}', 'edit')->name('edit');
+            Route::post('update/{id}', 'update')->name('update');
+            Route::post('destroy', 'destroy')->name('destroy');
+        });
+    });
+
     Route::prefix('suplier')->name('suplier.')->controller(App\Http\Controllers\Page\Logistik\SuplierController::class)->group(function () {
+        Route::get('get', 'getData')->name('getData');
+        Route::get('export', 'export')->name('export');
+        Route::get('import', 'importView')->name('import');
+        Route::post('import', 'import')->name('import');
+        Route::get('', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('vendor')->name('vendor.')->controller(App\Http\Controllers\Page\MasterData\Purchase\VendorController::class)->group(function () {
         Route::get('get', 'getData')->name('getData');
         Route::get('export', 'export')->name('export');
         Route::get('import', 'importView')->name('import');

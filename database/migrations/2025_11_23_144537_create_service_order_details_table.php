@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logistik_masuk_details', function (Blueprint $table) {
-            $table->uuid('id_logistik_masuk_detail')->primary();
-            $table->string('no_logistik_masuk')->index();
-            $table->char('id_barang')->index();
-            $table->integer('jumlah_barang')->default(0);
+        Schema::create('service_order_details', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logistik_masuk_details');
+        Schema::dropIfExists('service_order_details');
     }
 };

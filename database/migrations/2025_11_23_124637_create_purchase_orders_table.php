@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logistik_masuks', function (Blueprint $table) {
-            $table->uuid('id_logistik_masuk')->primary();
-            $table->string('no_logistik_masuk')->unique();
-            $table->string('id_po')->index();
+        Schema::create('purchase_orders', function (Blueprint $table) {
+            $table->uuid('id_po')->primary();
+            $table->string('no_po')->unique();
             $table->char('id_suplier', 36)->index();
-            $table->text('keterangan')->nullable();
-            $table->integer('total_item')->default(0);
-            $table->integer('jumlah_barang_total')->default(0);
-            $table->dateTime('tanggal_masuk');
+            $table->dateTime('tanggal_po');
+            $table->date('tanggal_dibutuhkan');
             $table->string('nik')->index();
+            $table->text('deskripsi_po');
+            $table->char('id_project', 36)->index()->nullable();
+            $table->enum('status_po', ['pending', 'on review', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logistik_masuks');
+        Schema::dropIfExists('purchase_orders');
     }
 };
