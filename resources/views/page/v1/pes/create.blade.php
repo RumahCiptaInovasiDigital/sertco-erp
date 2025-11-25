@@ -157,6 +157,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Lampiran</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="priceDoc">Upload Price Document</label>
+                                            <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="unpriceDoc">Upload UnPrice Document</label>
+                                            <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {{-- <div class="row">
                             <div class="col-12">
@@ -177,26 +197,7 @@
                         </div>
                     </div>
                 </form>
-                <div class="col-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <h5>Lampiran</h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="priceDoc">Upload Price Document</label>
-                                <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="unpriceDoc">Upload UnPrice Document</label>
-                                <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

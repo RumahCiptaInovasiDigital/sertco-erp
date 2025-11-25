@@ -123,6 +123,7 @@ class ProjectExecutionSheetController extends Controller
                 // } else {
                     if($row->prepared_by !== auth()->id()){
                         return  '<div class="text-center">
+                        <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
                         <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2"><i class="fas fa-comment"></i></a>
                                 </div>';
                     }
@@ -154,13 +155,10 @@ class ProjectExecutionSheetController extends Controller
         $data = ProjectSheet::query()
         ->where('id_project', $id)
         ->first();
-        $projectSheet = ProjectSheet::query()
-        ->where('id_project', $id)
-        ->first();
         $serviceKategori = KategoriService::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         $serviceType = ServiceType::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         
-        return view('page.v1.pes.show', compact('data', 'projectSheet', 'serviceKategori', 'serviceType'));
+        return view('page.v1.pes.show', compact('data', 'serviceKategori', 'serviceType'));
     }
 
     public function create()
@@ -172,7 +170,7 @@ class ProjectExecutionSheetController extends Controller
         return view('page.v1.pes.create', compact('project_no', 'role', 'departemen'));
     }
 
-    public function store(Request $request, $id_karyawan, $id_Serti)
+    public function store(Request $request)
     {
         $is_draft = $request->has('is_draft') ? true : false;
         $progess = 100;

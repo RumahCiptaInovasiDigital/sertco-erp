@@ -260,7 +260,7 @@
                     // Proses selesai, enable kembali tombol
                     $form.find('button[type="submit"]').attr('disabled', false);
                     $form.find('button[type="submit"]').text('Submit');
-                    console.log(response);
+                    // console.log(response);
 
                     // Opsional: tangani respons dari Laravel
                     if (response.success) {

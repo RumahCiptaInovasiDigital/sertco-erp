@@ -8,6 +8,13 @@
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endsection
+@section('styles')
+    <style>
+        .timeline {
+            margin: 0;
+        }
+    </style>
+@endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
@@ -19,14 +26,8 @@
 <div class="row">
     <div class="col-12">
         {{-- Project Information --}}
-        <div class="card collapsing-card">
+        <div class="card">
             <div class="card-header">
-                {{-- <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
-                    <h3 class="card-title" style="color: black;">Detail</h3>
-                    <div class="float-right d-none d-sm-inline">
-                        <i class="fas fa-minus"></i>
-                    </div>
-                </button> --}}
                 <div class="row">
                     <div class="col-12 col-md-10">
                         <ul class="nav nav-pills">
@@ -181,11 +182,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <a href="{{ route('v1.pes.edit', $data) }}" class="btn btn-xs btn-outline-warning" style="border-radius: 10px; color: black;"> <i class="fas fa-edit"></i> edit</a>
-                            </div>
-                        </div>
                     </div>
                     <div class="tab-pane" id="service">
                         <table class="table table-head-fixed text-nowrap table-bordered">
@@ -204,7 +200,7 @@
                                 @foreach ($serviceKategori as $kategori)
                                 @php
                                     // Ambil data service yang sesuai dengan kategori saat ini
-                                    $currentService = optional($projectSheet->service->firstWhere('id_kategori_service', $kategori->id_kategori_service));
+                                    $currentService = optional($data->service->firstWhere('id_kategori_service', $kategori->id_kategori_service));
                                 @endphp
                                     <input value="{{ $kategori->id_kategori_service }}" name="id_kategori[{{ $kategori->sort_num }}]" class="d-none">
                                     <tr>
@@ -257,17 +253,27 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <input type="text"
+                                                {{-- <input type="text"
                                                     id="other_value_{{ $kategori->sort_num }}"
-                                                    class="form-control tipe-input"
+                                                    class="form-control tipe-input text-wrap"
                                                     data-kategori="{{ $kategori->sort_num }}"
                                                     data-tipe="{{ (int) optional($serviceType->last())->sort_num + 1 }}"
                                                     name="other_value[{{ $kategori->sort_num }}]"
                                                     placeholder=""
                                                     style="text-align: center;"
-                                                    value="{{ $currentService->other_value }}"
+                                                    value="{{ $currentService->other_value }} kajshfkljahsd lfkjasflkjahfkjhsfhsakudhfshdfhdf ljkasf jsdlkajh"
                                                     readonly 
-                                                    >
+                                                    > --}}
+                                                    
+                                                    <textarea 
+                                                    id="other_value_{{ $kategori->sort_num }}"
+                                                    class="form-control tipe-input wrap-text overflow-auto" 
+                                                    data-kategori="{{ $kategori->sort_num }}"
+                                                    data-tipe="{{ (int) optional($serviceType->last())->sort_num + 1 }}"
+                                                    name="other_value[{{ $kategori->sort_num }}]"
+                                                    rows="auto"
+                                                    style="text-align: center;"
+                                                    readonly >{{ $currentService->other_value }}</textarea>
                                             </div>
                                         </td>
                                     </tr>
@@ -350,7 +356,17 @@
                     <div class="tab-pane" id="report">
                     </div>
                     <div class="tab-pane" id="comment">
-                    </div>
+                        <div id="comment-container"></div>
+
+                        <div id="comment-create" class="mt-3">
+                            <textarea id="main-comment" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
+
+                            <div class="d-flex align-items-center">
+                                <input type="file" id="main-image" accept="image/*">
+                                <button id="send-comment" class="btn btn-primary ml-2">Send</button>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -360,14 +376,7 @@
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-
 <script>
-    $(document).ready(function () {
-        if (window.location.hash === "#comment") {
-            $('a[href="#comment"]').tab('show');
-        }
-    });
-
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({
@@ -375,4 +384,125 @@
         })
     });
 </script>
+<script>
+    $(function() {
+        // ensure CSRF token present for ajax post
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+    
+        const projectNo = "{{ $data->project_no }}";
+        const loadUrl = "comment/" + projectNo;
+    
+        // initial load via jQuery .load() — server returns HTML directly
+        function loadComments() {
+            $("#comment-container").load(loadUrl);
+        }
+    
+        loadComments();
+    
+        // Send main comment (with optional image)
+        $('#send-comment').on('click', function () {
+            const comment = $('#main-comment').val().trim();
+            const imageFile = $('#main-image').prop('files')[0];
+    
+            if (!comment && !imageFile) {
+                alert('Isi komentar atau pilih gambar.');
+                return;
+            }
+    
+            const form = new FormData();
+            form.append('project_no', projectNo);
+            form.append('comment', comment);
+            if (imageFile) form.append('image', imageFile);
+    
+            $.ajax({
+                url: 'comment',
+                method: 'POST',
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    $('#main-comment').val('');
+                    $('#main-image').val('');
+                    loadComments();
+                },
+                error: function(xhr) {
+                    alert('Gagal mengirim komentar.');
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    
+        // Delegate: toggle reply form
+        $(document).on('click', '.reply-toggle', function () {
+            const id = $(this).data('id');
+            $('#reply-form-' + id).toggleClass('d-none');
+        });
+    
+        // Delegate: send reply (with optional image)
+        $(document).on('click', '.send-reply', function () {
+            const id = $(this).data('id');
+            const text = $('#reply-form-' + id + ' .reply-text').val().trim();
+            const fileEl = $('#reply-form-' + id + ' .reply-image')[0];
+            const file = fileEl && fileEl.files[0];
+    
+            if (!text && !file) {
+                alert('Isi reply atau pilih gambar.');
+                return;
+            }
+    
+            const form = new FormData();
+            form.append('project_no', projectNo);
+            form.append('comment', text);
+            form.append('parent_id', id);
+            if (file) form.append('image', file);
+    
+            $.ajax({
+                url: 'comment',
+                method: 'POST',
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    loadComments();
+                },
+                error: function(xhr) {
+                    alert('Gagal mengirim reply.');
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    
+        // Delegate: like toggle
+        $(document).on('click', '.like-btn', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $.post('comment/' + id + '/like', {}, function (res) {
+                // Option A: reload everything (simple, consistent)
+                loadComments();
+    
+                // Option B: update only this like count/button (more efficient)
+                // $(e.currentTarget).find('.like-count').text('(' + res.count + ')');
+            });
+        });
+    
+        // Optional: preview image before upload for main comment
+        $('#main-image').on('change', function () {
+            // you can implement preview if you want (left out to keep concise)
+        });
+
+        $('.like-btn').on('click', function () {
+            const id = $(this).data('id');
+            // AJAX like...
+        });
+
+        $('.reply-toggle').on('click', function () {
+            const id = $(this).data('id');
+            // toggle reply form...
+        });
+
+    });
+</script>
+
 @endsection

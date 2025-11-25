@@ -15,18 +15,7 @@ class ProjectRegisterController extends Controller
 
     public function index()
     {
-        return view('page.v1.marketing.register-project.index');
-    }
-
-    public function create()
-    {
-        $project_no = $this->generateProjectNo();
-
-        return view('page.v1.marketing.register-project.create', compact('project_no'));
-    }
-
-    public function store(\Request $request)
-    {
+        return view('page.v1.marketing.project-register.index');
     }
 
     public function edit($id)

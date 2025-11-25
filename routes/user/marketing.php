@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
-    Route::prefix('register-project')->name('register-project.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
+    Route::prefix('project-register')->name('project-register.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('get', 'getData')->name('getData');
         Route::get('create', 'create')->name('create');
@@ -60,4 +60,10 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
             Route::post('update/{id}', 'update')->name('update');
         });
     });
+});
+
+Route::prefix('v1/pes/show/')->controller(App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\CommentController::class)->group(function () {
+    Route::get('comment/{project_no}', 'load');
+    Route::post('comment', 'store');
+    Route::post('comment/{id}/like', 'toggleLike');
 });
