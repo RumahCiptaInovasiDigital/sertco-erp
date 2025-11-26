@@ -25,7 +25,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="file_serti">File Sertifikat</label>
-                        <input type="file" class="form-control departemen" name="file_serti" id="file_serti_{{ $item->id_sertifikat }}" value="{{ $item->name }}" accept=".pdf" {{ $punya ? 'disabled' : '' }}>
+                        <input type="file" class="form-control departemen" name="file_serti" id="file_serti_{{ $item->id_sertifikat }}" accept=".pdf" {{ $punya ? 'disabled' : '' }}>
                     </div>
                 </div>
                 <div class="col-12 col-md-2">

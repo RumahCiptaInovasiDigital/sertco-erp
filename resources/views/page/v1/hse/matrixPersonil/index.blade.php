@@ -19,12 +19,13 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Daftar Matrix Personil</h3>
-                <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.input-sertifikat.create') }}" class="btn btn-primary btn-block">
-                        <i class="fas fa-plus-circle"></i> Input Sertifikat Personil
+                <div class="float-right d-none d-sm-inline" style="gap: 10px;">
+                    <a href="{{ route('v1.input-sertifikat.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>Input Sertifikat Personil
                     </a>
                 </div>
             </div>
+
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="jenis_serti" class="table table-bordered table-hover">
@@ -55,9 +56,9 @@
                                     <td class="text-center">
                                         @if ($punya)
                                             <a href="javascript:void(0);" onclick="lihatSertifikat('{{ $punya->id }}')">
-                                                <button type="button" class="btn btn-sm btn-info">Lihat Sertifikat</button>
-                                            </a><br>
-                                            <span>due date ({{ $punya->due_date }})</span>
+                                                <i class="fas fa-check-circle"></i><br>
+                                                <span>due date ({{ $punya->due_date }})</span>
+                                            </a>
                                         @else
                                             -
                                         @endif

@@ -37,6 +37,7 @@ class MatrixPersonilController extends Controller
     public function create()
     {
         $karyawan = DataKaryawan::orderBy('fullName')->get();
+        
         $sertifikat = JenisSertifikat::orderBy('name')->get();
         return view('page.v1.hse.matrixPersonil.create', compact('karyawan','sertifikat'));
     }
@@ -80,6 +81,13 @@ class MatrixPersonilController extends Controller
         ]);
         
     }
+
+    // public function edit()
+    // {
+    //     $karyawan = DataKaryawan::orderBy('fullName')->get();
+    //     $sertifikat = JenisSertifikat::orderBy('name')->get();
+    //     return view('page.v1.hse.matrixPersonil.edit', compact('karyawan','sertifikat'));
+    // }
     public function show($id)
     {
         $data = MatrixPersonil::find($id);

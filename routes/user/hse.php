@@ -36,6 +36,7 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
         Route::get('karyawan/{id}', 'getKaryawan')->name('getKaryawan');
         Route::get('create','create')->name('create');
         Route::post('store', 'store')->name('store');
+        // Route::get('edit','edit')->name('edit');
         Route::post('update/{id}', 'update')->name('update');
     });
 });
