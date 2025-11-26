@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.pes_master')
 @section('title', 'Project Execution Sheet')
 @section('PageTitle', 'Project Execution Sheet')
 @section('head')
@@ -22,7 +22,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('v1.pes.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('v1.pes.store') }}" id="uploadForm" method="post">
                     @csrf
                     <div class="col-12">
                         <div class="row">
@@ -53,12 +53,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-4">
+                            {{-- <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="project_no">Project No.</label>
                                     <input type="text" class="form-control" name="project_no" id="project_no" value="{{ $project_no }}" placeholder="Input Project No." readonly>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="client">Client</label>
@@ -157,6 +157,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Lampiran</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="priceDoc">Upload Price Document</label>
+                                            <input type="file" class="form-control" name="priceDoc" id="priceDoc">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="unpriceDoc">Upload UnPrice Document</label>
+                                            <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {{-- <div class="row">
                             <div class="col-12">
@@ -172,87 +192,27 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary w-100">Halaman Service</button>
+                                <button type="submit" class="btn btn-primary w-100">Create Project</button>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div class="col-12 col-md-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <h5>Lampiran</h5>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="priceDoc">Upload Price Document</label>
-                                <input type="file" class="form-control" name="priceDoc" id="priceDoc" required>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="unpriceDoc">Upload UnPrice Document</label>
-                                <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc" required>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Comment Section --}}
-{{-- <aside class="control-sidebar control-sidebar-light" style="width: 350px;">
-    <div class="row m-1">
-        <div class="col-12">
-            <label><u>Project Notes / Comments</u></label>
-            <div id="notes-wrapper">
-            </div>
-            <button type="button" class="btn btn-success btn-sm" id="add-note">
-                <i class="fas fa-plus"></i> Tambah Note
-            </button>
-            <br/>
-            <button type="button" class="btn btn-outline-danger btn-sm mt-1" data-widget="control-sidebar" data-controlsidebar-slide="true">
-                tutup
-            </button>
-        </div>
-    </div>
-</aside> --}}
-
 @endsection
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-
+<script src="{{ asset('dist/js/chunkupload.js') }}"></script>
 <script>
-    // $(document).ready(function () {
-    //     // Tambah note baru
-    //     $('#add-note').click(function () {
-    //         $('#notes-wrapper').append(`
-    //             <div class="note-item">
-    //                 <span class="badge badge-info">{{ auth()->user()->fullname }} :</span>
-    //                 <div class="input-group mb-2">
-    //                     <textarea name="notes[]" class="form-control" placeholder="Input Note"></textarea>
-    //                     <button type="button" class="btn btn-danger btn-sm btn-remove-note">
-    //                         <i class="fas fa-trash"></i>
-    //                     </button>
-    //                 </div>
-    //             </div>
-    //         `);
-    //     });
-
-    //     // Hapus note tertentu
-    //     $(document).on('click', '.btn-remove-note', function () {
-    //         $(this).closest('.note-item').remove();
-    //     });
-    // });
-    
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2({
             theme: 'bootstrap4'
         })
     });
-</script>
+</script>   
 @endsection

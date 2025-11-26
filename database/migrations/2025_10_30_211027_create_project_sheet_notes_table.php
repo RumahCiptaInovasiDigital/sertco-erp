@@ -12,12 +12,20 @@ return new class extends Migration {
     {
         Schema::create('project_sheet_notes', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('project_no');
-            $table->text('note');
+            $table->string('project_no'); 
+            $table->text('comment');
             $table->uuid('id_user');
+    
+            // komentar
+            // null = top-level comment
+            // diisi = reply ke komentar lain
+            $table->uuid('parent_id')->nullable()->index();
+        
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('parent_id')->references('id')->on('project_sheet_notes')->onDelete('cascade');
         });
+        
     }
 
     /**

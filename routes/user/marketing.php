@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
-    Route::prefix('register-project')->name('register-project.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
+    Route::prefix('project-register')->name('project-register.')->controller(App\Http\Controllers\Page\Marketing\ProjectRegister\ProjectRegisterController::class)->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('get', 'getData')->name('getData');
         Route::get('create', 'create')->name('create');
@@ -61,3 +61,14 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         });
     });
 });
+
+Route::prefix('v1/pes/show/')->controller(App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\CommentController::class)->group(function () {
+    Route::get('comment/{project_no}', 'load');
+    Route::post('comment', 'store');
+    Route::post('comment/{id}/like', 'toggleLike');
+});
+
+
+// Chunk upload untuk upload lampiran pes big size
+Route::post('/chunk-upload', [App\Http\Controllers\System\FileUploadPES\ChunkUploadController::class, 'uploadChunk']);
+Route::post('/chunk-complete', [App\Http\Controllers\System\FileUploadPES\ChunkUploadController::class, 'completeChunk']);

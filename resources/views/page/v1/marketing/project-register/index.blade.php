@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Data Barang')
-@section('PageTitle', 'Data Barang')
+@section('title', 'Project Register')
+@section('PageTitle', 'Project Register')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Data Barang</li>
+    <li class="breadcrumb-item active">Project Register</li>
 </ol>
 @endsection
 @section('content')
@@ -18,31 +18,29 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">List Data Barang</h3>
-                <div class="float-sm-right d-none d-sm-inline">
-                    <a href="{{ route('v1.barang.master.export') }}" class="btn btn-success btn-sm">
-                        <i class="fas fa-download"></i> Rekap (.xlsx)
+                <h3 class="card-title">Daftar Project Dibuat</h3>
+                <div class="float-right d-none d-sm-inline">
+                    <a href="{{ route('v1.project-register.create') }}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-asterisk"></i> Refer Project
                     </a>
-                    <a href="{{ route('v1.barang.master.create') }}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus-circle"></i> Tambah Data
+                    <a href="{{ route('v1.project-register.create') }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus-circle"></i> Buat Project Baru
                     </a>
                 </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover" style="white-space: nowrap; width:100%;">
+                <table id="dt_data" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Nama Barang</th>
-                            <th>Kode Barang</th>
-                            <th>Nama Kategori Barang</th>
-                            <th>Jumlah Barang</th>
-                            <th>Status Barang</th>
-                            <th>Deskripsi Barang</th>
-                            <th>Kepemilikan</th>
-                            <th>Last Maintenance</th>
-                            <th>Opsi</th>
+                            <th width="5%">#</th>
+                            <th style="width: 10%;">Project No.</th>
+                            <th>Prepared By</th>
+                            <th>Issued Date</th>
+                            <th>To</th>
+                            <th>Attention</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,7 +58,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.barang.master.getData') }}";
+    const _URL = "{{ route('admin.notification.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -70,33 +68,24 @@
 
         let DT = $("#dt_data").DataTable({
             "paging": true,
-            "lengthChange": true,
+            "lengthChange": false,
             "searching": true,
-            "ordering": false,
+            "ordering": true,
             "info": true,
-            "autoWidth": true,
-            "responsive": false,
+            "autoWidth": false,
+            "responsive": true,
             processing: true,
             serverSide: true,
-            fixedColumns:   {
-                start: 1,
-                end: 1
-            },
-            scrollCollapse: true,
-            scrollX: true,
             ajax: {
                 url: _URL,
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "nama_barang" },
-                { data: "kode_barang" },
-                { data: "nama_kategori" },
-                { data: "qty" },
-                { data: "status_barang" },
-                { data: "deskripsi_barang" },
-                { data: "status_kepemilikan" },
-                { data: "last_maintenance" },
+                { data: "pesan" },
+                { data: "penerima" },
+                { data: "tanggal_notifikasi" },
+                { data: "jenis_notifikasi" },
+                { data: "status" },
                 {
                     data: "action",
                     orderable: false,
@@ -117,19 +106,18 @@
         //     DT.search(this.value).draw();
         // });
     });
-</script>
-<script>
+
     function deleteData(id) {
         Swal.fire({
-            text: "Yakin Data Ini Akan Dihapus?",
+            text: "Are you sure you want to delete this Notification?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yakin, hapus!",
-            cancelButtonText: "Tidak, batal!",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('v1.barang.master.destroy') }}",
+                    url: "{{ route('admin.notification.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
@@ -144,10 +132,9 @@
                     },
                 });
             } else if (result.dismiss === "cancel") {
-                Swal.fire("Cancelled", "Data Anda Aman :)", "info");
+                Swal.fire("Cancelled", "Your data is safe :)", "error");
             }
         });
     }
-
 </script>
 @endsection

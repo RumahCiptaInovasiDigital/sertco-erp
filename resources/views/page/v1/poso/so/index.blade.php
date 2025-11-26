@@ -1,6 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Project Register')
-@section('PageTitle', 'Project Register')
+@section('title', 'Data Service Order')
+@section('PageTitle', 'Data Service Order')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -10,7 +10,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Project Register</li>
+    <li class="breadcrumb-item active">Data Service Order</li>
 </ol>
 @endsection
 @section('content')
@@ -18,13 +18,13 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Project Dibuat</h3>
+                <h3 class="card-title">List Data Service Order</h3>
                 <div class="float-right d-none d-sm-inline">
-                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-warning">
-                        <i class="fas fa-asterisk"></i> Refer Project
+                    <a href="{{ route('v1.poso-request.so.export') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-download"></i> Rekap (.xlsx)
                     </a>
-                    <a href="{{ route('v1.register-project.create') }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus-circle"></i> Buat Project Baru
+                    <a href="{{ route('v1.poso-request.so.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus-circle"></i> SO Request
                     </a>
                 </div>
             </div>
@@ -33,14 +33,15 @@
                 <table id="dt_data" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="5%">#</th>
-                            <th style="width: 10%;">Project No.</th>
-                            <th>Prepared By</th>
-                            <th>Issued Date</th>
-                            <th>To</th>
-                            <th>Attention</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Action</th>
+                            <th>No</th>
+                            <th>Nomor SO</th>
+                            <th>Nama Vendor</th>
+                            <th>Tanggal SO</th>
+                            <th>Tanggal Dibutuhkan</th>
+                            <th>Jenis Pekerjaan</th>
+                            <th>Total Estimasi</th>
+                            <th>Status SO</th>
+                            <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,7 +59,7 @@
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('admin.notification.getData') }}";
+    const _URL = "{{ route('v1.poso-request.so.getData') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -68,7 +69,7 @@
 
         let DT = $("#dt_data").DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -81,10 +82,12 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
-                { data: "pesan" },
-                { data: "penerima" },
-                { data: "tanggal_notifikasi" },
-                { data: "jenis_notifikasi" },
+                { data: "no_so" },
+                { data: "nama_vendor" },
+                { data: "tanggal_so" },
+                { data: "tanggal_dibutuhkan" },
+                { data: "jenis_pekerjaan" },
+                { data: "total_estimasi" },
                 { data: "status" },
                 {
                     data: "action",
@@ -106,18 +109,19 @@
         //     DT.search(this.value).draw();
         // });
     });
-
+</script>
+<script>
     function deleteData(id) {
         Swal.fire({
-            text: "Are you sure you want to delete this Notification?",
+            text: "Yakin Data Ini Akan Dihapus?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Yakin, hapus!",
+            cancelButtonText: "Tidak, batal!",
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('admin.notification.destroy') }}",
+                    url: "{{ route('v1.poso-request.so.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
@@ -132,9 +136,10 @@
                     },
                 });
             } else if (result.dismiss === "cancel") {
-                Swal.fire("Cancelled", "Your data is safe :)", "error");
+                Swal.fire("Cancelled", "Data Anda Aman :)", "info");
             }
         });
     }
+
 </script>
 @endsection

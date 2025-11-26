@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Page\Logistik;
+namespace App\Http\Controllers\Page\MasterData\Purchase;
 
 use App\Http\Controllers\Controller;
-use App\Models\Suplier;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -12,48 +12,51 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-class SuplierController extends Controller
+
+class VendorController extends Controller
 {
     public function getData(Request $request)
     {
-        $query = Suplier::query()->latest()->get();
+        $query = Vendor::query()->latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
             ->editColumn("norek", function ($row) {
-                if($row->norek_suplier != null && $row->bank_suplier != null) {
-                    return $row->norek_suplier." (".$row->bank_suplier.")";
+                if($row->norek_vendor != null && $row->bank_vendor != null) {
+                    return $row->norek_vendor." (".$row->bank_vendor.")";
                 } else {
                     return "-";
                 }
             })
             ->editColumn("cp", function ($row) {
-                if($row->nama_kontak != null && $row->nohp_kontak != null) {
-                    return $row->nohp_kontak." (".$row->nama_kontak.")";
+                if($row->nama_kontak_vendor != null && $row->nohp_kontak_vendor != null) {
+                    return $row->nohp_kontak_vendor." (".$row->nama_kontak_vendor.")";
                 } else {
                     return "-";
                 }
             })
-            ->editColumn("telp_suplier", function ($row) {
-                if($row->telp_suplier != null) {
-                    return $row->telp_suplier;
+            ->editColumn("telp_vendor", function ($row) {
+                if($row->telp_vendor != null) {
+                    return $row->telp_vendor;
                 } else {
                     return "-";
                 }
             })
             ->addColumn('action', function ($row) {
-                return '<a href="'.route('v1.suplier.edit', $row->id_suplier).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_suplier.'\')"><i class="fas fa-trash"></i></button>';
+                return '<a href="'.route('v1.vendor.edit', $row->id_vendor).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_vendor.'\')"><i class="fas fa-trash"></i></button>';
             })
             ->rawColumns([
                 'action',
             ])
             ->make(true);
     }
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        return view('page.v1.suplier.index');
+        return view('page.v1.vendor.index');
     }
 
     /**
@@ -61,7 +64,7 @@ class SuplierController extends Controller
      */
     public function create()
     {
-        return view('page.v1.suplier.create');
+        return view('page.v1.vendor.create');
     }
 
     /**
@@ -78,23 +81,23 @@ class SuplierController extends Controller
         try {
             \DB::beginTransaction();
 
-            Suplier::create([
-                'nama_suplier' => $request->nama,
-                'telp_suplier' => $request->telp ?? null,
-                'alamat_suplier' => $request->alamat,
-                'email_suplier' => $request->email,
-                'norek_suplier' => $request->norek ?? null,
-                'bank_suplier' => $request->bank ?? null,
-                'nama_kontak' => $request->kontak ?? null,
-                'nohp_kontak' => $request->hp_kontak ?? null,
+            Vendor::create([
+                'nama_vendor' => $request->nama,
+                'telp_vendor' => $request->telp ?? null,
+                'alamat_vendor' => $request->alamat,
+                'email_vendor' => $request->email,
+                'norek_vendor' => $request->norek ?? null,
+                'bank_vendor' => $request->bank ?? null,
+                'nama_kontak_vendor' => $request->kontak ?? null,
+                'nohp_kontak_vendor' => $request->hp_kontak ?? null,
             ]);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Suplier Berhasil Ditambahkan',
-                'redirect' => route('v1.suplier.index'),
+                'message' => 'Vendor Berhasil Ditambahkan',
+                'redirect' => route('v1.vendor.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -111,11 +114,11 @@ class SuplierController extends Controller
      */
     public function edit(string $id)
     {
-        $data['suplier'] = Suplier::query()
-            ->where('id_suplier', $id)
+        $data['vendor'] = Vendor::query()
+            ->where('id_vendor', $id)
             ->first();
 
-        return view('page.v1.suplier.edit', $data);
+        return view('page.v1.vendor.edit', $data);
     }
 
     /**
@@ -132,26 +135,26 @@ class SuplierController extends Controller
         try {
             \DB::beginTransaction();
 
-            $data = Suplier::query()
-                ->where('id_suplier', $id)
+            $data = Vendor::query()
+                ->where('id_vendor', $id)
                 ->first();
             $data->update([
-                'nama_suplier' => $request->nama,
-                'telp_suplier' => $request->telp ?? null,
-                'alamat_suplier' => $request->alamat,
-                'email_suplier' => $request->email,
-                'norek_suplier' => $request->norek ?? null,
-                'bank_suplier' => $request->bank ?? null,
-                'nama_kontak' => $request->kontak ?? null,
-                'nohp_kontak' => $request->hp_kontak ?? null,
+                'nama_vendor' => $request->nama,
+                'telp_vendor' => $request->telp ?? null,
+                'alamat_vendor' => $request->alamat,
+                'email_vendor' => $request->email,
+                'norek_vendor' => $request->norek ?? null,
+                'bank_vendor' => $request->bank ?? null,
+                'nama_kontak_vendor' => $request->kontak ?? null,
+                'nohp_kontak_vendor' => $request->hp_kontak ?? null,
             ]);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Suplier Berhasil Diperbarui',
-                'redirect' => route('v1.suplier.index'),
+                'message' => 'Vendor Berhasil Diperbarui',
+                'redirect' => route('v1.vendor.index'),
             ]);
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -177,8 +180,8 @@ class SuplierController extends Controller
             ]);
         }
 
-        $data = Suplier::query()
-            ->where('id_suplier', $id)
+        $data = Vendor::query()
+            ->where('id_vendor', $id)
             ->first();
 
         // Hapus role
@@ -191,11 +194,11 @@ class SuplierController extends Controller
     }
 
     /**
-     * Export Suplier data to Excel (XLSX)
+     * Export Vendor data to Excel (XLSX)
      */
     public function export(Request $request)
     {
-        $items = Suplier::query()->latest()->get();
+        $items = Vendor::query()->latest()->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -203,12 +206,12 @@ class SuplierController extends Controller
         // Header
         $headers = [
             'No',
-            'Nama Suplier',
-            'Telp Suplier',
-            'Alamat Suplier',
-            'Email Suplier',
-            'Norek Suplier',
-            'Bank Suplier',
+            'Nama Vendor',
+            'Telp Vendor',
+            'Alamat Vendor',
+            'Email Vendor',
+            'Norek Vendor',
+            'Bank Vendor',
             'Nama Kontak',
             'No HP Kontak',
         ];
@@ -222,20 +225,20 @@ class SuplierController extends Controller
         $row = 2;
         foreach ($items as $index => $item) {
             $sheet->setCellValue('A'.$row, $index + 1);
-            $sheet->setCellValue('B'.$row, $item->nama_suplier ?? '#');
-            $sheet->setCellValue('C'.$row, $item->telp_suplier ?? '#');
-            $sheet->setCellValue('D'.$row, $item->alamat_suplier ?? '#');
-            $sheet->setCellValue('E'.$row, $item->email_suplier ?? '#');
-            $sheet->setCellValue('F'.$row, $item->norek_suplier ?? '#');
-            $sheet->setCellValue('G'.$row, $item->bank_suplier ?? '#');
-            $sheet->setCellValue('H'.$row, $item->nama_kontak ?? '#');
-            $sheet->setCellValue('I'.$row, $item->nohp_kontak ?? '#');
+            $sheet->setCellValue('B'.$row, $item->nama_vendor ?? '#');
+            $sheet->setCellValue('C'.$row, $item->telp_vendor ?? '#');
+            $sheet->setCellValue('D'.$row, $item->alamat_vendor ?? '#');
+            $sheet->setCellValue('E'.$row, $item->email_vendor ?? '#');
+            $sheet->setCellValue('F'.$row, $item->norek_vendor ?? '#');
+            $sheet->setCellValue('G'.$row, $item->bank_vendor ?? '#');
+            $sheet->setCellValue('H'.$row, $item->nama_kontak_vendor ?? '#');
+            $sheet->setCellValue('I'.$row, $item->nohp_kontak_vendor ?? '#');
 
             $row++;
         }
 
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'data-suplier-'.date('Ymd_His').'.xlsx';
+        $fileName = 'data-vendor-'.date('Ymd_His').'.xlsx';
 
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
@@ -245,7 +248,7 @@ class SuplierController extends Controller
     }
 
     /**
-     * Import suplier data from uploaded Excel (XLSX)
+     * Import vendor data from uploaded Excel (XLSX)
      */
     public function import(Request $request)
     {
@@ -280,15 +283,15 @@ class SuplierController extends Controller
                     continue; // skip rows without name
                 }
 
-                Suplier::create([
-                    'nama_suplier' => $nama,
-                    'telp_suplier' => isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null,
-                    'alamat_suplier' => isset($row[2]) && $row[2] !== '' ? trim($row[2]) : null,
-                    'email_suplier' => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
-                    'norek_suplier' => isset($row[4]) && $row[4] !== '' ? trim($row[4]) : null,
-                    'bank_suplier' => isset($row[5]) && $row[5] !== '' ? trim($row[5]) : null,
-                    'nama_kontak' => isset($row[6]) && $row[6] !== '' ? trim($row[6]) : null,
-                    'nohp_kontak' => isset($row[7]) && $row[7] !== '' ? trim($row[7]) : null,
+                Vendor::create([
+                    'nama_vendor' => $nama,
+                    'telp_vendor' => isset($row[1]) && $row[1] !== '' ? trim($row[1]) : null,
+                    'alamat_vendor' => isset($row[2]) && $row[2] !== '' ? trim($row[2]) : null,
+                    'email_vendor' => isset($row[3]) && $row[3] !== '' ? trim($row[3]) : null,
+                    'norek_vendor' => isset($row[4]) && $row[4] !== '' ? trim($row[4]) : null,
+                    'bank_vendor' => isset($row[5]) && $row[5] !== '' ? trim($row[5]) : null,
+                    'nama_kontak_vendor' => isset($row[6]) && $row[6] !== '' ? trim($row[6]) : null,
+                    'nohp_kontak_vendor' => isset($row[7]) && $row[7] !== '' ? trim($row[7]) : null,
                 ]);
             }
 
