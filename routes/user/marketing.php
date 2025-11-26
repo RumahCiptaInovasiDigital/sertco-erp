@@ -67,3 +67,8 @@ Route::prefix('v1/pes/show/')->controller(App\Http\Controllers\Page\Marketing\Pr
     Route::post('comment', 'store');
     Route::post('comment/{id}/like', 'toggleLike');
 });
+
+
+// Chunk upload untuk upload lampiran pes big size
+Route::post('/chunk-upload', [App\Http\Controllers\System\FileUploadPES\ChunkUploadController::class, 'uploadChunk']);
+Route::post('/chunk-complete', [App\Http\Controllers\System\FileUploadPES\ChunkUploadController::class, 'completeChunk']);

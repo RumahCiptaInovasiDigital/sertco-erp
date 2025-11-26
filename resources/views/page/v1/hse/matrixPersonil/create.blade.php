@@ -103,6 +103,7 @@
 
     // Auto fill data karyawan
     $(document).on('change', '.karyawanSelect', function () {
+        $('#daftar-sertifikat').html('');
         let nik_karyawan = $(this).val();
         // let row = $(this).closest('.alat-row');
 
