@@ -163,27 +163,20 @@ class ProjectExecutionSheetController extends Controller
 
     public function create()
     {
-        $project_no = $this->generateProjectNo();
-        $role = Role::orderBy('name')->get();
-        $departemen = Departemen::orderBy('name')->get();
-
-        return view('page.v1.pes.create', compact('project_no', 'role', 'departemen'));
+        return view('page.v1.pes.create');
     }
 
     public function store(Request $request)
     {
         $is_draft = $request->has('is_draft') ? true : false;
         $progess = 100;
-        if(!$is_draft){
-            $progess = 101;
-        }
 
         if (!$is_draft) {
+            $project_no = $this->generateProjectNo();
             $validated = $request->validate([
                 'nik' => 'required|string|max:255',
                 'prepared_by' => 'required|string|max:255',
                 'issued_date' => 'required|date',
-                'project_no' => 'required|string|max:255',
                 'client' => 'required|string|max:255',
                 'owner' => 'required|string|max:255',
                 'contract_no' => 'required|string|max:255',
@@ -204,7 +197,7 @@ class ProjectExecutionSheetController extends Controller
             DB::beginTransaction();
 
             $projectSheet = ProjectSheet::create([
-                'project_no' => $request->project_no,
+                'project_no' => $project_no,
                 'project_detail' => $request->project_detail,
                 'prepared_by' => $request->prepared_by,
                 'issued_date' => $request->issued_date,
@@ -214,33 +207,32 @@ class ProjectExecutionSheetController extends Controller
                 'progress' => $progess,
             ]);
 
-            // ==== HANDLE FILE UPLOAD ==== //
-            $pricedocPath = null;
-            $unpricedocPath = null;
+            $pricedocName = null;
+            $unpricedocName = null;
 
-            // if (!$is_draft) {
-            if ($request->hasFile('priceDoc')) {
-                $pricedoc = $request->file('priceDoc');
-                $pricedocName = time().'_priced_'.$pricedoc->getClientOriginalName();
+            $priceTmp = $request->input('priceDoc_tmp');
+            $unpriceTmp = $request->input('unpriceDoc_tmp');
 
-                $pricedocPath = public_path('assets/project/'.$request->project_no.'/pricedoc');
-                if (!file_exists($pricedocPath)) {
-                    mkdir($pricedocPath, 0755, true);
+            if ($priceTmp) {
+                // pindahkan dari storage/app/tmp/... ke public assets
+                $tmpFull = storage_path('app/' . $priceTmp); // storage/app/tmp/...
+                if (file_exists($tmpFull)) {
+                    $pricedocName = time().'_priced_'.basename($tmpFull);
+                    $destDir = public_path('assets/project/'.$project_no.'/pricedoc');
+                    if (!file_exists($destDir)) mkdir($destDir, 0755, true);
+                    rename($tmpFull, $destDir . '/' . $pricedocName);
                 }
-                $pricedoc->move($pricedocPath, $pricedocName);
             }
 
-            if ($request->hasFile('unpriceDoc')) {
-                $unpricedoc = $request->file('unpriceDoc');
-                $unpricedocName = time().'_priced_'.$unpricedoc->getClientOriginalName();
-
-                $unpricedocPath = public_path('assets/project/'.$request->project_no.'/unpricedoc');
-                if (!file_exists($unpricedocPath)) {
-                    mkdir($unpricedocPath, 0755, true);
+            if ($unpriceTmp) {
+                $tmpFull = storage_path('app/' . $unpriceTmp);
+                if (file_exists($tmpFull)) {
+                    $unpricedocName = time().'_unpriced_'.basename($tmpFull);
+                    $destDir = public_path('assets/project/'.$project_no.'/unpricedoc');
+                    if (!file_exists($destDir)) mkdir($destDir, 0755, true);
+                    rename($tmpFull, $destDir . '/' . $unpricedocName);
                 }
-                $unpricedoc->move($unpricedocPath, $unpricedocName);
             }
-            // }
 
             ProjectSheetDetail::create([
                 'id_project' => $projectSheet->id_project,
@@ -394,15 +386,5 @@ class ProjectExecutionSheetController extends Controller
             'success' => true,
             'message' => 'Data deleted successfully.',
         ]);
-    }
-
-
-    public function uploadPriceDoc(Request $request)
-    {
-        
-    }
-    public function uploadUnpriceDoc(Request $request)
-    {
-
     }
 }

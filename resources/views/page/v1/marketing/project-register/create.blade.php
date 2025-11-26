@@ -22,7 +22,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('v1.register-project.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('v1.project-register.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-12">
                         <div class="row">

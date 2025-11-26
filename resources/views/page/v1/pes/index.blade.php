@@ -69,7 +69,7 @@
                             <div class="col">
                                 <div class="text-left">
                                     @php
-                                        $parse = Carbon\Carbon::parse($sheet->issued_date)->locale('id');
+                                        $parse = Carbon\Carbon::parse($sheet->updated_at)->locale('id');
                                         $date = $parse->translatedFormat('l, d M Y H:i');
                                     @endphp
                                     <span class="badge bg-light">{{ $date }}</span>

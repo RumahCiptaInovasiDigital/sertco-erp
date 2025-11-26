@@ -1,4 +1,13 @@
-<div class="timeline">
+<div class="timeline">  
+    @if ($comments->count() == 0)
+    <div>
+        <div class="timeline-item">
+            <div class="timeline-body">
+                <p class="text-muted">Belum ada Komentar untuk Project ini.</p>
+            </div>
+        </div>
+    </div>
+    @endif
     @foreach($comments as $comment)
         <div>
             <div class="timeline-item">
