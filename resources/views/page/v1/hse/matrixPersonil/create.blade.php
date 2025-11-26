@@ -160,7 +160,10 @@
 
                 // 🔥 Hapus tombol submit & ganti icon check
                 $('#action_area_' + id).html(`
-                    <i class="fas fa-check-square text-success"></i>
+                    <button class="btn btn-warning btn-md"
+                        onclick="EnableUpdate('${id}')">
+                        Update
+                    </button>
                 `);
             },
             error: function (xhr) {
@@ -169,7 +172,55 @@
         });
     }
 
+    function SimpanUpdate(id) {
+        let formData = new FormData();
+        formData.append('_token', "{{ csrf_token() }}");
+        formData.append('nik', $('#nik_' + id).val());
+        formData.append('due_date', $('#due_date_' + id).val());
 
+        let fileInput = document.getElementById('file_serti_' + id);
+        if (fileInput.files.length > 0) {
+            formData.append('file_serti', fileInput.files[0]);
+        }
+
+        $.ajax({
+            url: `/v1/input-sertifikat/update/${id}`,
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+
+                Swal.fire("Success!", response.message, "success");
+
+                // disable input kembali
+                $('#file_serti_' + id).prop('disabled', true);
+                $('#due_date_' + id).prop('disabled', true);
+
+                $('#action_area_' + id).html(`
+                    <button class="btn btn-warning btn-md"
+                        onclick="EnableUpdate('${id}')">
+                        Update
+                    </button>
+                `);
+            },
+            error: function () {
+                Swal.fire("Error!", "Gagal mengupdate data", "error");
+            }
+        });
+    }
+
+    function EnableUpdate(id) {
+        $('#file_serti_' + id).prop('disabled', false);
+        $('#due_date_' + id).prop('disabled', false);
+
+        $('#action_area_' + id).html(`
+            <button class="btn btn-md btn-success"
+                onclick="SimpanUpdate('${id}')">
+                Submit
+            </button>
+        `);
+    }
 
 </script>
 @endsection

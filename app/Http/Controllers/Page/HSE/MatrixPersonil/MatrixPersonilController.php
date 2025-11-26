@@ -82,6 +82,62 @@ class MatrixPersonilController extends Controller
         
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nik' => 'required',
+            'due_date' => 'required|date',
+        ]);
+
+        // Cari row matrix yang sudah ada
+        $matrix = MatrixPersonil::where('nik_karyawan', $request->nik)
+            ->where('idSertifikat', $id)
+            ->firstOrFail();
+
+        if (!$matrix) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data sertifikat tidak ditemukan',
+            ], 404);
+        }
+
+        // Ambil nama sertifikat untuk nama file
+        $serti = JenisSertifikat::where('id_sertifikat', $id)->first();
+
+        $fileName = $matrix->file_serti;
+
+        // Jika upload file baru → hapus lama → simpan baru
+        if ($request->hasFile('file_serti')) {
+
+            $oldPath = public_path("assets/sertifikat/{$request->nik}/{$matrix->file_serti}");
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+
+            $file = $request->file('file_serti');
+            $fileName = $request->nik . '-' . $serti->name . '.pdf';
+
+            $dest = public_path("assets/sertifikat/{$request->nik}/");
+            if (!file_exists($dest)) {
+                mkdir($dest, 0755, true);
+            }
+
+            $file->move($dest, $fileName);
+        }
+
+        // UPDATE DATABASE
+        $matrix->update([
+            'file_serti' => $fileName,
+            'due_date'   => $request->due_date,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sertifikat berhasil diupdate',
+        ]);
+    }
+
+
     // public function edit()
     // {
     //     $karyawan = DataKaryawan::orderBy('fullName')->get();

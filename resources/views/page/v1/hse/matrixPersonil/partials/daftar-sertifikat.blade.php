@@ -4,6 +4,9 @@
         $punya = $karyawan->sertifikat
             ->where('idSertifikat', $item->id_sertifikat)
             ->first();
+
+            // Cek Pic
+        $pic = (auth()->user()->jabatan == $item->jabatan->name || auth()->user()->jabatan == 'Administrator');
     @endphp
     <div class="col-12">
         {{-- <form action="{{ route('v1.input-sertifikat.store', $item->id_sertifikat) }}" method="post" enctype="multipart/form-data">
@@ -36,12 +39,21 @@
                 </div>
                 <div class="col-12 col-md-2 d-flex align-items-end">
                     <div class="form-group" id="action_area_{{ $item->id_sertifikat }}"> 
-
-                
                         @if ($punya)
-                            <i class="fas fa-check-square text-success"></i>
+                            @if ($pic)
+                                <button class="btn btn-warning btn-md"
+                                    id="btn_update_{{ $item->id_sertifikat }}"
+                                    onclick="EnableUpdate('{{ $item->id_sertifikat }}')">
+                                    Update
+                                </button>
+                                {{-- <i class="fas fa-check-square text-success"></i> --}}
+                            @else
+                                <button class="btn btn-warning btn-md" disabled>
+                                    Update
+                                </button>   
+                            @endif
                         @else
-                            @if (auth()->user()->jabatan == $item->jabatan->name || auth()->user()->jabatan == 'Administrator')                              
+                            @if ($pic)                              
                                 <button class="btn btn-md btn-success"
                                     id="btn_submit_{{ $item->id_sertifikat }}"
                                     onclick="SimpanData('{{ $item->id_sertifikat }}')">
