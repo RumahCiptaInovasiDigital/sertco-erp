@@ -5,7 +5,7 @@
 <!-- /.login-logo -->
 <div class="card card-outline card-dark">
     <div class="card-header text-center">
-        <a href="{{ route('v1.dashboard') }}" class="h1"><b style="color: purple;">SQ-ERP</b> System</a>
+        <a href="{{ route('v1.dashboard') }}" class="h1"><b style="color: purple;">Sertco</b> InSystem</a>
     </div>
     <div class="card-body">
         <p class="login-box-msg">Sign in to start your session</p>

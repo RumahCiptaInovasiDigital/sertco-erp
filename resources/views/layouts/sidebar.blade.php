@@ -3,9 +3,15 @@
 @endphp
 <!-- Brand Logo -->
 <a href="{{ route('v1.dashboard') }}" class="brand-link">
-    <img src="{{ asset('dist/img/sq-logo.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-        style="opacity: .8">
-    <span class="brand-text font-weight-light"><b style="color: plum;">SQ-ERP</b> System</span>
+    {{-- <div class="row text-center justify-content-center">
+        <img src="{{ asset('dist/img/sq-logo.jpg') }}" alt="AdminLTE Logo" class="brand-image image-circle elevation-3"
+        style="opacity: .8;">
+    </div> --}}
+    <div class="row text-center justify-content-center">
+        <span class="brand-text font-weight-bold mr-1"><b style="color: plum;">SERTCO</b></span>
+        <span class="brand-text font-weight-light mr-1">Integrated</span>
+        <span class="brand-text font-weight-light">System</span>
+    </div>
 </a>
 
 <!-- Sidebar -->

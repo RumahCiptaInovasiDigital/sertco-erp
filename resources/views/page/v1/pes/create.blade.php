@@ -119,7 +119,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-8">
+                            <div class="col-12">
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <div class="form-group">
@@ -157,42 +157,73 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <h5>Lampiran</h5>
+                                    <div class="col-12 mb-2">
+                                        <h5 class="mb-3">Lampiran</h5>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="priceDoc">Upload Price Document</label>
-                                            <input type="file" class="form-control" name="priceDoc" id="priceDoc">
+                                    {{-- PRICE DOCUMENT --}}
+                                    <div class="col-12 col-md-6 mb-4">
+                                        <div class="border rounded p-3 shadow-sm bg-light">
+                                            <h6 class="font-weight-bold mb-3">Price Document</h6>
+                                
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="custom-control custom-radio mr-4">
+                                                    <input type="radio" id="price_type_link" name="price_type" value="link" class="custom-control-input" checked>
+                                                    <label class="custom-control-label" for="price_type_link">Insert Link</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="price_type_file" name="price_type" value="file" class="custom-control-input">
+                                                    <label class="custom-control-label" for="price_type_file">Upload File</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div id="price_link_wrap" class="form-group mb-0">
+                                                <input type="text" class="form-control" name="priceLink" placeholder="https://example.com/document">
+                                            </div>
+                                            <div id="price_file_wrap" class="form-group d-none mb-0">
+                                                <input type="file" class="form-control" name="priceDoc" id="priceDoc">
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="unpriceDoc">Upload UnPrice Document</label>
-                                            <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc">
+                                
+                                    {{-- UNPRICE DOCUMENT --}}
+                                    <div class="col-12 col-md-6 mb-4">
+                                        <div class="border rounded p-3 shadow-sm bg-light">
+                                            <h6 class="font-weight-bold mb-3">UnPrice Document</h6>
+                                
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="custom-control custom-radio mr-4">
+                                                    <input type="radio" id="unprice_type_link" name="unprice_type" value="link" class="custom-control-input" checked>
+                                                    <label class="custom-control-label" for="unprice_type_link">Insert Link</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="unprice_type_file" name="unprice_type" value="file" class="custom-control-input">
+                                                    <label class="custom-control-label" for="unprice_type_file">Upload File</label>
+                                                </div>
+                                            </div>
                                             
+                                            <div id="unprice_link_wrap" class="form-group mb-0">
+                                                <input type="text" class="form-control" name="unpriceLink" placeholder="https://example.com/document">
+                                            </div>
+                                            <div id="unprice_file_wrap" class="form-group d-none mb-0">
+                                                <input type="file" class="form-control" name="unpriceDoc" id="unpriceDoc">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row">
-                            <div class="col-12">
-                                <button type="button" class="btn btn-warning" data-widget="control-sidebar" data-controlsidebar-slide="true">Notes / Comments!!</button>
-                            </div>
-                        </div> --}}
                         <hr class="my-3">
                         <div class="row">
-                            <div class="col-12 mb-2">
+                            {{-- <div class="col-12 mb-2">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="is_draft" name="is_draft" checked>
                                     <label class="custom-control-label" for="is_draft">Save to Draft</label>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary w-100">Create Project</button>
+                                <button type="submit" class="btn btn-primary w-100">Selanjutnya</button>
                             </div>
                         </div>
                     </div>
@@ -214,5 +245,22 @@
             theme: 'bootstrap4'
         })
     });
-</script>   
+    function toggleInput(group, type) {
+        if (type === 'file') {
+            $(`#${group}_file_wrap`).removeClass('d-none');
+            $(`#${group}_link_wrap`).addClass('d-none');
+        } else {
+            $(`#${group}_file_wrap`).addClass('d-none');
+            $(`#${group}_link_wrap`).removeClass('d-none');
+        }
+    }
+
+    $('input[name="price_type"]').on('change', function() {
+        toggleInput('price', this.value);
+    });
+
+    $('input[name="unprice_type"]').on('change', function() {
+        toggleInput('unprice', this.value);
+    });
+</script>
 @endsection

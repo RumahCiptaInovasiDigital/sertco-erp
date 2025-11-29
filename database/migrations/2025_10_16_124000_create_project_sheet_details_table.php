@@ -28,6 +28,8 @@ return new class extends Migration {
             $table->dateTime('schedule_end')->nullable();
             $table->string('pricedoc')->nullable();
             $table->string('unpricedoc')->nullable();
+            $table->string('pricedoclink')->nullable();
+            $table->string('unpricedoclink')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

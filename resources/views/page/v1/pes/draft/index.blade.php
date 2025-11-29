@@ -1,16 +1,21 @@
 @extends('layouts.master')
-@section('title', 'Approval Project Execution Sheet')
-@section('PageTitle', 'Approval Project Execution Sheet')
+@section('title', 'Project Execution Sheet')
+@section('PageTitle', 'Project Execution Sheet')
 @section('head')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+<!-- Select2 -->
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
 @endsection
 @section('breadcrumb')
 <ol class="breadcrumb float-sm-right">
     <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active">Approval PES</li>
+    <li class="breadcrumb-item">Project Execution Sheet</li>
+    <li class="breadcrumb-item active">Your Draft</li>
 </ol>
 @endsection
 @section('content')
@@ -18,19 +23,29 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Permintaan Persetujuan Project</h3>
+                <h3 class="card-title">Your Draft List</h3>
+                <div class="float-right d-none d-sm-inline">
+                    <div class="float-right">
+                        <a href="{{ route('v1.pes.create') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus-circle"></i> New Project
+                        </a>
+                    </div>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="dt_data" class="table table-bordered table-hover">
+                <table id="dt_pes" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th width="5%">No</th>
-                            <th>Project No.</th>
-                            <th>Submitted by</th> 
-                            <th>Submitted at</th> 
-                            <th width="15%">Status</th> 
-                            <th>Action</th>
+                            <th>#</th>
+                            <th style="width: 10%;">Project No.</th>
+                            <th>Client</th>
+                            <th>Owner</th>
+                            <th>Prepared By</th>
+                            <th>Signature By</th>
+                            <th>Issued Date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,13 +57,16 @@
 </div>
 @endsection
 @section('scripts')
+<!-- DataTables  & Plugins -->
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
-    const _URL = "{{ route('v1.approval.pes.getData') }}";
+    var _URL = "{{ route('v1.pes.draft.getDraft') }}";
 
     $(document).ready(function () {
         $('.page-loading').fadeIn();
@@ -56,9 +74,9 @@
             $('.page-loading').fadeOut();
         }, 1000); // Adjust the timeout duration as needed
 
-        let DT = $("#dt_data").DataTable({
+        let DT = $("#dt_pes").DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -72,8 +90,11 @@
             columns: [
                 { data: "DT_RowIndex" },
                 { data: "project_no" },
-                { data: "request_by" },
-                { data: "request_at" },
+                { data: "client" },
+                { data: "owner" },
+                { data: "prepared_by" },
+                { data: "signature_by" },
+                { data: "issued_date" },
                 { data: "status" },
                 {
                     data: "action",
@@ -90,15 +111,11 @@
                 },
             ],
         });
-
-        // $('#search_dt').on('keyup', function () {
-        //     DT.search(this.value).draw();
-        // });
     });
 
     function deleteData(id) {
         Swal.fire({
-            text: "Are you sure you want to delete this Notification?",
+            text: "Are you sure you want to delete this Draft?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes, delete it!",
@@ -106,14 +123,14 @@
         }).then(function (result) {
             if (result.value) {
                 $.ajax({
-                    url: "{{ route('admin.notification.destroy') }}",
+                    url: "{{ route('v1.pes.destroy') }}",
                     type: "POST",
                     data: {
                         id: id,
                         _token: "{{ csrf_token() }}",
                     },
                     success: function (response) {
-                        $("#dt_data").DataTable().ajax.reload(null, false);
+                        $("#dt_pes").DataTable().ajax.reload(null, false);
                         Swal.fire("Deleted!", response.message, "success");
                     },
                     error: function (xhr) {
@@ -125,5 +142,6 @@
             }
         });
     }
+
 </script>
 @endsection

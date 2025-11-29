@@ -39,6 +39,7 @@
                             <li class="nav-item"><a class="nav-link" href="#coi" data-toggle="tab">COI</a></li>
                             <li class="nav-item"><a class="nav-link" href="#report" data-toggle="tab">Reporting</a></li>
                             <li class="nav-item"><a class="nav-link" href="#comment" data-toggle="tab"><i class="fas fa-comment mr-1"></i>Comment</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#log" data-toggle="tab">Timeline Activity</a></li>
                         </ul>
                     </div>
                 </div>
@@ -316,36 +317,159 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="pricedoc">
+                        @php
+                            $priceLink = $data->project_sheet_detail->pricedoclink ?? null;
+                            $pricedFile = $data->project_sheet_detail->pricedoc ?? null;
+                            $projectNo = $data->project_no;
+
+                            // extract Google Drive file ID
+                            function getDriveFileId($url)
+                            {
+                                if (!$url) return null;
+
+                                // format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+                                if (preg_match('/\/d\/(.*?)\//', $url, $match)) {
+                                    return $match[1];
+                                }
+
+                                // format: https://drive.google.com/open?id=FILE_ID
+                                parse_str(parse_url($url, PHP_URL_QUERY), $qs);
+
+                                return $qs['id'] ?? null;
+                            }
+
+                            $pricefileId = getDriveFileId($priceLink);
+                        @endphp
                         <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Price Document</h5>
+                            </div>
+
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <object 
-                                            data="{{ asset('assets/project/'. $data->project_no. '/pricedoc/' . $data->project_sheet_detail->pricedoc) }}" 
-                                            type="application/pdf" 
-                                            width="100%" 
-                                            height="700px">
-                                            <p>Browser tidak bisa menampilkan PDF, <a href="{{ asset('assets/project/'. $data->project_no. '/pricedoc/' . $data->project_sheet_detail->pricedoc) }}">klik di sini untuk buka</a>.</p>
-                                        </object>
-                                    </div>
-                                </div>
+
+                                {{-- FILE MODE --}}
+                                @if ($pricedFile)
+                                    <object 
+                                        data="{{ asset('assets/project/' . $projectNo . '/pricedoc/' . $pricedFile) }}"
+                                        type="application/pdf"
+                                        width="100%"
+                                        height="700px">
+                                        <p>
+                                            Browser tidak bisa menampilkan PDF. 
+                                            <a href="{{ asset('assets/project/' . $projectNo . '/pricedoc/' . $pricedFile) }}" 
+                                            target="_blank">Klik di sini untuk buka</a>.
+                                        </p>
+                                    </object>
+
+                                {{-- LINK MODE --}}
+                                @elseif ($priceLink)
+                                    @if ($pricefileId)
+                                        {{-- IFRAME PREVIEW --}}
+                                        <iframe 
+                                            src="https://drive.google.com/file/d/{{ $pricefileId }}/preview"
+                                            width="100%"
+                                            height="700px"
+                                            allow="autoplay">
+                                        </iframe>
+
+                                        <div class="mt-3">
+                                            <a href="{{ $priceLink }}" 
+                                            target="_blank" 
+                                            class="btn btn-primary btn-sm">
+                                                Open in Google Drive
+                                            </a>
+                                        </div>
+
+                                    @else
+                                        {{-- INVALID OR NON-GDRIVE LINK --}}
+                                        <p>Link tidak bisa di-embed.</p>
+                                        <a href="{{ $priceLink }}" 
+                                        target="_blank" 
+                                        class="btn btn-primary btn-sm">
+                                            Open Link
+                                        </a>
+                                    @endif
+
+                                @else
+                                    <p class="text-muted">No document available.</p>
+                                @endif
+
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane" id="unpricedoc">
+                        @php
+                            $unpriceLink = $data->project_sheet_detail->unpricedoclink ?? null;
+                            $unpricedFile = $data->project_sheet_detail->unpricedoc ?? null;
+                            $projectNo = $data->project_no;
+
+                            // extract Google Drive file ID
+                            function getDriveUnpriceFileId($url)
+                            {
+                                if (!$url) return null;
+
+                                // format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+                                if (preg_match('/\/d\/(.*?)\//', $url, $match)) {
+                                    return $match[1];
+                                }
+
+                                // format: https://drive.google.com/open?id=FILE_ID
+                                parse_str(parse_url($url, PHP_URL_QUERY), $qs);
+
+                                return $qs['id'] ?? null;
+                            }
+
+                            $fileId = getDriveUnpriceFileId($unpriceLink);
+                        @endphp
                         <div class="card">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <object 
-                                            data="{{ asset('assets/project/'. $data->project_no. '/unpricedoc/' . $data->project_sheet_detail->unpricedoc) }}" 
-                                            type="application/pdf" 
-                                            width="100%" 
-                                            height="700px">
-                                            <p>Browser tidak bisa menampilkan PDF, <a href="{{ asset('assets/project/'. $data->project_no. '/unpricedoc/' . $data->project_sheet_detail->unpricedoc) }}">klik di sini untuk buka</a>.</p>
-                                        </object>
-                                    </div>
-                                </div>
+                                {{-- FILE MODE --}}
+                                @if ($unpricedFile)
+                                    <object 
+                                        data="{{ asset('assets/project/' . $projectNo . '/unpricedoc/' . $unpricedFile) }}"
+                                        type="application/pdf"
+                                        width="100%"
+                                        height="700px">
+                                        <p>
+                                            Browser tidak bisa menampilkan PDF. 
+                                            <a href="{{ asset('assets/project/' . $projectNo . '/unpricedoc/' . $unpricedFile) }}" 
+                                            target="_blank">Klik di sini untuk buka</a>.
+                                        </p>
+                                    </object>
+
+                                {{-- LINK MODE --}}
+                                @elseif ($unpriceLink)
+                                    @if ($fileId)
+                                        {{-- IFRAME PREVIEW --}}
+                                        <iframe 
+                                            src="https://drive.google.com/file/d/{{ $fileId }}/preview"
+                                            width="100%"
+                                            height="700px"
+                                            allow="autoplay">
+                                        </iframe>
+
+                                        <div class="mt-3">
+                                            <a href="{{ $unpriceLink }}" 
+                                            target="_blank" 
+                                            class="btn btn-primary btn-sm">
+                                                Open in Google Drive
+                                            </a>
+                                        </div>
+
+                                    @else
+                                        {{-- INVALID OR NON-GDRIVE LINK --}}
+                                        <p>Link tidak bisa di-embed.</p>
+                                        <a href="{{ $unpriceLink }}" 
+                                        target="_blank" 
+                                        class="btn btn-primary btn-sm">
+                                            Open Link
+                                        </a>
+                                    @endif
+
+                                @else
+                                    <p class="text-muted">No document available.</p>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -366,7 +490,10 @@
                                 <button id="send-comment" class="btn btn-primary ml-2">Send</button>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
+                    <div class="tab-pane" id="log">
+                        @include('page.v1.pes.partials.log')
+                    </div>                
                 </div>
             </div>
         </div>
@@ -386,7 +513,6 @@
 </script>
 <script>
     $(function() {
-        // ensure CSRF token present for ajax post
         $.ajaxSetup({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
