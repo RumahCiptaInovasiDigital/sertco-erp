@@ -49,31 +49,6 @@
                         </div>
                         <hr class="my-1">
                         <div class="row">
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="to">To</label>
-                                    <Select class="form-control select2" name="to" id="to">
-                                        <option disabled selected></option>
-                                        @foreach ($departemen as $item)
-                                        <option value="{{ $item->id_departemen }}" {{ $data->to === $item->id_departemen ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @endforeach
-                                    </Select>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="attn">Attention</label>
-                                    <Select class="form-control select2" name="attn" id="attn">
-                                        <option disabled selected></option>
-                                        @foreach ($role as $item)
-                                        <option value="{{ $item->id_role }}" {{ $data->attn === $item->id_role ? 'selected' : '' }}>{{ $item->name }}</option>
-                                        @endforeach
-                                    </Select>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="my-1">
-                        <div class="row">
                             <div class="col-12">
                                 <h5>Project Information</h5>
                             </div>
@@ -145,28 +120,35 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="contract_period">Contract Period</label>
                                     <input type="text" class="form-control" name="contract_period" value="{{ $data->project_sheet_detail->contract_period ?? '' }}" placeholder="Input Contract Period">
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
+                                <div class="row row-cols-2">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="schedule_start">Schedule Start</label>
+                                            <input type="date" class="form-control" value="{{ !empty($data->project_sheet_detail->schedule_start) ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_start)->format('Y-m-d') : '' }}" name="schedule_start" id="schedule_start">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="schedule_end">End</label>
+                                            <input type="date" class="form-control" value="{{ !empty($data->project_sheet_detail->schedule_end) ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_end)->format('Y-m-d') : '' }}" name="schedule_end" id="schedule_end">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="payment_term">Term of Payment</label>
-                                    <input type="text" class="form-control" name="payment_term" value="{{ $data->project_sheet_detail->payment_term ?? '' }}" placeholder="Input Term of Payment">
+                                    <textarea class="form-control" name="payment_term" id="payment_term" rows="3" placeholder="Input Term of payment">{{ $data->project_sheet_detail->payment_term ?? '' }}</textarea>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="schedule">Schedule</label>
-                                    <input type="date" class="form-control" name="schedule" id="schedule" placeholder="Input Schedule"
-                                        value="{{ optional($data->project_sheet_detail)->schedule ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule)->format('Y-m-d') : '' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="project_detail">Project Detail</label>
                                     <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail">{{ $data->project_detail ?? '' }}</textarea>
@@ -175,12 +157,6 @@
                         </div>
                         <hr class="my-3">
                         <div class="row">
-                            <div class="col-12 mb-2">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="is_draft" name="is_draft" checked>
-                                    <label class="custom-control-label" for="is_draft">Save to Draft</label>
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary btn-lg w-100">Selanjutnya</button>
                             </div>

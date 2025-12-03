@@ -19,7 +19,7 @@
         <div class="card collapsing-card">
             <div class="card-header">
                 <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
-                    <h3 class="card-title" style="color: black;">Detail Project</h3>
+                    <h3 class="card-title" style="color: black;">Informasi Project</h3>
                     <div class="float-right d-none d-sm-inline">
                         <i class="fas fa-minus"></i>
                     </div>
@@ -45,21 +45,6 @@
                             <div class="form-group">
                                 <label for="issued_date">Issued Date</label>
                                 <input type="text" name="issued_date" value="{{ $data->issued_date }}" class="form-control" id="issued_date" placeholder="Input Issued Date" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="my-1">
-                    <div class="row">
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="to">To</label>
-                                <input type="text" value="{{ $data->to ?? 'NA' }}" class="form-control" id="to" readonly>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="attn">Attention</label>
-                                <input type="text" value="{{ $data->attn ?? 'NA' }}" class="form-control" id="attn" readonly>
                             </div>
                         </div>
                     </div>
@@ -145,13 +130,13 @@
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="schedule">Schedule Start</label>
-                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_start ?? 'NA' }}" placeholder="Input Schedule" readonly>
+                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_start ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_start)->format('d M Y') : 'NA' }}" placeholder="Input Schedule" readonly>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="schedule">Schedule End</label>
-                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_end ?? 'NA' }}" placeholder="Input Schedule" readonly>
+                                <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule_end ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_end)->format('d M Y') : 'NA' }}" placeholder="Input Schedule" readonly>
                             </div>
                         </div>
                     </div>

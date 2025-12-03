@@ -37,6 +37,11 @@ class ProjectSheet extends Model
         return $this->hasOne(ProjectSheetDetail::class, 'id_project', 'id_project');
     }
 
+    public function project_sheet_note()
+    {
+        return $this->hasMany(ProjectSheetNote::class, 'project_no', 'project_no');
+    }
+
     public function service()
     {
         return $this->hasMany(ServiceFormData::class, 'project_no', 'project_no');

@@ -20,10 +20,11 @@ class ApprovalProjectExecutionSheetController extends Controller
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('project_no', function ($row) {
-                return $row->pes->project_no;
+                // return $row->pes->project_no;
+                return '<a href="'.route('v1.pes.show', $row->id_project).'" class="badge badge-primary">'.$row->pes->project_no.' <i class="fas fa-share"></i></a>';
             })
             ->addColumn('request_by', function ($row) {
-                return $row->karyawan->fullName;
+                return $row->karyawan->fullName ?? '-';
             })
             ->addColumn('request_at', function ($row) {
                 $parse = Carbon::parse($row->created_at);
@@ -52,6 +53,7 @@ class ApprovalProjectExecutionSheetController extends Controller
                         </div>';
             })
             ->rawColumns([
+                'project_no',
                 'action',
                 'status',
             ])

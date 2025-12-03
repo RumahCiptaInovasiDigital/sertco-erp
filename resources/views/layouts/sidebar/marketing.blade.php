@@ -22,6 +22,14 @@
                 </p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('v1.pes.draft.index') }}" class="nav-link {{ request()->is('v1/project-draft*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file-contract"></i>
+                <p>
+                    Draft Project
+                </p>
+            </a>
+        </li>
         @break
     @endif
 @endforeach

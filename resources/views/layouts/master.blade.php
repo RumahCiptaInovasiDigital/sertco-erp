@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('dist/img/sq-logo.jpg') }}" />
 
-    <title>@yield('title') | SertcoQuality</title>
+    <title>@yield('title') | Sertco Integrated System</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -48,6 +48,11 @@
                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                     </div>
                 </li>
+                {{-- <li class="nav-item {{ $browser->isMobile() ? 'd-none' : '' }}">
+                    <div class="row">
+                        <button class="btn bg-success btn-sm my-1 mx-3">Sertco Integrated System</button>
+                    </div>
+                </li> --}}
             </ul>
 
             <!-- Right navbar links -->
@@ -92,19 +97,28 @@
                     <span class="nav-link">
                         <span id="idle_time" 
                         data-toggle="tooltip" data-placement="bottom" title="Counting Idle Time"
-                        class="bg-secondary text-muted py-1 px-2 fw-bold" 
+                        class="bg-secondary text-muted py-1 px-2" 
                         style="border-radius: 5px; color: white;">00:00</span>
                     </span>
                 </li>
 
-                {{-- Idle Time --}}
-                <li class="nav-item">
-                    <a class="nav-link py-1" href="{{ route('logout') }}">
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </a>
-                </li>
+                @if ($browser->isMobile())
+                    <li class="nav-item">
+                        <a class="nav-link py-1" href="{{ route('logout') }}">
+                            <button class="btn btn-sm btn-danger">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </a>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link py-1" href="{{ route('logout') }}">
+                            <button class="btn btn-sm btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -158,8 +172,9 @@
     </div>
     <!-- ./wrapper -->
 
+    @yield('modals')
+    
     <!-- REQUIRED SCRIPTS -->
-
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->

@@ -5,7 +5,7 @@
 <!-- /.login-logo -->
 <div class="card card-outline card-dark">
     <div class="card-header text-center">
-        <a href="{{ route('v1.dashboard') }}" class="h1"><b style="color: purple;">SQ-ERP</b> System</a>
+        <a href="{{ route('v1.dashboard') }}" class="h1"><b style="color: purple;">Sertco</b> InSystem</a>
     </div>
     <div class="card-body">
         <p class="login-box-msg">Sign in to start your session</p>
@@ -17,7 +17,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><b>NIK</b></span>
                     </div>
-                    <input type="text" class="form-control" name="nik" data-inputmask='"mask": "SQ-AAA-999"' data-mask placeholder="SQ-XYZ-000">
+                    <input type="text" class="form-control" name="nik" placeholder="SQ-XYZ-123" style="text-transform: uppercase;">
                   </div>
             </div>
             <div class="input-group mb-3">

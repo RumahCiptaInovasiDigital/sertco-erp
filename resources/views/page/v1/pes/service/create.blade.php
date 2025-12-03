@@ -149,7 +149,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{{ route('v1.pes.service.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('v1.pes.service.store') }}" method="post" id="service-form" enctype="multipart/form-data">
                     @csrf
                     <input value="{{ $projectSheet->project_no }}" name="project_no" class="d-none">
                     <div class="card">
@@ -266,13 +266,14 @@
                             <hr class="my-2"/>
                             <div class="row m-3">
                                 <div class="col-12 mb-2">
-                                    <div class="custom-control custom-switch">
+                                    <div class="custom-control custom-switch custom-switch-on-warning">
                                         <input type="checkbox" class="custom-control-input" id="is_draft" name="is_draft" checked>
                                         <label class="custom-control-label" for="is_draft">Save to Draft</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary w-100">Selanjutnya</button>
+                                    <button type="submit" class="btn btn-warning w-100" id="btn-save-draft">Save to Draft</button>
+                                    <button type="button" class="btn btn-primary w-100 d-none" id="btn-konfirmasi" data-toggle="modal" data-target="#modal-konfirmasi">Konfirmasi & Lanjutkan</button>
                                 </div>
                             </div>
                         </div>
@@ -282,6 +283,40 @@
         </div>
     </div>
 </div>
+@endsection
+@section('modals')
+<div class="modal fade" id="modal-konfirmasi">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title font-weight-bold">Konfirmasi Project</span>
+                <div class="float-right">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="callout callout-warning">
+                    <h5><i class="fas fa-exclamation-triangle text-warning"></i> Perhatian!!</h5>
+  
+                    <p>Pastikan Semua Data Sudah Benar. Untuk selanjutnya dikirim sebagai approval!</p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100" id="btn-submit-konfirmasi">Konfirmasi</button>
+                    </div>
+                </div>
+                <p>
+                    <i>Setelah dikonfirmasi, data tidak dapat diubah kembali.!</i>
+                </p>
+            </div>
+        </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+  <!-- /.modal -->
 @endsection
 @section('scripts')
 <!-- Toastr -->
@@ -328,5 +363,19 @@
         })
     }
     
+    $('#btn-submit-konfirmasi').on('click', function() {
+        $('#modal-konfirmasi').modal('hide');
+        $('#service-form').submit();
+    });
+
+    $('#is_draft').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#btn-save-draft').removeClass('d-none');
+            $('#btn-konfirmasi').addClass('d-none');
+        } else {
+            $('#btn-konfirmasi').removeClass('d-none');
+            $('#btn-save-draft').addClass('d-none');
+        }
+    });
 </script>
 @endsection

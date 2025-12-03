@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-12">
         <span class="badge badge-success mb-1">Newest Project :</span>
-        <div class="row row-cols-2 row-cols-md-4">
+        <div class="row row-cols-2 row-cols-md-5">
             @foreach ($data as $sheet)
             <div class="col mb-4">
                 <div class="card">
@@ -125,6 +125,7 @@
                             <th>Signature By</th>
                             <th>Issued Date</th>
                             <th class="text-center">Status</th>
+                            <th class="text-center">Batas Waktu</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -176,6 +177,7 @@
                 { data: "signature_by" },
                 { data: "issued_date" },
                 { data: "status" },
+                { data: "batas_waktu" },
                 {
                     data: "action",
                     orderable: false,

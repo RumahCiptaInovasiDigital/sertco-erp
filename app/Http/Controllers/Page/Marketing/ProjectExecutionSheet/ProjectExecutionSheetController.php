@@ -7,8 +7,10 @@ use App\Models\Departemen;
 use App\Models\KategoriService;
 use App\Models\ProjectSheet;
 use App\Models\ProjectSheetDetail;
+use App\Models\ProjectSheetLog;
 use App\Models\Role;
 use App\Models\ServiceType;
+use App\Services\ProjectExecutionSheet\CreateProjectLogService;
 use App\Services\ProjectExecutionSheet\ProjectStatusService;
 use App\Traits\GenerateProjectNo;
 use Carbon\Carbon;
@@ -22,25 +24,13 @@ class ProjectExecutionSheetController extends Controller
 
     public function getData(Request $request, $action)
     {
-        if (auth()->user()->jabatan == 'Administrator') {
-            if ($action == 'all') {
-                $query = ProjectSheet::query()->latest()->get();
-            } elseif ($action == 'draft') {
-                $query = ProjectSheet::query()->where('is_draft', 1)->latest()->get();
-            } elseif ($action == 'non-draft') {
-                $query = ProjectSheet::query()->where('is_draft', 0)->latest()->get();
-            }
-        } else {
-            if ($action == 'all') {
-                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->latest()->get();
-            } elseif ($action == 'draft') {
-                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('progress', 100)->latest()->get();
-            } elseif ($action == 'non-draft') {
-                $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->where('progress', '!=',100)->latest()->get();
-            }
-        }
+        // if (auth()->user()->jabatan == 'Administrator') {
+        //     $query = ProjectSheet::query()->Where('progress', '!=',100)->latest()->get();
+        //     // $query = ProjectSheet::query()->where('prepared_by', auth()->user()->id_user)->orWhere('progress', '!=',100)->latest()->get();
+        // } else {
+        // }
 
-        // $query = ProjectSheet::query()->where('is_draft', 0)->latest()->get();
+        $query = ProjectSheet::query()->where('progress', '!=',100)->latest()->get();
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -71,72 +61,50 @@ class ProjectExecutionSheetController extends Controller
             })
             ->editColumn('status', function ($row) {
                 return (new ProjectStatusService())->handle($row->progress);
-                // if ($row->status === 'draft') {
-                // } elseif ($row->status === 'progress') {
-                //     if ($row->approval) {
-                //         if ($row->approval->is_approved === 1) {
-                //             return '<div class="text-center">
-                //                         <button type="button" class="btn btn-block bg-gradient-success">Approved</button>
-                //                     </div>';
-                //         } elseif ($row->approval->is_rejected === 1) {
-                //             return '<div class="text-center">
-                //                         <button type="button" class="btn btn-block bg-gradient-danger">Rejected</button>
-                //                     </div>';
-                //         } else {
-                //             return '<div class="text-center">
-                //                 <button type="button" class="btn btn-block bg-gradient-info">Waiting Approval</button>
-                //                 </div>';
-                //         }
-                //     } else {
-                //         return '<div class="text-center">
-                //                 <i>data tidak valid</i>
-                //             </div>';
-                //     }
-                // }elseif($row->status === 'complete'){
-                //     return '<div class="text-center">
-                //                 <button type="button" class="btn btn-block bg-gradient-success">Selesai</button>
-                //             </div>';
-                // }
+            })
+            ->addColumn('batas_waktu', function ($row) {
+                $deadline = Carbon::parse($row->updated_at)->addHours(24);
+                $now = Carbon::now();
+
+                if ($now->gte($deadline)) {
+                    return '<div class="text-center">
+                                <span class="badge badge-danger">Expired</span>
+                            </div>';
+                }
+
+                $seconds = $deadline->diffInSeconds($now);
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds % 3600) / 60);
+                $secs = $seconds % 60;
+
+                return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
             })
             ->addColumn('action', function ($row) {
-                // if ($row->progres == 0) {
-                //     if (!$row->approval) {
-                //         return '<div class="text-center">
+                return  '<div class="text-center">
+                            <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
+                            <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2"><i class="fas fa-comment"></i></a>
+                        </div>';
+                // if(auth()->user()->jabatan != 'Administrator'){
+                //     if($row->prepared_by !== auth()->id()){
+                //     }
+                //     return '<div class="text-center">
+                //                 <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
+                //                 <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                 //                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
                 //             </div>';
-                //     }
-
-                //     if ($row->approval->is_approved === 1) {
-                //         return '<div class="text-center">
-                //             <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
-                //         </div>';
-                //     }
-                //     if ($row->approval->is_rejected === 1) {
-                //         return '<div class="text-center">
-                //             <a href="'.route('v1.review.pes.show', $row->id_project).'" class="btn btn-sm btn-success me-2"><i>Review Project</i></a>
-                //         </div>';
-                //     }
-
+                // }else{
                 //     return '<div class="text-center">
-                //             <button class="btn btn-sm btn-success me-2" disabled><i>Review Project</i></button>
-                //         </div>';
-                // } else {
-                    if($row->prepared_by !== auth()->id()){
-                        return  '<div class="text-center">
-                        <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
-                        <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2"><i class="fas fa-comment"></i></a>
-                                </div>';
-                    }
-                    return '<div class="text-center">
-                                <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
-                                <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                                <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
-                            </div>';
+                //                 <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2" data-toggle="tooltip" data-placement="bottom" title="Lihat Detail Project"><i class="fas fa-eye"></i></a>
+                //                 <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2" data-toggle="tooltip" data-placement="bottom" title="Lihat Komentar"><i class="fas fa-comment"></i></a>
+                //                 <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2" data-toggle="tooltip" data-placement="bottom" title="Edit Project"><i class="fas fa-edit"></i></a>
+                //                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')" data-toggle="tooltip" data-placement="bottom" title="Hapus Project"><i class="fas fa-trash"></i></button>
+                //             </div>';
                 // }
             })
             ->rawColumns([
                 'project_no',
                 'status',
+                'batas_waktu',
                 'action',
             ])
             ->make(true);
@@ -144,7 +112,7 @@ class ProjectExecutionSheetController extends Controller
 
     public function index()
     {
-        $data = ProjectSheet::with('project_sheet_detail')->where('status', 'draft')->latest()->limit(5)->get();
+        $data = ProjectSheet::with('project_sheet_detail')->where('progress', '!=', 100)->latest()->limit(5)->get();
 
         return view('page.v1.pes.index', compact('data'));
     }
@@ -157,8 +125,13 @@ class ProjectExecutionSheetController extends Controller
         ->first();
         $serviceKategori = KategoriService::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         $serviceType = ServiceType::orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
+
+        $projectLog = ProjectSheetLog::query()
+            ->where('id_project_sheet', $id)
+            ->latest()
+            ->get();
         
-        return view('page.v1.pes.show', compact('data', 'serviceKategori', 'serviceType'));
+        return view('page.v1.pes.show', compact('data', 'serviceKategori', 'serviceType', 'projectLog'));
     }
 
     public function create()
@@ -206,32 +179,43 @@ class ProjectExecutionSheetController extends Controller
                 'status' => 'draft',
                 'progress' => $progess,
             ]);
-
+            
             $pricedocName = null;
+            $pricedocLink = null;
             $unpricedocName = null;
+            $unpricedocLink = null;
 
-            $priceTmp = $request->input('priceDoc_tmp');
-            $unpriceTmp = $request->input('unpriceDoc_tmp');
+            if ($request->price_type === 'file') {
+                $priceTmp = $request->input('priceDoc_tmp');
 
-            if ($priceTmp) {
-                // pindahkan dari storage/app/tmp/... ke public assets
-                $tmpFull = storage_path('app/' . $priceTmp); // storage/app/tmp/...
-                if (file_exists($tmpFull)) {
-                    $pricedocName = time().'_priced_'.basename($tmpFull);
-                    $destDir = public_path('assets/project/'.$project_no.'/pricedoc');
-                    if (!file_exists($destDir)) mkdir($destDir, 0755, true);
-                    rename($tmpFull, $destDir . '/' . $pricedocName);
+                if ($priceTmp) {
+                    // pindahkan dari storage/app/tmp/... ke public assets
+                    $tmpFull = storage_path('app/' . $priceTmp); // storage/app/tmp/...
+                    if (file_exists($tmpFull)) {
+                        $pricedocName = time().'_priced_'.basename($tmpFull);
+                        $destDir = public_path('assets/project/'.$project_no.'/pricedoc');
+                        if (!file_exists($destDir)) mkdir($destDir, 0755, true);
+                        rename($tmpFull, $destDir . '/' . $pricedocName);
+                    }
                 }
+            } else {
+                $pricedocLink = $request->priceLink;
             }
 
-            if ($unpriceTmp) {
-                $tmpFull = storage_path('app/' . $unpriceTmp);
-                if (file_exists($tmpFull)) {
-                    $unpricedocName = time().'_unpriced_'.basename($tmpFull);
-                    $destDir = public_path('assets/project/'.$project_no.'/unpricedoc');
-                    if (!file_exists($destDir)) mkdir($destDir, 0755, true);
-                    rename($tmpFull, $destDir . '/' . $unpricedocName);
+            if ($request->unprice_type === 'file') {
+                $unpriceTmp = $request->input('unpriceDoc_tmp');
+
+                if ($unpriceTmp) {
+                    $tmpFull = storage_path('app/' . $unpriceTmp);
+                    if (file_exists($tmpFull)) {
+                        $unpricedocName = time().'_unpriced_'.basename($tmpFull);
+                        $destDir = public_path('assets/project/'.$project_no.'/unpricedoc');
+                        if (!file_exists($destDir)) mkdir($destDir, 0755, true);
+                        rename($tmpFull, $destDir . '/' . $unpricedocName);
+                    }
                 }
+            } else {
+                $unpricedocLink = $request->unpriceLink;
             }
 
             ProjectSheetDetail::create([
@@ -250,7 +234,11 @@ class ProjectExecutionSheetController extends Controller
                 'schedule_end' => $request->schedule_end,
                 'pricedoc' => $pricedocName,
                 'unpricedoc' => $unpricedocName,
+                'pricedoclink' => $pricedocLink,
+                'unpricedoclink' => $unpricedocLink,
             ]);
+
+            (new CreateProjectLogService())->handle($projectSheet->id_project, $progess);
 
             DB::commit();
 

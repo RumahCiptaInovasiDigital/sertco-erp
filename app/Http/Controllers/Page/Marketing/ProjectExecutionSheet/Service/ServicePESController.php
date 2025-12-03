@@ -8,6 +8,7 @@ use App\Models\ProjectSheet;
 use App\Models\ServiceFormData;
 use App\Models\ServiceType;
 use App\Services\ProjectExecutionSheet\Approval\SendApproval;
+use App\Services\ProjectExecutionSheet\CreateProjectLogService;
 use Illuminate\Http\Request;
 
 class ServicePESController extends Controller
@@ -20,7 +21,7 @@ class ServicePESController extends Controller
         $serviceKategori = KategoriService::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         $serviceType = ServiceType::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
 
-        return view('page.v1.pes.service.index', compact('projectSheet', 'serviceKategori', 'serviceType'));
+        return view('page.v1.pes.service.create', compact('projectSheet', 'serviceKategori', 'serviceType'));
     }
 
     public function store(Request $request)
@@ -35,63 +36,63 @@ class ServicePESController extends Controller
         $service_type = $request->service_type;
         $other_value = $request->other_value;
 
-        if (!$is_draft) {
-            // definisikan rules validasi
-            $rules = [
-                'kategori_qty' => 'required|array',
-                'kategori_qty.*' => 'required|integer|min:1',
-                'service_type' => [
-                    'required',
-                    'array',
-                    'size:'.(is_array($id_kategori) ? count($id_kategori) : 0),
-                ],
-                'service_type.*' => 'required|string',
-                'other_value' => 'nullable|array',
-                'other_value.*' => 'nullable|required_if:service_type.*,"0"|string|max:255',
-            ];
+        // if (!$is_draft) {
+        //     // definisikan rules validasi
+        //     $rules = [
+        //         'kategori_qty' => 'required|array',
+        //         'kategori_qty.*' => 'required|integer|min:1',
+        //         'service_type' => [
+        //             'required',
+        //             'array',
+        //             'size:'.(is_array($id_kategori) ? count($id_kategori) : 0),
+        //         ],
+        //         'service_type.*' => 'required|string',
+        //         'other_value' => 'nullable|array',
+        //         'other_value.*' => 'nullable|required_if:service_type.*,"0"|string|max:255',
+        //     ];
 
-            $messages = [
-                // JUMLAH (QTY)
-                'kategori_qty.required' => 'Semua Quantity item wajib diisi.',
-                'kategori_qty.array' => 'Format Quantity kategori tidak valid.',
-                'kategori_qty.*.required' => 'Quantity pada kategori nomor :sort_num belum diisi.',
-                'kategori_qty.*.integer' => 'Quantity pada kategori nomor :sort_num harus berupa angka.',
-                'kategori_qty.*.min' => 'Quantity pada kategori nomor :sort_num minimal 1.',
+        //     $messages = [
+        //         // JUMLAH (QTY)
+        //         'kategori_qty.required' => 'Semua Quantity item wajib diisi.',
+        //         'kategori_qty.array' => 'Format Quantity kategori tidak valid.',
+        //         'kategori_qty.*.required' => 'Quantity pada kategori nomor :sort_num belum diisi.',
+        //         'kategori_qty.*.integer' => 'Quantity pada kategori nomor :sort_num harus berupa angka.',
+        //         'kategori_qty.*.min' => 'Quantity pada kategori nomor :sort_num minimal 1.',
 
-                // SERVICE TYPE
-                'service_type.required' => 'Semua Service Type wajib diisi.',
-                'service_type.array' => 'Format Service Type tidak valid.',
-                'service_type.size' => 'Semua Service Type wajib diisi.',
-                'service_type.*.required' => 'Service Type pada kategori nomor :sort_num belum dipilih.',
+        //         // SERVICE TYPE
+        //         'service_type.required' => 'Semua Service Type wajib diisi.',
+        //         'service_type.array' => 'Format Service Type tidak valid.',
+        //         'service_type.size' => 'Semua Service Type wajib diisi.',
+        //         'service_type.*.required' => 'Service Type pada kategori nomor :sort_num belum dipilih.',
 
-                // OTHER VALUE (jika pilih “Other”)
-                'other_value.array' => 'Format Other Value tidak valid.',
-                'other_value.*.required_if' => 'Other Value pada kategori nomor :sort_num wajib diisi karena Service Type dipilih sebagai Other.',
-            ];
-            $validator = \Validator::make($request->all(), $rules, $messages);
-            if ($validator->fails()) {
-                $errors = $validator->errors()->toArray();
-                $formattedErrors = [];
+        //         // OTHER VALUE (jika pilih “Other”)
+        //         'other_value.array' => 'Format Other Value tidak valid.',
+        //         'other_value.*.required_if' => 'Other Value pada kategori nomor :sort_num wajib diisi karena Service Type dipilih sebagai Other.',
+        //     ];
+        //     $validator = \Validator::make($request->all(), $rules, $messages);
+        //     if ($validator->fails()) {
+        //         $errors = $validator->errors()->toArray();
+        //         $formattedErrors = [];
 
-                // Ganti placeholder :position dengan nomor kategori yang sesuai
-                foreach ($errors as $key => $msgArray) {
-                    if (preg_match('/\.(\d+)$/', $key, $matches)) {
-                        $index = (int) $matches[1]; // mulai dari 1
-                        foreach ($msgArray as $msg) {
-                            $formattedErrors[] = str_replace(':sort_num', $index, $msg);
-                        }
-                    } else {
-                        $formattedErrors = $msgArray;
-                    }
-                }
+        //         // Ganti placeholder :position dengan nomor kategori yang sesuai
+        //         foreach ($errors as $key => $msgArray) {
+        //             if (preg_match('/\.(\d+)$/', $key, $matches)) {
+        //                 $index = (int) $matches[1]; // mulai dari 1
+        //                 foreach ($msgArray as $msg) {
+        //                     $formattedErrors[] = str_replace(':sort_num', $index, $msg);
+        //                 }
+        //             } else {
+        //                 $formattedErrors = $msgArray;
+        //             }
+        //         }
 
-                return response()->json([
-                    'success' => false,
-                    'message' => $formattedErrors[0],
-                    'errors' => $formattedErrors,
-                ]);
-            }
-        }
+        //         return response()->json([
+        //             'success' => false,
+        //             'message' => $formattedErrors[0],
+        //             'errors' => $formattedErrors,
+        //         ]);
+        //     }
+        // }
 
         try {
             \DB::beginTransaction();
@@ -161,6 +162,7 @@ class ServicePESController extends Controller
                 'progress' => 101,
             ]);
             (new SendApproval())->handle($project->id_project, $project->prepared_by);
+            (new CreateProjectLogService())->handle($project->id_project, 101);
 
             return response()->json([
                 'success' => true,
