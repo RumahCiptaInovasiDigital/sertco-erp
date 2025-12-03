@@ -62,6 +62,23 @@ class ProjectExecutionSheetController extends Controller
             ->editColumn('status', function ($row) {
                 return (new ProjectStatusService())->handle($row->progress);
             })
+            ->addColumn('batas_waktu', function ($row) {
+                $deadline = Carbon::parse($row->updated_at)->addHours(24);
+                $now = Carbon::now();
+
+                if ($now->gte($deadline)) {
+                    return '<div class="text-center">
+                                <span class="badge badge-danger">Expired</span>
+                            </div>';
+                }
+
+                $seconds = $deadline->diffInSeconds($now);
+                $hours = floor($seconds / 3600);
+                $minutes = floor(($seconds % 3600) / 60);
+                $secs = $seconds % 60;
+
+                return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+            })
             ->addColumn('action', function ($row) {
                 return  '<div class="text-center">
                             <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
@@ -87,6 +104,7 @@ class ProjectExecutionSheetController extends Controller
             ->rawColumns([
                 'project_no',
                 'status',
+                'batas_waktu',
                 'action',
             ])
             ->make(true);

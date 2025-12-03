@@ -12,7 +12,7 @@
         <div>
             <div class="timeline-item">
                 <span class="time"><i class="fas fa-clock"></i> {{ $comment->created_at->diffForHumans() }}</span>
-                <h3 class="timeline-header">{{ $comment->user->fullname }}</h3>
+                <h3 class="timeline-header">{{ $comment->user->fullName ?? 'unknown user' }} - {{ $comment->user->jabatan->hasDepartemen->departemen->name ?? 'unknown department' }}</h3>
 
                 <div class="timeline-body">
                     <p>{!! nl2br(e($comment->comment)) !!}</p>
@@ -40,7 +40,6 @@
                     </button>
                 </div>
                 
-
                 <div class="reply-form mx-2 pb-2 d-none" id="reply-form-{{ $comment->id }}">
                     <div class="form-group">
                         <textarea class="form-control reply-text" rows="2" placeholder="Write a reply..."></textarea>
@@ -53,7 +52,6 @@
             </div>
         </div>
         
-        {{-- children (recursive) --}}
         @php
             $children = $comment->nestedReplies();
         @endphp

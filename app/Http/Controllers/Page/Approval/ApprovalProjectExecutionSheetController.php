@@ -21,7 +21,7 @@ class ApprovalProjectExecutionSheetController extends Controller
             ->addIndexColumn()
             ->addColumn('project_no', function ($row) {
                 // return $row->pes->project_no;
-                return '<a href="'.route('v1.pes.show', $row->id_project).'">'.$row->pes->project_no.'</a>';
+                return '<a href="'.route('v1.pes.show', $row->id_project).'" class="badge badge-primary">'.$row->pes->project_no.' <i class="fas fa-share"></i></a>';
             })
             ->addColumn('request_by', function ($row) {
                 return $row->karyawan->fullName ?? '-';

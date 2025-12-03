@@ -125,6 +125,7 @@
                             <th>Signature By</th>
                             <th>Issued Date</th>
                             <th class="text-center">Status</th>
+                            <th class="text-center">Batas Waktu</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -176,6 +177,7 @@
                 { data: "signature_by" },
                 { data: "issued_date" },
                 { data: "status" },
+                { data: "batas_waktu" },
                 {
                     data: "action",
                     orderable: false,

@@ -39,7 +39,7 @@
                             <li class="nav-item"><a class="nav-link" href="#coi" data-toggle="tab">COI</a></li>
                             <li class="nav-item"><a class="nav-link" href="#report" data-toggle="tab">Reporting</a></li>
                             <li class="nav-item"><a class="nav-link" href="#comment" data-toggle="tab"><i class="fas fa-comment mr-1"></i>Comment</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#log" data-toggle="tab">Timeline Activity</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#log" data-toggle="tab">Project Activity</a></li>
                         </ul>
                     </div>
                 </div>
@@ -151,35 +151,43 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="contract_description">Contract Description</label>
-                                    <textarea class="form-control" name="contract_description" id="contract_description" rows="3" placeholder="Input Contract Description" readonly>{{ $data->project_sheet_detail->contract_description ?? 'NA' }}</textarea>
+                                    <textarea class="form-control" id="contract_description" rows="3" placeholder="Input Contract Description" readonly>{{ $data->project_sheet_detail->contract_description ?? 'NA' }}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="contract_period">Contract Period</label>
-                                    <input type="text" class="form-control" value="{{ $data->project_sheet_detail->contract_period ?? 'NA' }}" placeholder="Input Contract Period" readonly>
+                                    <input type="text" class="form-control" value="{{ $data->project_sheet_detail->contract_period ?? '' }}" placeholder="Input Contract Period" readonly>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6">
+                                <div class="row row-cols-2">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="schedule_start">Schedule Start</label>
+                                            <input type="date" class="form-control" value="{{ !empty($data->project_sheet_detail->schedule_start) ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_start)->format('Y-m-d') : '' }}" id="schedule_start" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="schedule_end">End</label>
+                                            <input type="date" class="form-control" value="{{ !empty($data->project_sheet_detail->schedule_end) ? \Carbon\Carbon::parse($data->project_sheet_detail->schedule_end)->format('Y-m-d') : '' }}" id="schedule_end" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="payment_term">Term of Payment</label>
-                                    <input type="text" class="form-control" value="{{ $data->project_sheet_detail->payment_term ?? 'NA' }}" placeholder="Input Term of Payment" readonly>
+                                    <textarea class="form-control" id="payment_term" rows="3" placeholder="Input Term of payment" readonly>{{ $data->project_sheet_detail->payment_term ?? '' }}</textarea>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <div class="form-group">
-                                    <label for="schedule">Schedule</label>
-                                    <input type="text" class="form-control" value="{{ $data->project_sheet_detail->schedule ?? 'NA' }}" placeholder="Input Schedule" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <label for="project_detail">Project Detail</label>
-                                    <textarea class="form-control" name="project_detail" id="project_detail" rows="3" placeholder="Input Project Detail" readonly>{{ $data->project_detail ?? 'NA' }}</textarea>
+                                    <textarea class="form-control" id="project_detail" rows="3" placeholder="Input Project Detail" readonly>{{ $data->project_detail ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -341,10 +349,6 @@
                             $pricefileId = getDriveFileId($priceLink);
                         @endphp
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Price Document</h5>
-                            </div>
-
                             <div class="card-body">
 
                                 {{-- FILE MODE --}}
