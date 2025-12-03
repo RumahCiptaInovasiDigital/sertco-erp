@@ -121,6 +121,21 @@
                 @endif
             @endforeach
 
+            {{-- Master Data ISO --}}
+            @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.master-iso.index', $item->url))
+                    <li class="nav-item">
+                        <a href="{{ route('v1.master-iso.index') }}" class="nav-link {{ request()->is('v1/master-iso*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                ISO
+                            </p>
+                        </a>
+                    </li>
+                    @break
+                @endif
+            @endforeach
+
             {{-- Barang --}}
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.barang*', $item->url))

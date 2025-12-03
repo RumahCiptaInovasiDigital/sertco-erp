@@ -38,4 +38,15 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckRoleUser', 'CheckMai
         Route::post('store', 'store')->name('store');
         Route::post('update/{id}', 'update')->name('update');
     });
+
+    Route::prefix('master-iso')->name('master-iso.')->controller(App\Http\Controllers\Page\HSE\MasterIso\MasterIsoController::class)->group(function () {
+        Route::get('get','getData')->name('getData');
+        Route::get('show/{id}', 'show')->name('show');
+        Route::get('','index')->name('index');
+        Route::get('create','create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}','edit')->name('edit');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('destroy', 'destroy')->name('destroy');
+    });
 });
