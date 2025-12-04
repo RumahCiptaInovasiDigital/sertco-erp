@@ -14,11 +14,16 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('id_project');
             $table->uuid('request_by');
-            $table->string('response_by')->nullable();
-            $table->timestamp('response_at')->nullable();
-            $table->boolean('is_approved')->default(false);
-            $table->boolean('is_rejected')->default(false);
-            $table->text('note')->nullable();
+            $table->boolean('disetujui_mkt')->default(false);
+            $table->boolean('ditolak_mkt')->default(false);
+            $table->dateTime('response_mkt_at')->nullable();
+            $table->uuid('response_mkt_by')->nullable();
+            $table->text('note_mkt')->nullable();
+            $table->boolean('disetujui_t&o')->default(false);
+            $table->boolean('ditolak_t&o')->default(false);
+            $table->dateTime('response_t&o_at')->nullable();
+            $table->uuid('response_t&o_by')->nullable();
+            $table->text('note_t&o')->nullable();
             $table->timestamps();
         });
     }

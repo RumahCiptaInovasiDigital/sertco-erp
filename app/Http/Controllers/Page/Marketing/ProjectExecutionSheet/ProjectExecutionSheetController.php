@@ -60,16 +60,12 @@ class ProjectExecutionSheetController extends Controller
                     $parse->locale('en-ID')->translatedFormat('d M Y');
             })
             ->editColumn('status', function ($row) {
-                return (new ProjectStatusService())->handle($row->progress);
-            })
-            ->addColumn('batas_waktu', function ($row) {
                 $deadline = Carbon::parse($row->updated_at)->addHours(24);
                 $now = Carbon::now();
+                $expired = null;
 
                 if ($now->gte($deadline)) {
-                    return '<div class="text-center">
-                                <span class="badge badge-danger">Expired</span>
-                            </div>';
+                    $expired = true;
                 }
 
                 $seconds = $deadline->diffInSeconds($now);
@@ -77,29 +73,32 @@ class ProjectExecutionSheetController extends Controller
                 $minutes = floor(($seconds % 3600) / 60);
                 $secs = $seconds % 60;
 
-                return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+                $remaining_time = sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+
+                return (new ProjectStatusService())->handle($row->progress, $expired, $remaining_time);
             })
+            // ->addColumn('batas_waktu', function ($row) {
+            //     $deadline = Carbon::parse($row->updated_at)->addHours(24);
+            //     $now = Carbon::now();
+
+            //     if ($now->gte($deadline)) {
+            //         return '<div class="text-center">
+            //                     <span class="badge badge-danger">Expired</span>
+            //                 </div>';
+            //     }
+
+            //     $seconds = $deadline->diffInSeconds($now);
+            //     $hours = floor($seconds / 3600);
+            //     $minutes = floor(($seconds % 3600) / 60);
+            //     $secs = $seconds % 60;
+
+            //     return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+            // })
             ->addColumn('action', function ($row) {
                 return  '<div class="text-center">
                             <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
                             <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2"><i class="fas fa-comment"></i></a>
                         </div>';
-                // if(auth()->user()->jabatan != 'Administrator'){
-                //     if($row->prepared_by !== auth()->id()){
-                //     }
-                //     return '<div class="text-center">
-                //                 <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i></a>
-                //                 <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                //                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')"><i class="fas fa-trash"></i></button>
-                //             </div>';
-                // }else{
-                //     return '<div class="text-center">
-                //                 <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2" data-toggle="tooltip" data-placement="bottom" title="Lihat Detail Project"><i class="fas fa-eye"></i></a>
-                //                 <a href="'.route('v1.pes.show', $row->id_project).'#comment" class="btn btn-sm btn-primary me-2" data-toggle="tooltip" data-placement="bottom" title="Lihat Komentar"><i class="fas fa-comment"></i></a>
-                //                 <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2" data-toggle="tooltip" data-placement="bottom" title="Edit Project"><i class="fas fa-edit"></i></a>
-                //                 <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')" data-toggle="tooltip" data-placement="bottom" title="Hapus Project"><i class="fas fa-trash"></i></button>
-                //             </div>';
-                // }
             })
             ->rawColumns([
                 'project_no',

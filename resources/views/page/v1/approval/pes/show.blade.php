@@ -163,56 +163,104 @@
         <div class="card collapsing-card card-success card-outline">
             <div class="card-header">
                 <button type="button" class="btn btn-tool w-100" data-card-widget="collapse">
-                    <h3 class="card-title" style="color: black;">Approval Section</h3>
+                    <h3 class="card-title" style="color: black;">Status Approval</h3>
                     <div class="float-right d-none d-sm-inline">
                         <i class="fas fa-minus"></i>
                     </div>
                 </button>
             </div>
-            <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
-                    @if ($approvalData->is_approved === 0 && $approvalData->is_rejected === 0)
-                    <div class="col-12 mb-2">
-                        <button class="btn btn-lg bg-gradient-success w-100" onclick="handleApproval('approve')">Approve</button>
-                    </div>
-                    <div class="col-12 mb-2">
-                        <button class="btn bg-gradient-danger w-100" onclick="handleApproval('reject')">Reject</button>
-                    </div>
+                    {{-- Marketing --}}
                     <div class="col-12">
-                        <div class="form-group">
-                            <label for="contract_description">Note/Catatan</label>
-                            <textarea class="form-control" name="approval_note" id="aprroval_note" rows="3" placeholder="Masukkan Catatan"></textarea>
+                        <div class="card mb-3">
+                            <div class="card-header"><h5 class="card-title">Approval Tim Marketing</h5></div>
+                            <div class="card-body">
+                                @if (!$approvalData->disetujui_mkt && !$approvalData->ditolak_mkt)
+                                    <div class="col-12 mb-2">
+                                        <button onclick="openAuthModal('approve','mkt')" class="btn btn-sm bg-gradient-success w-100">Approve</button>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <button onclick="openAuthModal('reject','mkt')" class="btn btn-sm bg-gradient-danger w-100">Reject</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="approval_note_mkt">Note/Catatan</label>
+                                            <textarea class="form-control" name="approval_note_mkt" id="approval_note_mkt" rows="3" placeholder="Masukkan Catatan"></textarea>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="col-12 mb-2">
+                                        <button class="btn w-100 bg-gradient-{{ $approvalData->disetujui_mkt ? 'success' : ($approvalData->ditolak_mkt ? 'danger' : 'secondary') }}">
+                                            {{ $approvalData->disetujui_mkt ? 'Approved' : ($approvalData->ditolak_mkt ? 'Rejected' : 'Processed') }}
+                                        </button>
+                                    </div>
+                                    <div class="col-12">
+                                        Response by: {{ optional($approvalData->responseMkt)->fullName ?? 'Unknown' }} <br>
+                                        Response at: {{ $approvalData->response_mkt_at ?? '-' }} <br>
+                                        Note: {{ $approvalData->note_mkt ?? '-' }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    @else
-                    <div class="col-12 mb-2">
-                        <button 
-                            class="btn bg-gradient-{{ 
-                                $approvalData->is_approved === 1 
-                                    ? 'success' 
-                                    : ($approvalData->is_rejected === 1 
-                                        ? 'danger' 
-                                        : 'secondary') 
-                            }} w-100">
-                            {{ 
-                                $approvalData->is_approved === 1 
-                                    ? 'Approved' 
-                                    : ($approvalData->is_rejected === 1 
-                                        ? 'Rejected' 
-                                        : 'Reject') 
-                            }}
-                        </button>
-                    </div>
+
+                    {{-- T&O --}}
                     <div class="col-12">
-                        Response by: {{ $approvalData->responseKaryawan->fullName ?? $approvalData->responseUserSession->fullname }} <br>
-                        Response at: {{ $approvalData->response_at }}
+                        <div class="card mb-3">
+                            <div class="card-header"><h5 class="card-title">Approval Tim T&O</h5></div>
+                            <div class="card-body">
+                                @php
+                                    $mktApproved = $approvalData->disetujui_mkt ?? false;
+                                    $toPending = $approvalData && !$approvalData->disetujui_to && !$approvalData->ditolak_to;
+                                @endphp
+
+                                @if (!$mktApproved)
+                                    <div class="col-12 mb-2">
+                                        <button class="btn bg-gradient-warning w-100" disabled>Belum Di-Approve oleh Marketing</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="approval_note_to">Note/Catatan</label>
+                                            <textarea class="form-control" name="approval_note_to" id="approval_note_to" rows="3" placeholder="Masukkan Catatan" disabled></textarea>
+                                        </div>
+                                    </div>
+                                @else
+                                    @if ($toPending)
+                                        <div class="col-12 mb-2">
+                                            <button onclick="openAuthModal('approve','to')" class="btn btn-sm bg-gradient-success w-100">Approve</button>
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <button onclick="openAuthModal('reject','to')" class="btn btn-sm bg-gradient-danger w-100">Reject</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="approval_note_to">Note/Catatan</label>
+                                                <textarea class="form-control" name="approval_note_to" id="approval_note_to" rows="3" placeholder="Masukkan Catatan"></textarea>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="col-12 mb-2">
+                                            <button class="btn w-100 bg-gradient-{{ $approvalData->disetujui_to ? 'success' : ($approvalData->ditolak_to ? 'danger' : 'secondary') }}">
+                                                {{ $approvalData->disetujui_to ? 'Approved' : ($approvalData->ditolak_to ? 'Rejected' : 'Processed') }}
+                                            </button>
+                                        </div>
+                                        <div class="col-12">
+                                            Response by: {{ optional($approvalData->responseTo)->fullName ?? 'Unknown' }} <br>
+                                            Response at: {{ $approvalData->response_to_at ?? '-' }} <br>
+                                            Note: {{ $approvalData->note_to ?? '-' }}
+                                        </div>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                    @endif
                 </div>
             </div>
         </div>
+
     </div>
+    
     <div class="col-12">
         {{-- Service Type --}}
         <div class="card collapsed-card">
@@ -351,8 +399,36 @@
     </div>
 </div>
 @endsection
+@section('modals')
+<!-- Re-auth Modal -->
+<div class="modal fade" id="reauthModal" tabindex="-1" aria-labelledby="reauthModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <form id="reauthForm" onsubmit="return submitReauth(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reauthModalLabel">Konfirmasi Password</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" onclick="closeAuthModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Masukkan password untuk melanjutkan aksi ini.</p>
+                    <div class="form-group">
+                        <input type="password" id="reauth_password" class="form-control" placeholder="Password" required autocomplete="current-password" />
+                    </div>
+                    <input type="hidden" id="reauth_action" />
+                    <input type="hidden" id="reauth_role" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeAuthModal()">Batal</button>
+                    <button type="submit" id="reauth_submit_btn" class="btn btn-primary">Konfirmasi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
 @section('scripts')
-
 <script>
     $(document).ready(function() {
         $('.kategori-radio').each(function() {
@@ -377,10 +453,98 @@
     });
 </script>
 <script>
-    function handleApproval(action) {
-        const note = document.getElementById('aprroval_note').value;
+    let currentAction = null;
+    let currentRole = null;
+
+    function openAuthModal(action, role) {
+        // store for submit handler
+        currentAction = action;
+        currentRole = role;
+
+        document.getElementById('reauth_password').value = '';
+        document.getElementById('reauth_action').value = action;
+        document.getElementById('reauth_role').value = role;
+
+        // show modal (Bootstrap 5)
+        const modalEl = document.getElementById('reauthModal');
+        if (modalEl) {
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        }
+    }
+
+    function closeAuthModal() {
+        const modalEl = document.getElementById('reauthModal');
+        if (modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        }
+    }
+
+    async function submitReauth(e) {
+        e.preventDefault();
+        const password = document.getElementById('reauth_password').value;
+        const action = document.getElementById('reauth_action').value;
+        const role = document.getElementById('reauth_role').value;
+
+        // choose note field based on role
+        const noteElemId = role === 'mkt' ? 'approval_note_mkt' : 'approval_note_to';
+        const note = document.getElementById(noteElemId) ? document.getElementById(noteElemId).value : '';
+
         const projectId = '{{ $data->id_project ?? '' }}';
-    
+
+        // disable submit to avoid double click
+        const submitBtn = document.getElementById('reauth_submit_btn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Memproses...';
+
+        try {
+            const res = await fetch('{{ route('v1.approval.pes.ApproveOrReject') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    project_id: projectId,
+                    action: action,
+                    role: role,
+                    approval_note: note,
+                    password: password
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                // success
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = data.redirect;
+                });
+            } else {
+                // show error message (from server)
+                Swal.fire('Error', data.message || 'Autentikasi/approval gagal', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Konfirmasi';
+            }
+        } catch (err) {
+            Swal.fire('Error', err.message || 'Network error', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Konfirmasi';
+        }
+        return false;
+    }
+
+    function handleApproval(action, role) {
+        // role = 'mkt' or 'to'
+        const noteElemId = role === 'mkt' ? 'approval_note_mkt' : 'approval_note_to';
+        const note = document.getElementById(noteElemId) ? document.getElementById(noteElemId).value : '';
+        const projectId = '{{ $data->id_project ?? '' }}';
+
         fetch('{{ route('v1.approval.pes.ApproveOrReject') }}', {
             method: 'POST',
             headers: {
@@ -390,6 +554,7 @@
             body: JSON.stringify({
                 project_id: projectId,
                 action: action,
+                role: role,
                 approval_note: note
             })
         })
@@ -404,11 +569,12 @@
                     window.location.href = data.redirect;
                 });
             } else {
-                Swal.fire('Error', data.message, 'error');
+                Swal.fire('Error', data.message || 'Unknown error', 'error');
             }
         })
-        .catch(err => Swal.fire('Error', err.message, 'error'));
+        .catch(err => Swal.fire('Error', err.message || 'Network error', 'error'));
     }
+
 </script>
     
 @endsection

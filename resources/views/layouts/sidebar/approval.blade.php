@@ -1,6 +1,6 @@
 <li class="nav-header">Approval</li>
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.pes.index', $item->url))
+    @if (Str::is('v1.approval.pes.index', $item->url))
         <li class="nav-item">
             <a href="{{ route('v1.approval.pes.index') }}" class="nav-link {{ request()->is('v1/approval/pes*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-check-circle"></i>

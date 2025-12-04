@@ -9,7 +9,7 @@ use App\Services\ProgressMap;
  */
 class ProjectStatusService
 {
-    public function handle($code)
+    public function handle($code, $remaining_time, $expired)
     {
         $statusMap = ProgressMap::getProgressDescription($code);
     
@@ -23,6 +23,7 @@ class ProjectStatusService
                 </button>
                 <small class="badge bg-secondary font-weight-normal"><i>'. $status['progress'] .'</i></small>
             </div>
-        ';
+            ';
+                // <small class="badge '.($expired ? 'text-danger' : 'text-muted').'">'.($expired ? 'Expired' : $remaining_time).'</small>
     }
 }
