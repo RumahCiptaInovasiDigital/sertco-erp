@@ -15,13 +15,13 @@
 @endsection
 @section('content')
 <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-md-9">
         <div class="card">
             <div class="card-header">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 col-md-11">
-                            <h3 class="card-title" sty>Daftar Peminjaman Peralatan</h3>
+                            <h3 class="card-title">Informasi Peminjaman Peralatan</h3>
                         </div>
                         <div class="col-12 col-md-1">
                             <a href="{{ route('v1.data-peminjaman.index') }}" class="btn btn-sm btn-secondary">Kembali</a>
@@ -55,6 +55,7 @@
                     </tbody>
                 </table>
             </div>
+            <hr>
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="dt_tools" class="table table-bordered table-hover">
@@ -69,11 +70,10 @@
                             <th>Tanggal Pengembalian</th>
                             <th>Konsdisi Alat (Sebelum Berangkat)</th>
                             <th>Konsdisi Alat (Setelah Dari Site)</th>
-                            {{-- <th>Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($dataDetail as $item)
+                        {{-- @foreach ($dataDetail as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->dataAlat->name}}</td>
@@ -84,11 +84,58 @@
                             <td>{{ $dataPeminjaman->tanggal_kembali ?? '-' }}</td>
                             <td>{{ $item->kondisiSebelum }}</td>
                             <td>{{ $item->kondisiSesudah ?? '-' }}</td>
-                            {{-- <td> - </td> --}}
                         </tr>
-                        @endforeach
+                        @endforeach --}}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Approval Section</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {{-- @if ($approvalData->is_approved === 0 && $approvalData->is_rejected === 0) --}}
+                    <div class="col-12 mb-2">
+                        <button class="btn btn-sm bg-gradient-success w-100" onclick="handleApproval('approve')">Approve</button>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <button class="btn btn-sm bg-gradient-danger w-100" onclick="handleApproval('reject')">Reject</button>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="contract_description">Note/Catatan</label>
+                            <textarea class="form-control" name="approval_note" id="aprroval_note" rows="3" placeholder="Masukkan Catatan"></textarea>
+                        </div>
+                    </div>
+                    {{-- @else --}}
+                    {{-- <div class="col-12 mb-2">
+                        <button 
+                            class="btn bg-gradient-{{ 
+                                $approvalData->is_approved === 1 
+                                    ? 'success' 
+                                    : ($approvalData->is_rejected === 1 
+                                        ? 'danger' 
+                                        : 'secondary') 
+                            }} w-100">
+                            {{ 
+                                $approvalData->is_approved === 1 
+                                    ? 'Approved' 
+                                    : ($approvalData->is_rejected === 1 
+                                        ? 'Rejected' 
+                                        : 'Reject') 
+                            }}
+                        </button>
+                    </div> --}}
+                    {{-- <div class="col-12">
+                        Response by: {{ $approvalData->responseKaryawan->fullName ?? $approvalData->responseUserSession->fullname }} <br>
+                        Response at: {{ $approvalData->response_at }}
+                    </div> --}}
+                    {{-- @endif --}}
+                </div>
             </div>
         </div>
     </div>

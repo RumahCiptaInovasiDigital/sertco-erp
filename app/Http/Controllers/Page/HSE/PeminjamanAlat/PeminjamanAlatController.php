@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DataPeralatan;
 use App\Models\PeminjamanAlat;
 use App\Models\PeminjamanAlatDetail;
+use App\Models\PeminjamanAlatApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -26,11 +27,11 @@ class PeminjamanAlatController extends Controller
                 return $row->karyawan->fullName ?? '-';
             })
             ->editColumn('approved', function ($row) {
-                if ($row->approved === '0') {
+                if ($row->approval->approved === '0') {
                     return '<div class="text-center">
                                 <span class="badge badge-info">Menunggu Persetujuan</span>
                             </div>';
-                } elseif ($row->approved === '1') {
+                } elseif ($row->approval->approved === '1') {
                     return '<div class="text-center">
                                 <span class="badge badge-danger w-100 d-block text-center">Ditolak</span>
                             </div>';
@@ -40,7 +41,7 @@ class PeminjamanAlatController extends Controller
                         </div>';
                 }})
             ->addColumn('action', function ($row) {
-                if ($row->approved === '0') {
+                if ($row->approval->approved === '0') {
                     // Tombol download surat jalan
                     return '<button class="btn btn-sm btn-danger me-1" 
                                 onclick="deleteData(\''.$row->id.'\')">
@@ -51,7 +52,7 @@ class PeminjamanAlatController extends Controller
                                 class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
                             </a>';
-                } elseif ($row->approved === '1') {
+                } elseif ($row->approval->approved === '1') {
                     return '<a href="'.route('v1.data-peminjaman.show', $row->id).'"
                                 class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i>
@@ -105,7 +106,7 @@ class PeminjamanAlatController extends Controller
     {
         $request->validate([
             'tanggal_pinjam'  => 'required|date',
-            'tanggal_kembali' => 'required|date',
+            // 'tanggal_kembali' => 'required|date',
             'idAlat'          => 'required|array|min:1',  // minimal harus ada 1 alat
         ]);
     
@@ -121,7 +122,7 @@ class PeminjamanAlatController extends Controller
                 'nikUser'         => $request->nikUser,
                 'namaClient'      => $request->namaClient,
                 'tanggal_pinjam'  => $request->tanggal_pinjam,
-                'tanggal_kembali' => $request->tanggal_kembali,
+                // 'tanggal_kembali' => $request->tanggal_kembali,
                 'total_alat'      => $totalAlat,   // <-- Simpan total alat
             ]);
     
@@ -137,6 +138,12 @@ class PeminjamanAlatController extends Controller
                     'kondisiSebelum' => $request->kondisiSebelum[$i],
                 ]);
             }
+
+            PeminjamanAlatApproval::create([
+                'idPeminjamanAlat' => $peminjaman->id,
+                'nikPeminjam'       => $request->nikUser,
+                'tgl_pinjam'         => $request->tanggal_pinjam,
+            ]);
     
             DB::commit();
     
@@ -208,6 +215,12 @@ class PeminjamanAlatController extends Controller
                     'kondisiSebelum' => $request->kondisiSebelum[$i],
                 ]);
             }
+
+            PeminjamanAlatApproval::create([
+                'idPeminjamanAlat' => $data->id,
+                'nikPeminjam'       => $request->nikUser,
+                'tgl_pinjam'         => $request->tanggal_pinjam,
+            ]);
 
             PeminjamanAlat::updateOrCreate(
                 ['id' => $data->id], // kondisi pencarian

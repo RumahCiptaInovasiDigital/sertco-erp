@@ -13,10 +13,10 @@
     @endif
 @endforeach
 
-{{-- @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.logistik*', $item->url)) --}}
-        {{-- <li class="nav-item menu-open">
-            <a href="#" class="nav-link">
+@foreach ($relation ?? [] as $item)
+    @if (Str::is('v1.approval-alat.index', $item->url))
+        <li class="nav-item menu-open {{ request()->is('v1/approval-alat*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('v1/approval-alat*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-check-circle"></i>
                 <p>
                     Approval Peminjaman
@@ -25,13 +25,13 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('v1.approval-alat.index') }}" class="nav-link {{ request()->is('v1/approval-alat*') ? 'active' : '' }}">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Alat</p>
                     </a>
                 </li>
             </ul>
-        </li> --}}
-        {{-- @break
+        </li>
+        @break
     @endif
-@endforeach --}}
+@endforeach

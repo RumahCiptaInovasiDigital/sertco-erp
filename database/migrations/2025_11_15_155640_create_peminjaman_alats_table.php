@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('namaClient')->nullable();
             $table->date('tanggal_pinjam');
             $table->date('tanggal_kembali')->nullable();
-            $table->enum('approved', ['0', '1', '2'])->default('0');
             $table->integer('total_alat')->default(0); 
             $table->timestamps();
             $table->softDeletes();

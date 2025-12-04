@@ -69,12 +69,12 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-4">
+                        {{-- <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label>Tanggal Kembali</label>
                                 <input type="date" name="tanggal_kembali" class="form-control" value="{{ $dataPeminjaman->tanggal_kembali }}">
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-12">
                             <button type="button" class="btn btn-primary mb-3" id="addRow">
