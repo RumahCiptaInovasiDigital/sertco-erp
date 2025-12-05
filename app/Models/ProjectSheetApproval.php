@@ -8,10 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectSheetApproval extends Model
 {
-    use HasFactory;
-    use HasUuids;
+    use HasFactory, HasUuids;
 
-    protected $guarded;
+    // allow mass assignment for explicit fields
+    protected $guarded = [];
+
+    protected $table = 'project_sheet_approvals';
+    protected $casts = [
+        'disetujui_mkt' => 'boolean',
+        'ditolak_mkt' => 'boolean',
+        'disetujui_to' => 'boolean',
+        'ditolak_to' => 'boolean',
+    ];
 
     public function pes()
     {
@@ -23,18 +31,13 @@ class ProjectSheetApproval extends Model
         return $this->belongsTo(DataKaryawan::class, 'request_by', 'id');
     }
 
-    public function userSession()
+    public function responseMkt()
     {
-        return $this->belongsTo(User::class, 'request_by', 'id_user');
+        return $this->belongsTo(DataKaryawan::class, 'response_mkt_by', 'id');
     }
 
-    public function responseKaryawan()
+    public function responseTo()
     {
-        return $this->belongsTo(DataKaryawan::class, 'response_by', 'id');
-    }
-
-    public function responseUserSession()
-    {
-        return $this->belongsTo(User::class, 'response_by', 'id_user');
+        return $this->belongsTo(DataKaryawan::class, 'response_to_by', 'id');
     }
 }

@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('peminjaman_alats', function (Blueprint $table) {
+        Schema::create('master_isos', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nikUser');
-            $table->string('namaClient')->nullable();
-            $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali')->nullable();
-            $table->integer('total_alat')->default(0); 
+            $table->string('name');
+            $table->string('petugas')->nullable();
+            $table->date('tgl_audit')->nullable();
+            $table->string('fileIso')->nullable();
+            $table->string('linkIso')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjaman_alats');
+        Schema::dropIfExists('master_isos');
     }
 };

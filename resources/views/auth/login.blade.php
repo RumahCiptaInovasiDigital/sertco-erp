@@ -17,7 +17,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><b>NIK</b></span>
                     </div>
-                    <input type="text" class="form-control" name="nik" data-inputmask='"mask": "SQ-AAA-999"' data-mask placeholder="SQ-XYZ-000">
+                    <input type="text" class="form-control" name="nik" placeholder="SQ-XYZ-123" style="text-transform: uppercase;">
                   </div>
             </div>
             <div class="input-group mb-3">

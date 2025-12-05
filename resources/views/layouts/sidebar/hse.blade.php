@@ -27,3 +27,36 @@
         @break
     @endif
 @endforeach
+
+@php
+use App\Models\MasterIso;
+
+$isoList = MasterIso::orderBy('name')->get();
+
+@endphp
+@foreach ($relation ?? [] as $item)
+    @if (Str::is('v1.iso*', $item->url))
+        <li class="nav-item {{ request()->is('v1/iso*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ request()->is('v1/iso*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file-archive"></i>
+                <p>
+                    List ISO
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                @foreach ($isoList as $data)
+                <li class="nav-item">
+                    <a href="{{ route('v1.iso.show', $data->id) }}"
+                       class="nav-link {{ request()->is('v1/iso/'.$data->id.'*') ? 'active' : '' }}">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>{{ $data->name }}</p>
+                    </a>
+                </li>
+                @endforeach
+            </ul>
+        </li>
+        @break
+    @endif
+@endforeach

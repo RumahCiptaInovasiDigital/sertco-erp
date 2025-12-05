@@ -296,20 +296,21 @@
                                 window.location.href = response.redirect;
                             }
                         });
-                    } else {
-                        // Menampilkan SweetAlert dengan pesan error
-                        Swal.fire({
-                            title: 'Error System',
-                            text: response.message,
-                            icon: 'error',
-                            allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
-                            allowEscapeKey: false, // Tidak bisa ditutup dengan tombol escape
-                        });
+                    } 
+                    // else {
+                    //     // Menampilkan SweetAlert dengan pesan error
+                    //     Swal.fire({
+                    //         title: 'Error System',
+                    //         text: response.message,
+                    //         icon: 'error',
+                    //         allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
+                    //         allowEscapeKey: false, // Tidak bisa ditutup dengan tombol escape
+                    //     });
 
-                        // Enable kembali tombol submit
-                        $form.find('button[type="submit"]').attr('disabled', false).text(
-                            'Submit');
-                    }
+                    //     // Enable kembali tombol submit
+                    //     $form.find('button[type="submit"]').attr('disabled', false).text(
+                    //         'Submit');
+                    // }
                 },
                 error: function(xhr) {
                     // Enable kembali tombol submit

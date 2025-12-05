@@ -69,7 +69,7 @@
             <li class="nav-header">MASTER DATA</li>
             {{-- Service --}}
             @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.service*', $item->url))
+                @if (Str::is('v1.service.index', $item->url))
                     <li class="nav-item {{ request()->is('v1/service*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('v1/service*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tasks"></i>
@@ -127,9 +127,24 @@
                 @endif
             @endforeach
 
+            {{-- Master Data ISO --}}
+            @foreach ($relation ?? [] as $item)
+                @if (Str::is('v1.master-iso.index', $item->url))
+                    <li class="nav-item">
+                        <a href="{{ route('v1.master-iso.index') }}" class="nav-link {{ request()->is('v1/master-iso*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                ISO
+                            </p>
+                        </a>
+                    </li>
+                    @break
+                @endif
+            @endforeach
+
             {{-- Barang --}}
             @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.barang*', $item->url))
+                @if (Str::is('v1.barang.index', $item->url))
                     <li class="nav-item {{ request()->is('v1/barang*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('v1/barang*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tasks"></i>

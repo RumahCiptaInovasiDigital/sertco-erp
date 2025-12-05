@@ -4,13 +4,13 @@
         @foreach ($projectLog as $log)
         @php
         // Cek apakah notifikasi dari hari ini
-        $isToday = Carbon\Carbon::parse($log->created_at)->isToday();
+            $isToday = Carbon\Carbon::parse($log->created_at)->isToday();
         @endphp
         <div class="post">
             <div class="user-block">
                 <img class="img-circle img-bordered-sm" src="{{ asset('dist/img/sq-logo.jpg') }}" alt="user image">
                 <span class="username">
-                    <a href="#">{{ $log->karyawan->fullName }}</a>
+                    <a href="#">{{ $log->karyawan->fullName ?? 'Unknown' }}</a>
                 </span>
                 <span class="description">{{ $log->created_at->format('g:i A') }} {{ $isToday ? 'Hari ini' : $log->created_at->format('d M Y') }}</span>
             </div>

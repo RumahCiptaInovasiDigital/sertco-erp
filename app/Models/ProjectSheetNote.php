@@ -17,7 +17,7 @@ class ProjectSheetNote extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(DataKaryawan::class, 'id_user', 'id');
     }
 
     public function replies()

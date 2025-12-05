@@ -49,6 +49,15 @@
                                 </div>
                                 <div class="col-12 mt-2">
                                     <div class="row">
+                                        <div class="col">
+                                            <button class="btn btn-sm bg-light w-100">
+                                                {{ $sheet->project_detail ?? '-' }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="row">
                                         <div class="col-4">
                                             <button class="btn btn-sm bg-purple w-100">
                                                 Deskripsi:
@@ -125,6 +134,7 @@
                             <th>Signature By</th>
                             <th>Issued Date</th>
                             <th class="text-center">Status</th>
+                            {{-- <th class="text-center">Batas Waktu</th> --}}
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -176,6 +186,7 @@
                 { data: "signature_by" },
                 { data: "issued_date" },
                 { data: "status" },
+                // { data: "batas_waktu" },
                 {
                     data: "action",
                     orderable: false,

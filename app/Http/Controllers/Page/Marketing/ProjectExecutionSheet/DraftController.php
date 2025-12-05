@@ -57,8 +57,7 @@ class DraftController extends Controller
             })
             ->addColumn('action', function ($row) {
                 return '<div class="text-center">
-                            <a href="'.route('v1.pes.show', $row->id_project).'" class="btn btn-sm btn-info me-2" data-toggle="tooltip" data-placement="bottom" title="Lihat Detail Project"><i class="fas fa-eye"></i></a>
-                            <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-warning me-2" data-toggle="tooltip" data-placement="bottom" title="Edit Project"><i class="fas fa-edit"></i></a>
+                            <a href="'.route('v1.pes.edit', $row->id_project).'" class="btn btn-sm btn-info me-2" data-toggle="tooltip" data-placement="bottom" title="Edit Project">Buka Draft</a>
                             <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_project.'\')" data-toggle="tooltip" data-placement="bottom" title="Hapus Project"><i class="fas fa-trash"></i></button>
                         </div>';
             })

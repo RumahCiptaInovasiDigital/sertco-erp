@@ -67,12 +67,12 @@
                                 <input type="date" class="form-control" name="tanggal_pinjam" required>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        {{-- <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="tanggal_kembali">Tgl Pengembalian</label>
                                 <input type="date" class="form-control" name="tanggal_kembali" required>
                             </div>
-                        </div>
+                        </div> --}}
 
                         {{-- Tombol tambah baris --}}
                         <div class="col-12">

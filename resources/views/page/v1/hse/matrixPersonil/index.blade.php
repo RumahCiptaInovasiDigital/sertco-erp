@@ -25,6 +25,14 @@
                     </a>
                 </div>
             </div>
+            
+            <div class="col-12 pt-2">
+                <div class="callout callout-info">
+                  <h5>Pemberitahuan Expired !</h5>
+                  <p><i class="fas fa-check-circle text-warning"></i> 3 Bulan Sebelum Expired</p>
+                  <p><i class="fas fa-check-circle text-danger"></i> 1 Bulan Sebelum Expired</p>
+                </div>
+            </div>
 
             <!-- /.card-header -->
             <div class="card-body">
@@ -40,6 +48,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            use Carbon\Carbon;
+                        @endphp
                         @foreach ($dataKaryawan as $karyawan)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -48,6 +59,7 @@
 
                                 @foreach ($jenisSerti as $item)
                                     @php
+
                                         $punya = $karyawan->sertifikat
                                             ->where('idSertifikat', $item->id_sertifikat)
                                             ->first();
@@ -55,7 +67,21 @@
 
                                     <td class="text-center">
                                         @if ($punya)
-                                            <a href="javascript:void(0);" onclick="lihatSertifikat('{{ $punya->id }}')">
+                                                @php
+                                                    $due = Carbon::parse($punya->due_date);
+                                                    $now = Carbon::now();
+                                                    $daysLeft = $now->diffInDays($due, false);
+
+                                                    // Logic warna
+                                                    if ($daysLeft <= 30) {
+                                                        $bgColor = 'text-danger'; // Merah
+                                                    } elseif ($daysLeft <= 90) {
+                                                        $bgColor = 'text-warning'; // Kuning
+                                                    } else {
+                                                        $bgColor = ''; // Normal
+                                                    }
+                                                @endphp
+                                            <a href="javascript:void(0);" class="{{ $bgColor }}" onclick="lihatSertifikat('{{ $punya->id }}')">
                                                 <i class="fas fa-check-circle"></i><br>
                                                 <span>due date ({{ $punya->due_date }})</span>
                                             </a>
