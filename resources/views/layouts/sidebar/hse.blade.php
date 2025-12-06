@@ -28,14 +28,14 @@
     @endif
 @endforeach
 
-{{-- @php
+@php
 use App\Models\MasterIso;
 
 $isoList = MasterIso::orderBy('name')->get();
 
 @endphp
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.iso*', $item->url))
+    @if (Str::is('v1.iso.show', $item->url))
         <li class="nav-item {{ request()->is('v1/iso*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('v1/iso*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-file-archive"></i>
@@ -59,4 +59,4 @@ $isoList = MasterIso::orderBy('name')->get();
         </li>
         @break
     @endif
-@endforeach --}}
+@endforeach
