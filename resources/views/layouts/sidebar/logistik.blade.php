@@ -31,7 +31,7 @@
 
 {{-- Permintaan PO Barang/Jasa --}}
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.poso-request.index', $item->url))
+    @if (Str::is('v1.poso-request.po.index', $item->url))
         <li class="nav-item {{ request()->is('v1/poso-request*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('v1/poso-request*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-paper-plane"></i>
