@@ -15,7 +15,7 @@
 
 @foreach ($relation ?? [] as $item)
     @if (Str::is('v1.approval-alat.index', $item->url))
-        <li class="nav-item menu-open {{ request()->is('v1/approval-alat*') ? 'menu-open' : '' }}">
+        <li class="nav-item {{ request()->is('v1/approval-alat*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('v1/approval-alat*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-check-circle"></i>
                 <p>
