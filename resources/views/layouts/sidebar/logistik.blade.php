@@ -61,7 +61,7 @@
 
 {{-- Logistik --}}
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.logistik.index', $item->url))
+    @if (Str::is('v1.logistik.masuk.index', $item->url))
         <li class="nav-item {{ request()->is('v1/logistik*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ request()->is('v1/logistik*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-truck"></i>
