@@ -10,7 +10,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class MasterIsoController extends Controller
 {
-        public function getData(Request $request)
+    public function getData(Request $request)
     {
         $query = masterIso::query()
             ->select([
@@ -123,7 +123,7 @@ class MasterIsoController extends Controller
 
             $fileIso = $data->fileIso;
             $linkIso = $data->linkIso;
-            
+
             $date = now()->format('Ymd_His');
             $newFileName = $fileIso;
             $newLink = $linkIso;
@@ -213,7 +213,7 @@ class MasterIsoController extends Controller
             ->where('id', $id)
             ->first();
 
-        // Hapus 
+        // Hapus
         $data->delete();
 
         return response()->json([

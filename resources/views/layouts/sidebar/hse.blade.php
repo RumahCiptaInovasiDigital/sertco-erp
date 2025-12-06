@@ -28,7 +28,7 @@
     @endif
 @endforeach
 
-@php
+{{-- @php
 use App\Models\MasterIso;
 
 $isoList = MasterIso::orderBy('name')->get();
@@ -59,4 +59,4 @@ $isoList = MasterIso::orderBy('name')->get();
         </li>
         @break
     @endif
-@endforeach
+@endforeach --}}
