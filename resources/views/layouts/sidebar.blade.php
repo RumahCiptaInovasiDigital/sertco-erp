@@ -58,7 +58,7 @@
             </li>
 
             @include('layouts.sidebar.admin')
-            
+
             @include('layouts.sidebar.marketing')
             @include('layouts.sidebar.approval')
 
@@ -96,7 +96,7 @@
                     @break
                 @endif
             @endforeach
-            
+
             {{-- Data Peralatan --}}
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.data-peralatan.index', $item->url))
@@ -111,7 +111,7 @@
                     @break
                 @endif
             @endforeach
-            
+
             {{-- Jenis Sertifikat --}}
             @foreach ($relation ?? [] as $item)
                 @if (Str::is('v1.jenis-sertifikat.index', $item->url))
@@ -144,7 +144,7 @@
 
             {{-- Barang --}}
             @foreach ($relation ?? [] as $item)
-                @if (Str::is('v1.barang.index', $item->url))
+                @if (Str::is('v1.barang.master.index', $item->url))
                     <li class="nav-item {{ request()->is('v1/barang*') ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ request()->is('v1/barang*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tasks"></i>

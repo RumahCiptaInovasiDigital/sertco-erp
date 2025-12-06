@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use App\Models\ServiceOrder;
 use App\Models\ProjectSheet;
+use App\Models\LogSO;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -165,7 +166,14 @@ class ServiceOrderController extends Controller
         try {
             \DB::beginTransaction();
 
-            ServiceOrder::create($data);
+            $so = ServiceOrder::create($data);
+
+            // Simpan log SO
+            LogSO::create([
+                'id_so' => $so->id_so,
+                'status_so' => 'draft',
+                'ket_log_so' => 'Draft Service Order dibuat',
+            ]);
 
             \DB::commit();
 

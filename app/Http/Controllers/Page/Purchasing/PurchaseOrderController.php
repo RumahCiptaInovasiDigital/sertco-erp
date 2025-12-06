@@ -8,6 +8,7 @@ use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDetail;
 use App\Models\Barang;
 use App\Models\ProjectSheet;
+use App\Models\LogPO;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -171,6 +172,13 @@ class PurchaseOrderController extends Controller
                     'jumlah_barang' => $request->req[$i],
                 ]);
             }
+
+            // Simpan log PO
+            LogPO::create([
+                'id_po' => $po->id_po,
+                'status_po' => 'draft',
+                'ket_log_po' => 'Draft Purchase Order dibuat',
+            ]);
 
             \DB::commit();
 
