@@ -54,7 +54,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="deskripsi">Deskripsi SO <span style="color: #ff0000;">*</span></label>
-                                    <textarea class="form-control" name="deskripsi" value="{{ old('deskripsi') }}" id="deskripsi" placeholder="Masukkan Deskripsi Vendor" rows="3"></textarea>
+                                    <textarea class="form-control" name="deskripsi" value="{{ old('deskripsi') }}" id="deskripsi" placeholder="Masukkan Deskripsi" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="file_lampiran">File Lampiran (.pdf) <span style="color: #ff0000;">*</span></label>
-                                    <input type="file" class="form-control" name="file_lampiran" id="file_lampiran"><br />
+                                    <input type="file" class="form-control" name="file_lampiran" id="file_lampiran">
                                     <em><b>File wajib PDF (.pdf) maksimal 5Mb</b></em>
                                 </div>
                             </div>
