@@ -173,6 +173,7 @@ class ServiceOrderController extends Controller
                 'id_so' => $so->id_so,
                 'status_so' => 'draft',
                 'ket_log_so' => 'Draft Service Order dibuat',
+                'eksekutor' => auth()->user()->nik,
             ]);
 
             \DB::commit();

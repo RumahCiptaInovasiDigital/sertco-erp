@@ -178,6 +178,7 @@ class PurchaseOrderController extends Controller
                 'id_po' => $po->id_po,
                 'status_po' => 'draft',
                 'ket_log_po' => 'Draft Purchase Order dibuat',
+                'eksekutor' => auth()->user()->nik,
             ]);
 
             \DB::commit();
@@ -241,6 +242,14 @@ class PurchaseOrderController extends Controller
 
             PurchaseOrder::where('id_po', $id)->update($data);
 
+            // Simpan log PO
+            LogPO::create([
+                'id_po' => $id,
+                'status_po' => 'draft',
+                'ket_log_po' => 'Purchase Order Request dikirim, menunggu approval pimpinan departemen.',
+                'eksekutor' => auth()->user()->nik,
+            ]);
+
             \DB::commit();
 
             return response()->json([
@@ -277,6 +286,14 @@ class PurchaseOrderController extends Controller
             \DB::beginTransaction();
 
             PurchaseOrder::where('id_po', $id)->update($data);
+
+            // Simpan log PO
+            LogPO::create([
+                'id_po' => $id,
+                'status_po' => 'draft',
+                'ket_log_po' => 'Purchase Order Request dibatalkan kembali ke draft.',
+                'eksekutor' => auth()->user()->nik,
+            ]);
 
             \DB::commit();
 

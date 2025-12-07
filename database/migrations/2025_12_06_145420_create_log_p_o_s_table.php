@@ -16,6 +16,7 @@ return new class extends Migration
             $table->char('id_po', 36)->index();
             $table->enum('status_po', ['draft', 'pending', 'on review', 'approved', 'rejected', 'finished'])->default('draft');
             $table->text('ket_log_po')->default('Draft Purchase Order dibuat');
+            $table->char('eksekutor', 36)->nullable();
             $table->timestamps();
         });
     }

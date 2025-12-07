@@ -16,6 +16,7 @@ return new class extends Migration
             $table->char('id_so', 36)->index();
             $table->enum('status_so', ['draft', 'pending', 'on review', 'approved', 'rejected', 'finished'])->default('draft');
             $table->text('ket_log_so')->default('Draft Service Order dibuat');
+            $table->char('eksekutor', 36)->nullable();
             $table->timestamps();
         });
     }
