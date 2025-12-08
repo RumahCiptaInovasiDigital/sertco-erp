@@ -8,6 +8,7 @@ use App\Models\JenisSertifikat;
 use App\Models\MatrixPersonil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class MatrixPersonilController extends Controller
@@ -51,9 +52,10 @@ class MatrixPersonilController extends Controller
         //     'tanggal_expired' => 'required|date|after:tanggal_terbit',
         // ]);
         $serti = JenisSertifikat::where('id_sertifikat', $request->id)->first();
+        $folderName = Str::slug($serti->name);
         if ($request->hasFile('file_serti')) {
             $file = $request->file('file_serti');
-            $fileName = $request->nik. '-' . '.pdf';
+            $fileName = $request->nik. '-' .$folderName. '.pdf';
             $dest = public_path('assets/sertifikat/' . $request->nik . '/');
 
             if (!file_exists($dest)) {
@@ -103,6 +105,7 @@ class MatrixPersonilController extends Controller
 
         // Ambil nama sertifikat untuk nama file
         $serti = JenisSertifikat::where('id_sertifikat', $id)->first();
+        $folderName = Str::slug($serti->name);
 
         $fileName = $matrix->file_serti;
 
@@ -115,7 +118,7 @@ class MatrixPersonilController extends Controller
             }
 
             $file = $request->file('file_serti');
-            $fileName = $request->nik . '-'  . '.pdf';
+            $fileName = $request->nik . '-' . $folderName . '.pdf';
 
             $dest = public_path("assets/sertifikat/{$request->nik}/");
             if (!file_exists($dest)) {
