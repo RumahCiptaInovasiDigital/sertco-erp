@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('nik')->index();
             $table->text('deskripsi_po');
             $table->char('id_project', 36)->index()->nullable();
-            $table->enum('status_po', ['pending', 'on review', 'approved', 'rejected'])->default('pending');
+            $table->enum('status_po', ['draft', 'pending', 'on review', 'approved', 'rejected', 'finished'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
         });

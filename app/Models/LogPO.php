@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurchaseOrderDetail extends Model
+class LogPO extends Model
 {
     use HasFactory;
     use HasUuids;
 
     protected $guarded;
 
-    protected $primaryKey = 'id_pod';
+    protected $primaryKey = 'id_log_po';
 }

@@ -10,6 +10,7 @@ use App\Models\ServiceType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Hash;
 
 class ApprovalProjectExecutionSheetController extends Controller
 {
@@ -81,51 +82,95 @@ class ApprovalProjectExecutionSheetController extends Controller
         $request->validate([
             'project_id' => 'required|exists:project_sheets,id_project',
             'action' => 'required|in:approve,reject',
+            'role' => 'required|in:mkt,to',
             'approval_note' => 'nullable|string|max:1000',
+            'password' => 'required|string',
         ]);
 
         try {
             \DB::beginTransaction();
 
-            $project = ProjectSheet::where('id_project', $request->project_id)->first();
-            $status = $request->action === 'approve' ? 'approved' : 'rejected';
-            $project->update([
-                'received_by' => auth()->user()->id,
-            ]);
             $approvalData = ProjectSheetApproval::where('id_project', $request->project_id)->first();
-            if ($status === 'approved') {
-                $approvalData->update([
-                    'response_by' => auth()->user()->id_user,
-                    'response_at' => now(),
-                    'is_approved' => 1,
-                    'note' => $request->approval_note,
-                ]);
-            } else {
-                $approvalData->update([
-                    'response_by' => auth()->user()->id_user,
-                    'response_at' => now(),
-                    'is_rejected' => 1,
-                    'note' => $request->approval_note,
-                ]);
+
+            if (!$approvalData) {
+                return response()->json(['success' => false, 'message' => 'Approval data tidak ditemukan.'], 404);
             }
+
+            // VALIDASI PASSWORD
+            $user = auth()->user();
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Password salah. Autentikasi ulang gagal.'
+                ], 401);
+            }
+
+            $isApprove = $request->action === 'approve';
+            $role = $request->role;
+            $idUser = $user->id_user ?? null;
+
+            // === UPDATE APPROVAL STATE ===
+            if ($role === 'mkt') {
+
+                $approvalData->disetujui_mkt = $isApprove;
+                $approvalData->ditolak_mkt = !$isApprove;
+                $approvalData->response_mkt_at = now();
+                $approvalData->response_mkt_by = $idUser;
+                $approvalData->note_mkt = $request->approval_note;
+                $approvalData->save();
+
+                if (!$isApprove) {
+                    // Reset T&O state
+                    $approvalData->disetujui_to = false;
+                    $approvalData->ditolak_to = false;
+                    $approvalData->response_to_at = null;
+                    $approvalData->response_to_by = null;
+                    $approvalData->note_to = null;
+                    $approvalData->save();
+                }
+
+            } else { // role = T&O
+
+                if (!$approvalData->disetujui_mkt) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'T&O tidak dapat melakukan approval sebelum Marketing menyetujui.'
+                    ], 422);
+                }
+
+                $approvalData->disetujui_to = $isApprove;
+                $approvalData->ditolak_to = !$isApprove;
+                $approvalData->response_to_at = now();
+                $approvalData->response_to_by = $idUser;
+                $approvalData->note_to = $request->approval_note;
+                $approvalData->save();
+            }
+
+            // ==== UPDATE PROGRESS VIA SERVICE ====
+            $project = ProjectSheet::where('id_project', $request->project_id)->first();
+
+            (new \App\Services\ProjectExecutionSheet\ProjectProgressService())
+                ->updateProgress($project, $approvalData, $role, $isApprove);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => $status === 'approved'
-                    ? 'Project berhasil di-approve.'
-                    : 'Project telah ditolak.',
+                'message' => $isApprove ? 'Berhasil disetujui.' : 'Telah ditolak.',
                 'redirect' => route('v1.approval.pes.index'),
             ]);
+
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error('Approval error: '.$th->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memproses data.',
+                'message' => 'Gagal memproses approval.',
                 'error' => $th->getMessage(),
-            ]);
+            ], 500);
         }
     }
+
+
 }

@@ -102,8 +102,11 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
             Route::get('create', 'create')->name('create');
             Route::post('store', 'store')->name('store');
             Route::get('show/{id}', 'show')->name('show');
+            Route::get('item-search/{id}', 'itemSearch')->name('item-search');
             Route::get('edit/{id}', 'edit')->name('edit');
             Route::post('update/{id}', 'update')->name('update');
+            Route::post('send', 'send')->name('send');
+            Route::post('cancel', 'cancel')->name('cancel');
             Route::post('destroy', 'destroy')->name('destroy');
         });
         Route::prefix('so')->name('so.')->controller(App\Http\Controllers\Page\Purchasing\ServiceOrderController::class)->group(function () {

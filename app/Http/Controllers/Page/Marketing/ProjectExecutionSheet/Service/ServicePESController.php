@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Page\Marketing\ProjectExecutionSheet\Service;
 use App\Http\Controllers\Controller;
 use App\Models\KategoriService;
 use App\Models\ProjectSheet;
-use App\Models\ServiceFormData;
+use App\Models\ProjectSheetServices;
 use App\Models\ServiceType;
 use App\Services\ProjectExecutionSheet\Approval\SendApproval;
 use App\Services\ProjectExecutionSheet\CreateProjectLogService;
@@ -98,7 +98,7 @@ class ServicePESController extends Controller
             \DB::beginTransaction();
 
             // Hapus data lama biar gak dobel kalau update
-            ServiceFormData::where('project_no', $project_no)->delete();
+            ProjectSheetServices::where('project_no', $project_no)->delete();
 
             if (!empty($id_kategori)) {
                 foreach ($id_kategori as $key => $idKategoriService) {
@@ -109,7 +109,7 @@ class ServicePESController extends Controller
                     // Cek apakah kategori ini pakai opsi "Other"
                     $isOther = $type == '0' ? true : false;
 
-                    ServiceFormData::create([
+                    ProjectSheetServices::create([
                         'project_no' => $project_no,
                         'id_kategori_service' => $idKategoriService,
                         'id_service_type' => $isOther ? null : $type, // null kalau Other
@@ -188,7 +188,7 @@ class ServicePESController extends Controller
         $serviceKategori = KategoriService::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
         $serviceType = ServiceType::query()->orderByRaw('CAST(sort_num AS UNSIGNED) ASC')->get();
 
-        $serviceData = ServiceFormData::query()->where('project_no', strtoupper($project_no));
+        $serviceData = ProjectSheetServices::query()->where('project_no', strtoupper($project_no));
 
         return view('page.v1.pes.service.edit', compact('projectSheet', 'serviceKategori', 'serviceType', 'serviceData'));
     }
@@ -266,7 +266,7 @@ class ServicePESController extends Controller
             \DB::beginTransaction();
 
             // Hapus data lama biar gak dobel kalau update
-            ServiceFormData::where('project_no', $project_no)->delete();
+            ProjectSheetServices::where('project_no', $project_no)->delete();
 
             if (!empty($id_kategori)) {
                 foreach ($id_kategori as $key => $idKategoriService) {
@@ -277,7 +277,7 @@ class ServicePESController extends Controller
                     // Cek apakah kategori ini pakai opsi "Other"
                     $isOther = $type == '0' ? true : false;
 
-                    ServiceFormData::create([
+                    ProjectSheetServices::create([
                         'project_no' => $project_no,
                         'id_kategori_service' => $idKategoriService,
                         'id_service_type' => $isOther ? null : $type, // null kalau Other

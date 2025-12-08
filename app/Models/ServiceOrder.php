@@ -21,4 +21,9 @@ class ServiceOrder extends Model
     {
         return $this->hasOne(Vendor::class, 'id_vendor', 'id_vendor');
     }
+
+    public function hasLogSO()
+    {
+        return $this->hasMany(LogSO::class, 'id_so', 'id_so');
+    }
 }

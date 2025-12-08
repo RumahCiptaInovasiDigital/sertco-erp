@@ -14,10 +14,6 @@ class SendApproval
         ProjectSheetApproval::create([
             'id_project' => $id_project,
             'request_by' => $id_user,
-            'response_by' => null,
-            'response_at' => null,
-            'is_approved' => false,
-            'is_rejected' => false,
         ]);
     }
 }
