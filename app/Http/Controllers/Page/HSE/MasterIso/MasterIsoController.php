@@ -57,7 +57,7 @@ class MasterIsoController extends Controller
         if ($request->upload_type ==='file') {
             if ($request->hasFile('fileIso')) {
                 $file = $request->file('fileIso');
-                $fileName = $request->name. '-' .$date. '.pdf';
+                $fileName =  'ISO-' .$date. '.pdf';
                 $dest = public_path('assets/ISO/' . $request->name . '/');
 
                 if (!file_exists($dest)) {
@@ -137,7 +137,7 @@ class MasterIsoController extends Controller
                     }
 
                     $file = $request->file('fileIso');
-                    $newFileName = $request->name. '-' .$date. '.pdf';
+                    $newFileName = 'ISO-' .$date. '.pdf';
 
                     $dest = public_path('assets/ISO/' . $data->name . '/');
                     if (!file_exists($dest)) {

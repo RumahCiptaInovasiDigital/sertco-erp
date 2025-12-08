@@ -65,6 +65,52 @@ class ApprovalAlatController extends Controller
         ->where('idPeminjaman', $id)
         ->get();
 
-        return view('page.v1.approval.peminjamanAlat.show', compact('dataDetail', 'dataPeminjaman'));
+        $dataApproved = PeminjamanAlatApproval::query()
+        ->where('idPeminjamanAlat', $id)
+        ->first();
+// dd($dataApproved);
+        return view('page.v1.approval.peminjamanAlat.show', compact('dataDetail', 'dataPeminjaman', 'dataApproved'));
     }
+
+    public function approveOrReject(Request $request)
+    {
+        $request->validate([
+            
+            'action' => 'required|in:approve,reject',
+            'catatan_approved' => 'nullable|string|max:1000'
+        ]);
+
+        try {
+
+            DB::beginTransaction();
+
+            $approvalData = PeminjamanAlatApproval::where('id', $request->id)->first();
+// dd($request->all());
+            $status = $request->action === 'approve' ? 'approved' : 'rejected';
+            $approvedValue = $request->action === 'approve' ? '2' : '1';
+
+            $approvalData->update([
+                'response_by'        => auth()->user()->id_user,
+                'approved'           => $approvedValue,
+                'catatan_approved'   => $request->catatan_approved,
+            ]);
+
+            \DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => $status === 'approved'
+                    ? 'Peminjaman alat berhasil di-approve.'
+                    : 'Peminjaman alat telah ditolak.',
+                'redirect' => route('v1.approval-alat.index'),
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
 }

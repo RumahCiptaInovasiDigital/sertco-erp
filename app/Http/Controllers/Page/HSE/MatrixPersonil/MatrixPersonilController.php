@@ -53,7 +53,7 @@ class MatrixPersonilController extends Controller
         $serti = JenisSertifikat::where('id_sertifikat', $request->id)->first();
         if ($request->hasFile('file_serti')) {
             $file = $request->file('file_serti');
-            $fileName = $request->nik. '-' .$serti->name. '.pdf';
+            $fileName = $request->nik. '-' . '.pdf';
             $dest = public_path('assets/sertifikat/' . $request->nik . '/');
 
             if (!file_exists($dest)) {
@@ -115,7 +115,7 @@ class MatrixPersonilController extends Controller
             }
 
             $file = $request->file('file_serti');
-            $fileName = $request->nik . '-' . $serti->name . '.pdf';
+            $fileName = $request->nik . '-'  . '.pdf';
 
             $dest = public_path("assets/sertifikat/{$request->nik}/");
             if (!file_exists($dest)) {
