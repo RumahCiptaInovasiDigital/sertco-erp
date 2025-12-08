@@ -49,6 +49,7 @@
                                 @php
                                     $file = $data->fileIso ?? null;
                                     $link = $data->linkIso ?? null;
+                                    $folderName = Str::slug($data->name);
 
                                     function getDriveFileId($url)
                                     {
@@ -71,18 +72,18 @@
                                 {{-- FILE MODE --}}
                                 @if ($file)
                                     <object 
-                                        data="{{ asset('assets/ISO/' . $data->name . '/' . $file) }}"
+                                        data="{{ asset('assets/ISO/' . $folderName . '/' . $file) }}"
                                         type="application/pdf"
                                         width="100%"
                                         height="700px">
                                         <p>
                                             Browser tidak bisa menampilkan PDF. 
-                                            <a href="{{ asset('assets/ISO/' . $data->name . '/' . $file) }}" 
+                                            <a href="{{ asset('assets/ISO/' . $folderName . '/' . $file) }}" 
                                             target="_blank">Klik di sini untuk buka</a>.
                                         </p>
                                     </object>
                                     <p class="mt-2">
-                                        <a href="{{ asset('assets/ISO/' . $data->name . '/' . $file) }}" target="_blank" class="btn btn-primary btn-sm">
+                                        <a href="{{ asset('assets/ISO/' . $folderName . '/' . $file) }}" target="_blank" class="btn btn-primary btn-sm">
                                             Open File PDF
                                         </a>
                                     </p>
