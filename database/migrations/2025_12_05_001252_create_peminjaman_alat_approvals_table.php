@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('peminjaman_alat_approvals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('idPeminjamanAlat');
-            $table->string('response_by')->nullable();
+            $table->uuid('response_by')->nullable();
             $table->string('nikPeminjam');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali')->nullable();

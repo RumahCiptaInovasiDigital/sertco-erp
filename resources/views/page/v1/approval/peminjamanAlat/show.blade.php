@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($dataDetail as $item)
+                        @foreach ($dataDetail as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->dataAlat->name}}</td>
@@ -85,7 +85,7 @@
                             <td>{{ $item->kondisiSebelum }}</td>
                             <td>{{ $item->kondisiSesudah ?? '-' }}</td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -108,7 +108,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="contract_description">Note/Catatan</label>
-                            <textarea class="form-control" name="approval_note" id="aprroval_note" rows="3" placeholder="Masukkan Catatan"></textarea>
+                            <textarea class="form-control" name="catatan_approved" id="catatan_approved" rows="3" placeholder="Masukkan Catatan"></textarea>
                         </div>
                     </div>
                     {{-- @else --}}
@@ -167,36 +167,38 @@
         });
     });
 
+    function handleApproval(action) {
+        const catatan = document.getElementById('catatan_approved').value;
+        const approvedId = '{{ $dataApproved->id ?? '' }}';
+    
+        fetch('{{ route('v1.approval-alat.ApproveOrReject') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: approvedId,
+                action: action,
+                catatan_approved: catatan
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = data.redirect;
+                });
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(err => Swal.fire('Error', err.message, 'error'));
+    }
+
 </script>
-{{-- <script>
-    function deleteData(id) {
-        Swal.fire({
-            text: "Are you sure you want to delete this Role?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
-        }).then(function (result) {
-            if (result.value) {
-                $.ajax({
-                    url: "{{ route('v1.data-peralatan.destroy') }}",
-type: "POST",
-data: {
-id: id,
-_token: "{{ csrf_token() }}",
-},
-success: function (response) {
-$("#dt_tools").DataTable().ajax.reload(null, false);
-Swal.fire("Deleted!", response.message, "success");
-},
-error: function (xhr) {
-Swal.fire("Error!", xhr.responseJSON.message, "error");
-},
-});
-} else if (result.dismiss === "cancel") {
-Swal.fire("Cancelled", "Your data is safe :)", "error");
-}
-});
-}
-</script> --}}
 @endsection
