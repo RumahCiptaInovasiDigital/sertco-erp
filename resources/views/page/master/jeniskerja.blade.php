@@ -206,7 +206,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `{{ url("presensi/jenis-kerja-delete") }}/${id}`,
+                        url: `{{ url("presensi/master/jenis-kerja-delete") }}/${id}`,
                         type: 'DELETE',
                         success: function(response) {
                             Swal.fire({ icon: 'success', title: 'Dihapus!', text: response.success, timer: 1500, showConfirmButton: false });
