@@ -10,6 +10,7 @@ use App\Models\PeminjamanAlatApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Hash;
 
 class ApprovalAlatController extends Controller
 {
@@ -29,15 +30,15 @@ class ApprovalAlatController extends Controller
             ->editColumn('approved', function ($row) {
                 if ($row->approval->approved === '0') {
                     return '<div class="text-center">
-                                <span class="badge badge-info">Menunggu Persetujuan</span>
+                                <span class="badge badge-info text-center">Menunggu Persetujuan</span>
                             </div>';
                 } elseif ($row->approval->approved === '1') {
                     return '<div class="text-center">
-                                <span class="badge badge-danger w-100 d-block text-center">Ditolak</span>
+                                <span class="badge badge-success text-center">Disetujui</span>
                             </div>';
                 } else {
                     return '<div class="text-center">
-                        <span class="badge badge-success text-center">Disetujui</span>
+                        <span class="badge badge-danger text-center">Ditolak</span>
                         </div>';
                 }})
             ->addColumn('action', function ($row) {
@@ -85,12 +86,21 @@ class ApprovalAlatController extends Controller
             DB::beginTransaction();
 
             $approvalData = PeminjamanAlatApproval::where('id', $request->id)->first();
-// dd($request->all());
+
+            $user = auth()->user();
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Password salah. Autentikasi gagal.'
+                ], 401);
+            }
+
             $status = $request->action === 'approve' ? 'approved' : 'rejected';
-            $approvedValue = $request->action === 'approve' ? '2' : '1';
+            $approvedValue = $request->action === 'approve' ? '1' : '2';
+            $idUser = $user->id_user ?? null;
 
             $approvalData->update([
-                'response_by'        => auth()->user()->id_user,
+                'response_by'        => $idUser,
                 'approved'           => $approvedValue,
                 'catatan_approved'   => $request->catatan_approved,
             ]);

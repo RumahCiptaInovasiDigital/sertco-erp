@@ -14,4 +14,9 @@ class PeminjamanAlatApproval extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    public function responseAlat()
+    {
+        return $this->belongsTo(DataKaryawan::class, 'response_by', 'id');
+    }
 }

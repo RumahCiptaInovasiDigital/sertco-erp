@@ -98,7 +98,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    {{-- @if ($approvalData->is_approved === 0 && $approvalData->is_rejected === 0) --}}
+                    @if ($dataApproved->approved === '0' )
                     <div class="col-12 mb-2">
                         <button class="btn btn-sm bg-gradient-success w-100" onclick="handleApproval('approve')">Approve</button>
                     </div>
@@ -111,35 +111,53 @@
                             <textarea class="form-control" name="catatan_approved" id="catatan_approved" rows="3" placeholder="Masukkan Catatan"></textarea>
                         </div>
                     </div>
-                    {{-- @else --}}
-                    {{-- <div class="col-12 mb-2">
+                    @else
+                    <div class="col-12 mb-2">
                         <button 
-                            class="btn bg-gradient-{{ 
-                                $approvalData->is_approved === 1 
-                                    ? 'success' 
-                                    : ($approvalData->is_rejected === 1 
-                                        ? 'danger' 
-                                        : 'secondary') 
-                            }} w-100">
-                            {{ 
-                                $approvalData->is_approved === 1 
-                                    ? 'Approved' 
-                                    : ($approvalData->is_rejected === 1 
-                                        ? 'Rejected' 
-                                        : 'Reject') 
-                            }}
+                            class="btn {{ $dataApproved->approved === '1' ? 'bg-gradient-success' : 'bg-gradient-danger' }} w-100">
+                            {{ $dataApproved->approved === '1' ? 'Approved' : 'Rejected' }}
                         </button>
-                    </div> --}}
-                    {{-- <div class="col-12">
-                        Response by: {{ $approvalData->responseKaryawan->fullName ?? $approvalData->responseUserSession->fullname }} <br>
-                        Response at: {{ $approvalData->response_at }}
-                    </div> --}}
-                    {{-- @endif --}}
+                    </div>
+                    <div class="col-12">
+                        Response by: {{ $dataApproved->responseAlat->fullName ?? auth()->user()->fullname }} <br>
+                        Response at: {{ $dataApproved->updated_at }} <br>
+                        Note: {{ $dataApproved->catatan_approved ?? '-' }}
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+{{-- MODAL KONFIRMASI PASSWORD --}}
+<div class="modal fade" id="modalPassword" tabindex="-1" aria-labelledby="reauthModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Password</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Masukan Password Untuk Lanjut</label>
+                    <input type="password" id="password_confirm" class="form-control" placeholder="Masukkan password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    Batal
+                </button>
+                <button class="btn btn-primary" onclick="submitApproval()">
+                    Konfirmasi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 @section('scripts')
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -167,10 +185,23 @@
         });
     });
 
+    let selectedAction = null;
+
     function handleApproval(action) {
+        selectedAction = action;
+        $('#modalPassword').modal('show');
+    }
+
+    function submitApproval() {
+        const password = document.getElementById('password_confirm').value;
         const catatan = document.getElementById('catatan_approved').value;
         const approvedId = '{{ $dataApproved->id ?? '' }}';
-    
+
+        if (!password) {
+            Swal.fire('Warning', 'Password wajib diisi', 'warning');
+            return;
+        }
+
         fetch('{{ route('v1.approval-alat.ApproveOrReject') }}', {
             method: 'POST',
             headers: {
@@ -179,12 +210,15 @@
             },
             body: JSON.stringify({
                 id: approvedId,
-                action: action,
-                catatan_approved: catatan
+                action: selectedAction,
+                catatan_approved: catatan,
+                password: password
             })
         })
         .then(res => res.json())
         .then(data => {
+            $('#modalPassword').modal('hide');
+
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
@@ -197,8 +231,10 @@
                 Swal.fire('Error', data.message, 'error');
             }
         })
-        .catch(err => Swal.fire('Error', err.message, 'error'));
+        .catch(err => {
+            $('#modalPassword').modal('hide');
+            Swal.fire('Error', err.message, 'error');
+        });
     }
-
 </script>
 @endsection
