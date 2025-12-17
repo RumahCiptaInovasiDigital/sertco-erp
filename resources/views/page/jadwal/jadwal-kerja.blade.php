@@ -3,6 +3,13 @@
 @section('PageTitle', 'Jadwal Kerja')
 
 @section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
     <style>
         /* Page Header */
         .page-header {
@@ -101,7 +108,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">@yield('PageTitle')</li>
     </ol>
 @endsection
@@ -204,6 +211,17 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
     <script>
         $(function () {
@@ -211,7 +229,7 @@
             var table = $("#jadwal-kerja-table").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.jadwal-kerja.get') }}",
+                ajax: "{{ route('presensi.master.jadwal-kerja.get') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'karyawan', name: 'karyawan' },
@@ -232,7 +250,7 @@
                 dropdownParent: $('#assignShiftModal'),
                 placeholder: 'Cari NIK atau Nama Karyawan',
                 ajax: {
-                    url: "{{ route('master.karyawan.select2') }}",
+                    url: "{{ route('presensi.master.karyawan.select2') }}",
                     dataType: 'json',
                     delay: 250,
                     processResults: function (data) {
@@ -258,7 +276,7 @@
             // Edit button handler
             $('#jadwal-kerja-table').on('click', '.edit-btn', function () {
                 var id = $(this).data('id');
-                $.get("{{ url('jadwal/jadwal-kerja') }}/" + id + "/edit", function (data) {
+                $.get("{{ url('presensi/jadwal/jadwal-kerja') }}/" + id + "/edit", function (data) {
                     $('#assignShiftModalLabel').html("Edit Jadwal Kerja");
                     $('#saveBtn').html('Update');
                     $('#assignShiftModal').modal('show');
@@ -288,7 +306,7 @@
 
 
                 var id = $('#jadwal_id').val();
-                var url = id ? "{{ url('jadwal/jadwal-kerja-update') }}/" + id : "{{ route('master.jadwal-kerja.store') }}";
+                var url = id ? "{{ url('presensi/jadwal/jadwal-kerja-update') }}/" + id : "{{ route('presensi.master.jadwal-kerja.store') }}";
                 var formData = $(this).serialize();
                 // As the id_karyawan is disabled on edit, it's not included in serialize().
                 // We add it manually for the update request if needed by backend, though our backend logic for update doesn't use it.
@@ -343,7 +361,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ route('master.jadwal-kerja.sync') }}",
+                            url: "{{ route('presensi.master.jadwal-kerja.sync') }}",
                             type: 'POST',
                             data: { _token: "{{ csrf_token() }}" },
                             beforeSend: function() {
@@ -410,7 +428,7 @@
             // Update shift counts
             function updateShiftCounts() {
                 $.ajax({
-                    url: "{{ route('master.jadwal-kerja.shift-counts') }}",
+                    url: "{{ route('presensi.master.jadwal-kerja.shift-counts') }}",
                     type: 'GET',
                     success: function(data) {
                         $.each(data, function(shiftId, count) {

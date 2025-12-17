@@ -1,7 +1,12 @@
 @extends('layouts.master')
 @section('title', 'Manajemen Device')
 @section('PageTitle', 'Manajemen Device')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -44,12 +49,17 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             const table = $('#deviceTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("device.data") }}',
+                ajax: '{{ route("presensi.device.data") }}',
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'nik', name: 'nik'},
@@ -102,7 +112,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("device/manajemen/block") }}/' + id,
+                            url: '{{ url("presensi/device/manajemen/block") }}/' + id,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
@@ -137,7 +147,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("device/manajemen/unblock") }}/' + id,
+                            url: '{{ url("presensi/device/manajemen/unblock") }}/' + id,
                             type: 'POST',
                             data: {_token: '{{ csrf_token() }}'},
                             success: function(res) {

@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', 'Manajemen Informasi')
 @section('PageTitle', 'Manajemen Informasi')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -122,6 +129,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             // Inisialisasi Select2 (Jika menggunakan template AdminLTE/Bootstrap4)
@@ -132,7 +144,7 @@
             const table = $('#information-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("informasi.data") }}',
+                ajax: '{{ route("presensi.informasi.data") }}',
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'title', name: 'title'},
@@ -170,7 +182,7 @@
                 const id = $('#information_id').val();
 
                 // Tentukan URL berdasarkan ada tidaknya ID
-                const url = id ? '{{ url("informasi/update") }}/' + id : '{{ route("informasi.store") }}';
+                const url = id ? '{{ url("presensi.informasi/update") }}/' + id : '{{ route("presensi.informasi.store") }}';
 
                 const formData = new FormData(this);
 
@@ -206,7 +218,7 @@
             // --- 3. PERBAIKAN EDIT ---
             $(document).on('click', '.edit-btn', function() {
                 const id = $(this).data('id');
-                $.get('{{ url("informasi/show") }}/' + id, function(data) {
+                $.get('{{ url("presensi.informasi/show") }}/' + id, function(data) {
                     $('#information_id').val(data.id);
                     $('[name="title"]').val(data.title);
                     $('[name="description"]').val(data.description);
@@ -251,7 +263,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("informasi/destroy") }}/' + id,
+                            url: '{{ url("presensi.informasi/destroy") }}/' + id,
                             type: 'DELETE',
                             data: {_token: '{{ csrf_token() }}'},
                             success: function(res) {
@@ -269,7 +281,7 @@
             // --- 4. PERBAIKAN DETAIL ---
             $(document).on('click', '.detail-btn', function() {
                 const id = $(this).data('id');
-                $.get('{{ url("informasi/show") }}/' + id, function(data) {
+                $.get('{{ url("presensi.informasi/show") }}/' + id, function(data) {
 
                     // Cek path lampiran. Jika path dari faker/temp windows, mungkin tidak bisa dibuka.
                     // Asumsi path valid tersimpan di storage/app/public

@@ -309,7 +309,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">@yield('PageTitle')</li>
     </ol>
 @endsection
@@ -666,7 +666,7 @@
                 markersLayer.clearLayers();
 
                 $.ajax({
-                    url: "{{ route('presensi.data') }}",
+                    url: "{{ route('presensi.presensi.data') }}",
                     data: {
                         tanggal: tanggal,
                         length: -1
@@ -833,7 +833,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('presensi.data') }}",
+                    url: "{{ route('presensi.presensi.data') }}",
                     data: function (d) {
                         d.tanggal = $('#filterDate').val();
                     }
@@ -1019,7 +1019,7 @@
                 let tanggal = $('#filterDate').val();
 
                 $.ajax({
-                    url: "{{ route('presensi.summary') }}",
+                    url: "{{ route('presensi.presensi.summary') }}",
                     method: 'GET',
                     data: { tanggal: tanggal },
                     success: function(response) {
@@ -1075,7 +1075,7 @@
                 btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Sinkronisasi...');
 
                 $.ajax({
-                    url: "{{ route('presensi.sync') }}",
+                    url: "{{ route('presensi.presensi.sync') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',

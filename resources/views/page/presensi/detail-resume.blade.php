@@ -166,7 +166,7 @@
             <!-- Action Buttons -->
             <div class="row mb-3 no-print">
                 <div class="col-12">
-                    <a href="{{ route('resume-presensi.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('presensi.resume-presensi.index') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali
                     </a>
                     <button type="button" class="btn btn-primary" onclick="window.print()">

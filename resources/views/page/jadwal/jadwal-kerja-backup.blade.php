@@ -219,7 +219,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">@yield('PageTitle')</li>
     </ol>
 @endsection
@@ -288,7 +288,7 @@
             var table = $("#jadwal-kerja-table").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.jadwal-kerja.get') }}",
+                ajax: "{{ route('presensi.master.jadwal-kerja.get') }}",
                 columns: [
                     {
                         data: 'karyawan',
@@ -367,7 +367,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "{{ route('master.jadwal-kerja.delete', ['id' => ':id']) }}".replace(':id', id),
+                            url: "{{ route('presensi.master.jadwal-kerja.delete', ['id' => ':id']) }}".replace(':id', id),
                             type: 'DELETE',
                             data: { _token: "{{ csrf_token() }}" },
                             success: function(response) {
@@ -386,7 +386,7 @@
             // Update shift counts
             function updateShiftCounts() {
                 $.ajax({
-                    url: "{{ route('master.jadwal-kerja.shift-counts') }}",
+                    url: "{{ route('presensi.master.jadwal-kerja.shift-counts') }}",
                     type: 'GET',
                     success: function(data) {
                         $.each(data, function(shiftId, count) {

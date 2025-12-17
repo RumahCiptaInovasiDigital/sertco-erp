@@ -13,7 +13,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">Kalender Kerja</li>
     </ol>
 @endsection
@@ -200,7 +200,7 @@
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 themeSystem: 'bootstrap',
-                events: '{{ route("master.kalender-kerja.events") }}',
+                events: '{{ route("presensi.master.kalender-kerja.events") }}',
                 editable: true,
                 droppable: true,
                 dateClick: function(info) {
@@ -277,7 +277,7 @@
                     var newEnd = info.event.end ? moment(info.event.end).format('YYYY-MM-DD HH:mm:ss') : null;
 
                     $.ajax({
-                        url: '{{ url("master/kalender-kerja") }}/' + eventId,
+                        url: '{{ url("presensi/master/kalender-kerja") }}/' + eventId,
                         type: 'PUT',
                         data: {
                             title: info.event.title,
@@ -305,7 +305,7 @@
             $('#form-event').on('submit', function(e) {
                 e.preventDefault();
                 var id = $('#event_id').val();
-                var url = id ? '{{ url("master/kalender-kerja") }}/' + id : '{{ route("master.kalender-kerja.store") }}';
+                var url = id ? '{{ url("presensi/master/kalender-kerja") }}/' + id : '{{ route("presensi.master.kalender-kerja.store") }}';
                 var method = id ? 'PUT' : 'POST';
 
                 $('#color').prop('disabled', false); // Re-enable before serializing
@@ -355,7 +355,7 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                                url: '{{ url("master/kalender-kerja") }}/' + id,
+                                url: '{{ url("presensi/master/kalender-kerja") }}/' + id,
                                 type: 'DELETE',
                                 success: function(response) {
                                     $('#modal-event').modal('hide');
@@ -375,7 +375,7 @@
             $('#import-holidays-btn').on('click', function() {
                  $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Mengimpor...');
                 $.ajax({
-                    url: '{{ route("master.kalender-kerja.import-api") }}',
+                    url: '{{ route("presensi.master.kalender-kerja.import-api") }}',
                     type: 'POST',
                     success: function(response) {
                         Swal.fire({ icon: 'success', title: 'Berhasil!', text: response.success });

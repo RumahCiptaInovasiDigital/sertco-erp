@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', 'Pengajuan Izin - Cuti')
 @section('PageTitle', 'Pengajuan Izin - Cuti')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -157,6 +164,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             // 1. Inisialisasi Select2 (Agar tampilan dropdown bagus sesuai class yang ada)
@@ -169,7 +181,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ url("presensi/izin-cuti/data") }}',
+                    url: '{{ url("presensi/presensi/izin-cuti/data") }}',
                     type: 'GET',
                     // --- PERBAIKAN DISINI: Kirim data periode ke backend ---
                     data: function (d) {
@@ -224,7 +236,7 @@
             // --- 1. FUNGSI DETAIL ---
             $(document).on('click', '.detail-btn', function() {
                 const id = $(this).data('id');
-                const url = '{{ route("presensi-izin.detail", ":id") }}'.replace(':id', id);
+                const url = '{{ route("presensi.presensi-izin.detail", ":id") }}'.replace(':id', id);
 
                 $('#det_nama').text('Loading...');
 
@@ -314,9 +326,9 @@
                 // Tentukan URL berdasarkan tipe
                 let url = '';
                 if(type === 'approve') {
-                    url = '{{ route("presensi-izin.approve", ":id") }}'.replace(':id', id);
+                    url = '{{ route("presensi.presensi-izin.approve", ":id") }}'.replace(':id', id);
                 } else {
-                    url = '{{ route("presensi-izin.reject", ":id") }}'.replace(':id', id);
+                    url = '{{ route("presensi.presensi-izin.reject", ":id") }}'.replace(':id', id);
                 }
 
                 // Tombol loading

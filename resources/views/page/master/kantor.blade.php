@@ -3,6 +3,10 @@
 @section('PageTitle', 'Data Kantor Cabang')
 
 @section('head')
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -211,6 +215,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -232,7 +241,7 @@
             var tabelKantor = $("#tabelKantor").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.kantor.get') }}",
+                ajax: "{{ route('presensi.master.kantor.get') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'name', name: 'name' },
@@ -287,7 +296,7 @@
                 mapAllMarkers = {};
                 mapAllCircles = {};
 
-                return $.get('{{ url("master/kantor-all") }}')
+                return $.get('{{ url("presensi/master/kantor-all") }}')
                     .done(function(response) {
                         console.log('master/kantor-all response:', response);
                         var items = unwrapArray(response);
@@ -468,7 +477,7 @@
             // Edit Kantor
             $('#tabelKantor tbody').on('click', '.edit-btn', function() {
                 var id = $(this).data('id');
-                $.get('{{ url("master/kantor-edit") }}/' + id, function(data) {
+                $.get('{{ url("presensi/master/kantor-edit") }}/' + id, function(data) {
                     $('#kantor_id').val(data.id);
                     $('#name').val(data.name);
                     $('#address').val(data.address);
@@ -496,7 +505,7 @@
             $('#formKantor').on('submit', function(e) {
                 e.preventDefault();
                 var id = $('#kantor_id').val();
-                var url = id ? '{{ url("master/kantor-update") }}/' + id : '{{ route("master.kantor.store") }}';
+                var url = id ? '{{ url("presensi/master/kantor-update") }}/' + id : '{{ route("presensi.master.kantor.store") }}';
                 var method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -536,7 +545,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("master/kantor-delete") }}/' + id,
+                            url: '{{ url("presensi/master/kantor-delete") }}/' + id,
                             type: 'DELETE',
                             success: function(response) {
                                 Swal.fire({ icon: 'success', title: 'Berhasil', text: response.success });

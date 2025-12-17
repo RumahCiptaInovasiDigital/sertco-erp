@@ -10,7 +10,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">Data Karyawan</li>
     </ol>
 @endsection
@@ -20,7 +20,7 @@
         <div class="card-header">
             <h3 class="card-title">Daftar Karyawan</h3>
             <div class="card-tools">
-                <a href="{{ route('master.karyawan.create') }}" class="btn btn-primary">
+                <a href="{{ route('presensi.master.karyawan.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Tambah Karyawan
                 </a>
             </div>
@@ -60,7 +60,7 @@
             $("#karyawan-table").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.karyawan.data') }}",
+                ajax: "{{ route('presensi.master.karyawan.data') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'foto', name: 'foto', orderable: false, searchable: false },

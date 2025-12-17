@@ -1,7 +1,12 @@
 @extends('layouts.master')
 @section('title', 'Approval Device')
 @section('PageTitle', 'Approval Device Baru')
-
+@section('head')
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -42,12 +47,18 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <script>
+
         $(document).ready(function() {
             const table = $('#approvalTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("device.approval.data") }}',
+                ajax: '{{ route("presensi.device.approval.data") }}',
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'nik', name: 'nik'},
@@ -80,7 +91,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("device/approval/approve") }}/' + id,
+                            url: '{{ url("presensi/device/approval/approve") }}/' + id,
                             type: 'POST',
                             data: {_token: '{{ csrf_token() }}'},
                             success: function(res) {
@@ -111,7 +122,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("device/approval/reject") }}/' + id,
+                            url: '{{ url("presensi/device/approval/reject") }}/' + id,
                             type: 'POST',
                             data: {_token: '{{ csrf_token() }}'},
                             success: function(res) {

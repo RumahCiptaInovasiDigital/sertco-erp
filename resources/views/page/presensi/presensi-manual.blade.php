@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', 'Presensi Manual')
 @section('PageTitle', 'Presensi Manual')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <section class="content">
         <div class="container-fluid">
@@ -255,6 +262,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             // Inisialisasi Select2 untuk filter periode
@@ -266,7 +278,7 @@
             // Load data karyawan untuk select2
             function loadKaryawan(callback) {
                 $.ajax({
-                    url: '{{ route("master.karyawan.select2") }}',
+                    url: '{{ route("presensi.master.karyawan.select2") }}',
                     type: 'GET',
                     success: function(data) {
                         if ($('#karyawan_id').hasClass("select2-hidden-accessible")) {
@@ -302,7 +314,7 @@
             // Load data kantor/lokasi untuk select2
             function loadLokasi(callback) {
                 $.ajax({
-                    url: '{{ url("master/kantor-get") }}',
+                    url: '{{ url("presensi/master/kantor-get") }}',
                     type: 'GET',
                     success: function(response) {
                         if ($('#lokasi').hasClass("select2-hidden-accessible")) {
@@ -349,7 +361,7 @@
                 }
 
                 $.ajax({
-                    url: '{{ url("presensi/manual/jadwal") }}',
+                    url: '{{ url("presensi/presensi/manual/jadwal") }}',
                     type: 'GET',
                     data: {
                         karyawan_id: karyawanId,
@@ -424,7 +436,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ url("presensi/manual/data") }}',
+                    url: '{{ url("presensi/presensi/manual/data") }}',
                     type: 'GET',
                     data: function (d) {
                         d.periode = $('#filterPeriode').val();
@@ -504,7 +516,7 @@
                 e.preventDefault();
 
                 const id = $('#presensi_id').val();
-                const url = id ? '{{ url("presensi/manual/update") }}/' + id : '{{ url("presensi/manual/store") }}';
+                const url = id ? '{{ url("presensi/presensi/manual/update") }}/' + id : '{{ url("presensi/presensi/manual/store") }}';
                 const method = id ? 'PUT' : 'POST';
 
                 const jamMasuk = $('#jam_masuk').val().substring(0, 5);
@@ -564,7 +576,7 @@
             // Tombol Detail
             $(document).on('click', '.detail-btn', function() {
                 const id = $(this).data('id');
-                const url = '{{ url("presensi/manual/detail") }}/' + id;
+                const url = '{{ url("presensi/presensi/manual/detail") }}/' + id;
 
                 $.ajax({
                     url: url,
@@ -603,7 +615,7 @@
             // Tombol Edit
             $(document).on('click', '.edit-btn', function() {
                 const id = $(this).data('id');
-                const url = '{{ url("presensi/manual/detail") }}/' + id;
+                const url = '{{ url("presensi/presensi/manual/detail") }}/' + id;
 
                 $.ajax({
                     url: url,
@@ -674,7 +686,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("presensi/manual/destroy") }}/' + id,
+                            url: '{{ url("presensi/presensi/manual/destroy") }}/' + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'

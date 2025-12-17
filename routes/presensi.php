@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::namespace('App\Http\Controllers\Presensi')->group(function () {
-    Route::prefix('presensi')->group(function () {
+    Route::prefix('presensi')->name('presensi.')->group(function () {
 
 
      Route::get('/', 'LoginController@index')->name('login');

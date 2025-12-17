@@ -72,8 +72,8 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('master.karyawan.index') }}">Data Karyawan</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('presensi.master.karyawan.index') }}">Data Karyawan</a></li>
         <li class="breadcrumb-item active">{{ isset($karyawan) ? 'Edit' : 'Tambah' }}</li>
     </ol>
 @endsection
@@ -434,7 +434,7 @@
                         <button type="submit" id="submitBtn" class="btn btn-primary">
                             <i class="fas fa-save mr-1"></i> Simpan
                         </button>
-                        <a href="{{ route('master.karyawan.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('presensi.master.karyawan.index') }}" class="btn btn-secondary">
                             <i class="fas fa-times mr-1"></i> Batal
                         </a>
                     </div>
@@ -500,7 +500,7 @@
             $('#karyawanForm').on('submit', function(e) {
                 e.preventDefault();
                 var formData = new FormData(this);
-                var url = "{{ isset($karyawan) ? route('master.karyawan.update', $karyawan->id) : route('master.karyawan.store') }}";
+                var url = "{{ isset($karyawan) ? route('presensi.master.karyawan.update', $karyawan->id) : route('presensi.master.karyawan.store') }}";
 
                 if ("{{ isset($karyawan) }}") {
                     formData.append('_method', 'PUT');
@@ -524,7 +524,7 @@
                             timer: 1500,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "{{ route('master.karyawan.index') }}";
+                            window.location.href = "{{ route('presensi.master.karyawan.index') }}";
                         });
                     },
                     error: function(xhr) {

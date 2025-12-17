@@ -5,6 +5,9 @@
 @section('head')
     <!-- Chart.js -->
     <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb')
@@ -94,6 +97,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <script>
         $(document).ready(function () {
 
@@ -105,7 +113,7 @@
             var tabelJabatan = $("#tabelJabatan").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.jabatan.get') }}",
+                ajax: "{{ route('presensi.master.jabatan.get') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'nama_jabatan', name: 'nama_jabatan' },
@@ -139,7 +147,7 @@
                 $('#submitBtn').text('Update Data');
 
                 $.ajax({
-                    url: '{{ url("master/jabatan-edit") }}/' + id,
+                    url: '{{ url("presensi/master/jabatan-edit") }}/' + id,
                     type: 'GET',
                     success: function(response) {
                         $('#jabatan_id').val(response.id);
@@ -155,7 +163,7 @@
                 e.preventDefault();
                 var formData = $(this).serialize();
                 var id = $('#jabatan_id').val();
-                var url = id ? '{{ url("master/jabatan-update") }}/' + id : "{{ route('master.jabatan.store') }}";
+                var url = id ? '{{ url("presensi/master/jabatan-update") }}/' + id : "{{ route('presensi.master.jabatan.store') }}";
                 var method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -198,7 +206,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("master/jabatan-delete") }}/' + id,
+                            url: '{{ url("presensi/master/jabatan-delete") }}/' + id,
                             type: 'DELETE',
                             success: function(response) {
                                 Swal.fire({ icon: 'success', title: 'Dihapus!', text: response.success, timer: 1500, showConfirmButton: false });

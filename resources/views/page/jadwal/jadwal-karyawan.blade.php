@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', $title)
 @section('PageTitle', 'Jadwal Karyawan')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('content')
 
     <div class="card card-outline card-primary">
@@ -196,10 +203,16 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script>
         $(function () {
             // Setup CSRF Token
@@ -333,7 +346,7 @@
                 btn.prop('disabled', true);
 
                 // Panggil Route Backend
-                var url = "{{ route('jadwal.jadwal-karyawan.shift', ':id') }}";
+                var url = "{{ route('presensi.jadwal.jadwal-karyawan.shift', ':id') }}";
                 url = url.replace(':id', idJadwal);
 
                 $.ajax({
@@ -429,7 +442,7 @@
                 btn.html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...').prop('disabled', true);
 
                 // 4. Siapkan URL
-                var url = "{{ route('jadwal.jadwal-karyawan.shift', ':id') }}";
+                var url = "{{ route('presensi.jadwal.jadwal-karyawan.shift', ':id') }}";
                 url = url.replace(':id', idJadwal);
 
                 // 5. Kirim AJAX POST
@@ -466,7 +479,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('jadwal.jadwal-karyawan.get') }}",
+                    url: "{{ route('presensi.jadwal.jadwal-karyawan.get') }}",
                     data: function (d) {
                         d.tanggal_awal = filterStartDate;
                     }
@@ -577,7 +590,7 @@
                         });
 
                         $.ajax({
-                            url: "{{ route('jadwal.jadwal-karyawan.generate') }}",
+                            url: "{{ route('presensi.jadwal.jadwal-karyawan.generate') }}",
                             type: "POST",
                             data: {tanggal_awal: tanggalAwal},
                             success: function (response) {

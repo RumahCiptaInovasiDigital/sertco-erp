@@ -1,42 +1,39 @@
+@php
+    $listmenu = [
+        // Routes that point to @index only
+        'presensi.device.index' => 'Manajemen Perangkat',
+        'presensi.informasi.index' => 'Informasi',
+        'presensi.master.jadwal-karyawan' => 'Jadwal Karyawan',
+        'presensi.master.jadwal-kerja' => 'Jadwal Kerja',
+        'presensi.master.kalender-kerja' => 'Kalender Kerja',
+        'presensi.master.kantor' => 'Kantor',
+        'presensi.master.jenis-kerja' => 'Jenis Kerja',
+        'presensi.master.shift-kerja' => 'Shift Kerja',
+        'presensi.master.departemen' => 'Departemen',
+        'presensi.presensi.monitoring' => 'Monitoring Presensi',
+        'presensi.presensi-manual.index' => 'Presensi Manual',
+        'presensi.presensi-izin.index' => 'Izin & Cuti',
+        'presensi.resume-presensi.index' => 'Resume Presensi',
+    ];
+    $keymenu = array_keys($listmenu);
+@endphp
+
 <li class="nav-header">PRESENSI</li>
 {{-- Employee Data --}}
 @foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.data-karyawan.index', $item->url))
-        <li class="nav-item">
-            <a href="{{ route('v1.data-karyawan.index') }}" class="nav-link {{ request()->is('v1/data-karyawan*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                    Data Karyawan
-                </p>
-            </a>
-        </li>
-        @break
-    @endif
-@endforeach
-@foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.departemen.index', $item->url))
-        <li class="nav-item">
-            <a href="{{ route('v1.departemen.index') }}" class="nav-link {{ request()->is('v1/departemen*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-tags"></i>
-                <p>
-                    Departemen
-                </p>
-            </a>
-        </li>
-        @break
-    @endif
-@endforeach
 
-@foreach ($relation ?? [] as $item)
-    @if (Str::is('v1.role.index', $item->url))
+    @if ( in_array($item->url, $keymenu ) )
+        @php
+            $path = route($item->url);
+            $path = substr($path, strlen(url('/')) + 1);
+        @endphp
         <li class="nav-item">
-            <a href="{{ route('v1.role.index') }}" class="nav-link {{ request()->is('v1/role*') ? 'active' : '' }}">
-                <i class="nav-icon fas fa-user-tag"></i>
+            <a href="{{ route($item->url) }}" class="nav-link {{ request()->is( $path . '*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-check-circle"></i>
                 <p>
-                    Role/Jabatan
+                    {{ $listmenu[$item->url] }}
                 </p>
             </a>
         </li>
-        @break
     @endif
 @endforeach

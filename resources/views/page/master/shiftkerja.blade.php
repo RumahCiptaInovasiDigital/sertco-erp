@@ -4,11 +4,16 @@
 
 @section('head')
     <!-- Additional head content if needed -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">Master Shift Kerja</li>
     </ol>
 @endsection
@@ -138,6 +143,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             // 1. SETUP & INISIALISASI
@@ -153,7 +163,7 @@
             var tabelShiftKerja = $("#tabelShiftKerja").DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.shift-kerja.get') }}",
+                ajax: "{{ route('presensi.master.shift-kerja.get') }}",
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'nama_shift', name: 'nama_shift' },
@@ -196,7 +206,7 @@
                 $('#submitBtn').text('Update Data');
 
                 $.ajax({
-                    url: '{{ url("master/shift-kerja/edit") }}/' + id,
+                    url: '{{ url("presensi/master/shift-kerja/edit") }}/' + id,
                     type: 'GET',
                     success: function(response) {
                         $('#shift_id').val(response.id);
@@ -227,7 +237,7 @@
                 e.preventDefault();
                 var formData = $(this).serialize();
                 var id = $('#shift_id').val();
-                var url = id ? '{{ url("master/shift-kerja/update") }}/' + id : "{{ route('master.shift-kerja.store') }}";
+                var url = id ? '{{ url("presensi/master/shift-kerja/update") }}/' + id : "{{ route('presensi.master.shift-kerja.store') }}";
                 var method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -275,7 +285,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url("master/shift-kerja/delete") }}/' + id,
+                            url: '{{ url("presensi/master/shift-kerja/delete") }}/' + id,
                             type: 'DELETE',
                             success: function(response) {
                                 Swal.fire({ icon: 'success', title: 'Dihapus!', text: response.success, timer: 1500, showConfirmButton: false });

@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', 'Laporan Resume Presensi')
 @section('PageTitle', 'Laporan Resume Presensi')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('content')
     <style>
         /* Info Box Compact */
@@ -243,6 +250,11 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             // Init Select2
@@ -257,7 +269,7 @@
                 autoWidth: false,   // Membiarkan Bootstrap mengatur lebar
                 // ------------------------
                 ajax: {
-                    url: "{{ route('resume-presensi.index') }}",
+                    url: "{{ route('presensi.resume-presensi.index') }}",
                     data: function(d) {
                         d.periode = $('#filterPeriode').val();
                     }
@@ -401,7 +413,7 @@
             // 3. Event Tombol Export
             $('#btnExport').click(function() {
                 let periode = $('#filterPeriode').val();
-                let url = "{{ route('resume-presensi.export') }}?periode=" + periode;
+                let url = "{{ route('presensi.resume-presensi.export') }}?periode=" + periode;
                 window.location.href = url;
             });
 
@@ -426,7 +438,7 @@
                         });
 
                         $.ajax({
-                            url: "{{ route('resume-presensi.sync') }}",
+                            url: "{{ route('presensi.resume-presensi.sync') }}",
                             type: "POST",
                             data: {
                                 _token: "{{ csrf_token() }}",
@@ -465,7 +477,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Buka window baru untuk print
-                        window.open(`{{ url('presensi/resume/print') }}/${id}?periode=${periode}`, '_blank');
+                        window.open(`{{ url('presensi/presensi/resume/print') }}/${id}?periode=${periode}`, '_blank');
                     }
                 });
             });

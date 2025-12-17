@@ -4,11 +4,14 @@
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
 @endsection
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item">Master</li>
         <li class="breadcrumb-item active">Data Role</li>
     </ol>
@@ -69,6 +72,9 @@
 @section('scripts')
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -80,7 +86,7 @@
             var table = $('#role-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('master.role.data') }}",
+                ajax: "{{ route('presensi.master.role.data') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'name', name: 'name'},
@@ -113,7 +119,7 @@
                 $("#save-btn").html('Menyimpan...').attr('disabled', 'disabled');
                 var formData = new FormData(this);
                 var id = $('#role_id').val();
-                var url = id ? "{{ url('master/role-update') }}/" + id : "{{ route('master.role.store') }}";
+                var url = id ? "{{ url('master/role-update') }}/" + id : "{{ route('presensi.master.role.store') }}";
                 var method = id ? 'POST' : 'POST';
 
                 if(id) {

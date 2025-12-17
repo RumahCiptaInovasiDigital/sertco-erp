@@ -1,7 +1,14 @@
 @extends('layouts.master')
 @section('title', $title)
 @section('PageTitle', 'Jadwal Karyawan')
-
+@section('head')
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endsection
 @section('head')
     <style>
         /* Day Card Styling */
@@ -166,7 +173,7 @@
 
 @section('breadcrumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('v1.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">@yield('PageTitle')</li>
     </ol>
 @endsection
@@ -291,6 +298,17 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+
     <script>
         $(document).ready(function() {
             // Global reload function
@@ -315,7 +333,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('master.jadwal-kerja.get') }}',
+                    url: '{{ route('presensi.master.jadwal-kerja.get') }}',
                     type: 'GET',
                 },
                 columns: [
@@ -524,7 +542,7 @@
                     showLoaderOnConfirm: true,
                     preConfirm: () => {
                         return $.ajax({
-                            url: '{{ route('master.jadwal-kerja.sync') }}',
+                            url: '{{ route('presensi.master.jadwal-kerja.sync') }}',
                             type: 'POST',
                             data: { _token: '{{ csrf_token() }}' }
                         });
@@ -554,7 +572,7 @@
             $('#tambah-btn').on('click', function() {
                 // First check if there are karyawan without jadwal
                 $.ajax({
-                    url: '{{ route('master.karyawan-without-jadwal.select2') }}',
+                    url: '{{ route('presensi.master.karyawan-without-jadwal.select2') }}',
                     type: 'GET',
                     data: { q: '' },
                     success: function(karyawanData) {
@@ -601,7 +619,7 @@
                                     theme: 'bootstrap4',
                                     dropdownParent: $('.swal-select-karyawan'),
                                     ajax: {
-                                        url: '{{ route('master.karyawan-without-jadwal.select2') }}',
+                                        url: '{{ route('presensi.master.karyawan-without-jadwal.select2') }}',
                                         dataType: 'json',
                                         delay: 250,
                                         data: function(params) {
@@ -673,8 +691,8 @@
 
                 // Load shifts and locations
                 $.when(
-                    $.ajax({ url: '{{ route('master.shift-kerja.data') }}', type: 'GET' }),
-                    $.ajax({ url: '{{ route('master.kantor.get') }}', type: 'GET' })
+                    $.ajax({ url: '{{ route('presensi.master.shift-kerja.data') }}', type: 'GET' }),
+                    $.ajax({ url: '{{ route('presensi.master.kantor.get') }}', type: 'GET' })
                 ).done(function(shiftResponse, lokasiResponse) {
                     window.shiftsData = shiftResponse[0].data;
                     window.lokasiData = lokasiResponse[0].data;
@@ -838,7 +856,7 @@
 
                 // Save to server
                 $.ajax({
-                    url: '{{ route('master.jadwal-kerja.store') }}',
+                    url: '{{ route('presensi.master.jadwal-kerja.store') }}',
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -879,7 +897,7 @@
                 $('#edit-jadwal-id').val(id);
 
                 $.ajax({
-                    url: '{{ url('jadwal/jadwal-kerja') }}/' + id + '/edit',
+                    url: '{{ url('presensi/jadwal/jadwal-kerja') }}/' + id + '/edit',
                     type: 'GET',
                     success: function(jadwal) {
                         // Check if jadwal_json is already an object or needs parsing
@@ -904,8 +922,8 @@
 
                         // Load shifts and locations
                         $.when(
-                            $.ajax({ url: '{{ route('master.shift-kerja.data') }}', type: 'GET' }),
-                            $.ajax({ url: '{{ route('master.kantor.get') }}', type: 'GET' })
+                            $.ajax({ url: '{{ route('presensi.master.shift-kerja.data') }}', type: 'GET' }),
+                            $.ajax({ url: '{{ route('presensi.master.kantor.get') }}', type: 'GET' })
                         ).done(function(shiftResponse, lokasiResponse) {
                             // Store for later use
                             window.shiftsData = shiftResponse[0].data;
@@ -1136,7 +1154,7 @@
 
                     // Save to server
                     $.ajax({
-                        url: '{{ url('jadwal/jadwal-kerja-update') }}/' + window.currentJadwalId,
+                        url: '{{ url('presensi/jadwal/jadwal-kerja-update') }}/' + window.currentJadwalId,
                         type: 'PUT',
                         data: {
                             _token: '{{ csrf_token() }}',
@@ -1246,7 +1264,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '{{ url('jadwal/jadwal-kerja-delete') }}/' + id,
+                            url: '{{ url('presensi/jadwal/jadwal-kerja-delete') }}/' + id,
                             type: 'DELETE',
                             data: { _token: '{{ csrf_token() }}' },
                             success: function(response) {
