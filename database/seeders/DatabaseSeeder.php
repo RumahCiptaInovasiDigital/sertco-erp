@@ -26,6 +26,21 @@ class DatabaseSeeder extends Seeder
             SatuanBarangSeeder::class,
             SuplierSeeder::class,
             VendorSeeder::class,
+            JenisKerjaSeeder::class,
+            ShiftKerjaSeeder::class,
+            UserDeviceSeeder::class,
+            JabatanSeeder::class,
+            BeritaAcaraHarianSeeder::class,
+            BranchOfficeSeeder::class,
+            CalendarEventSeeder::class,
+            InformationSeeder::class,
+            JadwalKerjaSeeder::class,
+            JenisKerjaSeeder::class,
+            NotifMobileSeeder::class,
+            PresensiSeeder::class,
+            ResumePresensiSeeder::class,
+            PresensiIzinSeeder::class,
+
         ]);
         // User::factory(10)->create();
 

@@ -14,10 +14,12 @@
         "endroid/qr-code": "^6.0",
         "intervention/image": "^3.11",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "mobiledetect/mobiledetectlib": "^4.8",
         "pusher/pusher-php-server": "^7.2",
         "ramsey/uuid": "^4.9",
+        "maatwebsite/excel": "^4.x-dev",
         "yajra/laravel-datatables": "^12.0"
     },
     "require-dev": {
@@ -36,7 +38,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+         "files": [
+            "app/Helpers/GlobalHelpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -63,6 +63,8 @@
             @include('layouts.sidebar.approval')
 
             @include('layouts.sidebar.hrga')
+            @include('layouts.sidebar.presensi')
+
             @include('layouts.sidebar.logistik')
             @include('layouts.sidebar.hse')
 

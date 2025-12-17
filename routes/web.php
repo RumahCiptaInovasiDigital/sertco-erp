@@ -24,5 +24,5 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance'])->grou
 });
 
 require __DIR__.'/admin.php';
+require __DIR__.'/presensi.php';
 require __DIR__.'/user.php';
-require __DIR__.'/api.php';
