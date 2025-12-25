@@ -49,6 +49,61 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card card-primary card-outline direct-chat direct-chat-primary shadow-none">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-paw"></i> Log PO Request</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!-- Conversations are loaded here -->
+                <div class="direct-chat-messages">
+                    <!-- Message. Default to the left -->
+                    <div class="direct-chat-msg">
+                        <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name float-left">Alexander Pierce</span>
+                            <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                        </div>
+                        <!-- /.direct-chat-infos -->
+                        <img class="direct-chat-img" src="{{ asset('dist/img/avatar5.png')}}">
+                        <!-- /.direct-chat-img -->
+                        <div class="direct-chat-text">
+                            Is this template really for free? That's unbelievable!
+                        </div>
+                        <!-- /.direct-chat-text -->
+                    </div>
+                    <!-- /.direct-chat-msg -->
+
+                    <!-- Message to the right -->
+                    <div class="direct-chat-msg right">
+                        <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name float-right">Sarah Bullock</span>
+                            <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
+                        </div>
+                        <!-- /.direct-chat-infos -->
+                        <img class="direct-chat-img" src="{{ asset('dist/img/avatar5.png')}}">
+                        <!-- /.direct-chat-img -->
+                        <div class="direct-chat-text">
+                            You better believe it!
+                        </div>
+                        <!-- /.direct-chat-text -->
+                    </div>
+                    <!-- /.direct-chat-msg -->
+                </div>
+                <!--/.direct-chat-messages-->
+            </div>
+            <!--/.direct-chat -->
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>

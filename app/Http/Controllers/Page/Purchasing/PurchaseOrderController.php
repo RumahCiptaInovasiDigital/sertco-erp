@@ -63,7 +63,8 @@ class PurchaseOrderController extends Controller
                         <button class="btn btn-sm btn-primary" onclick="sendData(\''.$row->id_po.'\')"><i class="fas fa-paper-plane"></i></button>';
                 } elseif ($row->status_po == "pending") {
                     if(auth()->user()->nik == $row->nik) {
-                         return '<button class="btn btn-sm btn-primary" onclick="cancelData(\''.$row->id_po.'\')"><i class="fas fa-undo"></i></button>';
+                        return '<button class="btn btn-sm btn-warning" onclick="cancelData(\''.$row->id_po.'\')"><i class="fas fa-undo"></i></button>
+                        <a href="'.route('v1.poso-request.po.log', $row->id_po).'" class="btn btn-sm btn-secondary me-2"><i class="fas fa-paw"></i></a>';
                     } else {
                         return '#';
                     }
@@ -203,7 +204,7 @@ class PurchaseOrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('page.v1.poso.po.detail');
     }
 
     /**
