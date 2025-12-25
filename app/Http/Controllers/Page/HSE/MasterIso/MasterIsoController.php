@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MasterIso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class MasterIsoController extends Controller
@@ -53,12 +54,13 @@ class MasterIsoController extends Controller
         $fileIso = null;
         $linkIso = null;
         $date = now()->format('Ymd_His');
+        $folderName = Str::slug($request->name);
 
         if ($request->upload_type ==='file') {
             if ($request->hasFile('fileIso')) {
                 $file = $request->file('fileIso');
-                $fileName = $request->name. '-' .$date. '.pdf';
-                $dest = public_path('assets/ISO/' . $request->name . '/');
+                $fileName = $folderName . '-' .$date. '.pdf';
+                $dest = public_path('assets/ISO/' . $folderName . '/');
 
                 if (!file_exists($dest)) {
                     mkdir($dest, 0755, true);
@@ -127,19 +129,20 @@ class MasterIsoController extends Controller
             $date = now()->format('Ymd_His');
             $newFileName = $fileIso;
             $newLink = $linkIso;
+            $folderName = Str::slug($data->name);
             if ($request->upload_type ==='file') {
                 if ($request->hasFile('fileIso')) {
 
                     // hapus file lama jika ada
                     if ($fileIso) {
-                        $oldPath = public_path('assets/ISO/' .$data->name . '/' . $fileIso);
+                        $oldPath = public_path('assets/ISO/' .$folderName . '/' . $fileIso);
                         if (file_exists($oldPath)) unlink($oldPath);
                     }
 
                     $file = $request->file('fileIso');
-                    $newFileName = $request->name. '-' .$date. '.pdf';
+                    $newFileName = $folderName .'-' .$date. '.pdf';
 
-                    $dest = public_path('assets/ISO/' . $data->name . '/');
+                    $dest = public_path('assets/ISO/' . $folderName . '/');
                     if (!file_exists($dest)) {
                         mkdir($dest, 0755, true);
                     }

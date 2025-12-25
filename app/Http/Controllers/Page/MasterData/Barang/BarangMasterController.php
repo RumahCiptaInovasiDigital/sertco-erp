@@ -56,11 +56,7 @@ class BarangMasterController extends Controller
                 return $row->qty_barang." ".$row->hasSatuan->satuan;
             })
             ->addColumn('action', function ($row) {
-                return '
-                <a href="'.route('v1.barang.master.show', $row->id_barang).'" class="btn btn-sm btn-primary me-2"><i class="fas fa-eye"></i></a>
-                <a href="'.route('v1.barang.master.edit', $row->id_barang).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
-                <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id_barang.'\')"><i class="fas fa-trash"></i></button>
-                ';
+                return actionButtons($row->id_barang, 'v1.barang.master');
             })
             ->rawColumns([
                 'action',

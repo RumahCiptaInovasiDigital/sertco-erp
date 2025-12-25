@@ -26,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         config(['app.locale' => 'id']);
         Carbon::setLocale('id');
+        foreach (glob(app_path('Helpers/*.php')) as $file) {
+            require_once $file;
+        }
     }
 }
