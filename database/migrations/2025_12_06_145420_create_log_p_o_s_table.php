@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id_log_po')->primary();
             $table->char('id_po', 36)->index();
             $table->enum('status_po', ['draft', 'pending', 'on review', 'approved', 'rejected', 'finished'])->default('draft');
-            $table->text('ket_log_po')->default('Draft Purchase Order dibuat');
+            $table->text('ket_log_po');
             $table->char('eksekutor', 36)->nullable();
             $table->timestamps();
         });
