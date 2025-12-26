@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Peralatan')
-@section('PageTitle', 'Tambah Karyawan')
+@section('PageTitle', 'Tambah Data Karyawan')
 @section('head')
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
