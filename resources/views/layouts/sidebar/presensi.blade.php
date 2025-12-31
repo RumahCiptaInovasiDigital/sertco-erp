@@ -2,6 +2,7 @@
     $listmenu = [
         // Routes that point to @index only
         'presensi.device.index' => 'Manajemen Perangkat',
+        'presensi.device.approval' => 'Approval Perangkat',
         'presensi.informasi.index' => 'Informasi',
         'presensi.master.jadwal-karyawan' => 'Jadwal Karyawan',
         'presensi.master.jadwal-kerja' => 'Jadwal Kerja',
