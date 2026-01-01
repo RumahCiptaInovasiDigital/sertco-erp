@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Presensi;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -86,9 +87,9 @@ class LoginController extends Controller
             return response()->json(['error' => 'Kode tidak valid atau sudah kadaluarsa!'], 400);
         }
 
-        $user = auth()->user();
+        $user = auth()?->user();
         if(!$user){
-            return response()->json(['error' => 'User tidak ditemukan!'], 404);
+            return response()->json(['error' => 'User tidak ditemukan!', 'user'=>$user], 404);
         }
 
         $accesstoken = Str::uuid();

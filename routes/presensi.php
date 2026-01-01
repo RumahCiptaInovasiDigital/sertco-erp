@@ -34,6 +34,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
             })->name('dashboard');
 
 
+            Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
 
             Route::get('/dashboard/data', 'DashboardController@getData')->name('dashboard.data');
             Route::prefix('master')->group(function () {
