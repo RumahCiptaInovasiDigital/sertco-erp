@@ -1,0 +1,63 @@
+{
+    "gps.invalid": "Attendance cannot be performed on a device with a manipulated location",
+    "attendance.unset": "Attendance plot is not configured",
+    "attendance.office.unset": "Office attendance location is not configured",
+    "attendance.outside_office": "You are outside the office area",
+    "attendance.warn.checkin": "You are late for check-in, do you still want to check in?",
+    "attendance.warn.checkout": "You are currently outside the scheduled time, do you still want to check out?",
+    "attendance.warn.bap_required": "Daily report is not completed, please complete it before checking out.",
+    "attendance.success.checkin": "Successfully checked in",
+    "attendance.success.checkout": "Successfully checked out",
+    "attendance.finish": "You have already checked out today",
+    "attendance.fail": "An error occurred while recording attendance, please try again later",
+    "attendance.bap.title": "Daily Report",
+    "attendance.bap.description": "Please complete your daily report before checking out.",
+    "device.required": "Device not recognized, please use a registered device to record attendance",
+    "device.unregistered": "Device is not registered, please register your device first",
+    "device.inactive": "Device is inactive, please contact HR staff to activate your device",
+    "device.blocked": "Device is blocked, please contact HR staff for more information",
+    "apikey.invalid": "API key is invalid",
+    "apikey.missing": "API key not found",
+
+    "notif_mobile.mark_all_as_read.success": "All notifications have been marked as read",
+    "notif_mobile.mark_all_as_read.invalid_data": "Invalid data, please send an array of notification ids",
+
+    "profile.password_updated": "Password updated successfully",
+
+    "department.created": "Department successfully created.",
+    "department.updated": "Department successfully updated.",
+    "department.deleted": "Department successfully deleted.",
+
+    "division.created": "Division successfully created.",
+    "division.updated": "Division successfully updated.",
+    "division.deleted": "Division successfully deleted.",
+
+    "information.saved": "Data saved successfully",
+    "information.updated": "Data updated successfully",
+    "information.deleted": "Data deleted successfully",
+
+    "schedule.shift_changed": "Shift changed for employee: :name",
+
+    "work_schedule.deleted": "Work schedule successfully deleted.",
+    "work_schedule.synced": ":count employee schedules successfully synced.",
+    "work_schedule.created": "Work schedule successfully created.",
+    "work_schedule.updated": "Work schedule successfully updated.",
+
+    "work_type.created": "Work type successfully created.",
+    "work_type.updated": "Work type successfully updated.",
+    "work_type.deleted": "Work type successfully deleted.",
+
+    "branch.created": "Branch office successfully created!",
+    "branch.updated": "Branch office successfully updated!",
+    "branch.deleted": "Branch office successfully deleted!",
+
+    "user.created": "User successfully created.",
+    "user.not_found": "Data not found",
+    "user.updated": "User successfully updated.",
+    "user.deleted": "User successfully deleted.",
+
+    "presensi.schedule_not_found": "Work schedule for this employee not found on that date.",
+    "presensi.data_created": "Attendance data successfully added.",
+
+    "general.data_not_found": "Data not found"
+}
