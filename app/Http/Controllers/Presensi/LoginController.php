@@ -58,7 +58,7 @@ class LoginController extends Controller
         }
 
         if(!in_array($clientid, $this->clientidWhitelist)){
-            return redirect()->route('login')->with('error', 'Client ID tidak valid!');
+            return redirect()->route('login')->with('error', 'Client ID '.$clientid.' tidak valid!');
         }
 
         $code = Str::uuid();
@@ -71,16 +71,16 @@ class LoginController extends Controller
 
     public function token(Request $request)
     {
-       $clientid = $request->query('client_id');
-       $clientSecret = $request->query('client_secret');
-       $code = $request->query('code');
+       $clientid = $request->post('client_id');
+       $clientSecret = $request->post('client_secret');
+       $code = $request->post('code');
 
         if(!in_array($clientid, $this->clientidWhitelist)){
-            return response()->json(['error' => 'Client ID tidak valid!'], 400);
+            return response()->json(['error' => 'Client ID "'.$clientid.'" tidak valid!'], 400);
         }
 
         if(!in_array($clientSecret, $this->clientSecretWhitelist)){
-            return response()->json(['error' => 'Client Secret tidak valid!'], 400);
+            return response()->json(['error' => 'Client Secret "'.$clientSecret.'" tidak valid!'], 400);
         }
         if(!Cache::has('sso_token_'.$code)){
             return response()->json(['error' => 'Kode tidak valid atau sudah kadaluarsa!'], 400);
@@ -98,7 +98,7 @@ class LoginController extends Controller
                 'id_user' => $user->id_user,
                 'nama' => $user->nama,
                 'email' => $user->email,
-            ]));;
+            ]));
         });
 
         return response()->json([
