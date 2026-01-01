@@ -103,7 +103,8 @@ class UserDeviceController extends Controller
     public function approvalData(Request $request)
     {
         $query = UserDevice::with(['user'])
-            ->where('status','inactive')
+            ->orWhere('status','inactive')
+            ->orWhere('register_new','<>',null)
             ->select('user_devices.*');
 
         return DataTables::of($query)
@@ -115,7 +116,14 @@ class UserDeviceController extends Controller
                 return $row->user->nik ?? '-';
             })
             ->addColumn('device_info', function($row) {
+                $registernew = $row->register_new ? $row->register_new : [];
+                $row->device_name = $registernew['device_name'] ?? $row->device_name;
+                $row->device_model = $registernew['device_model'] ?? 'Unknown Model';
                 return $row->device_name . '<br><small class="text-muted">' . $row->device_model . '</small>';
+            })
+            ->editColumn('device_id', function($row) {
+                $registernew = $row->register_new ? $row->register_new : [];
+                return $registernew['device_id'] ?? $row->device_id;
             })
             ->addColumn('created_at_formatted', function($row) {
                 return $row->created_at->format('d/m/Y H:i');
@@ -140,8 +148,16 @@ class UserDeviceController extends Controller
         try {
             $device = UserDevice::findOrFail($id);
             $device->status = 'active';
+            $regusternew = $device->register_new ? $device->register_new : [];
+            $device->device_id = $regusternew['device_id'] ?? $device->device_id;
+            $device->device_name = $regusternew['device_name'] ?? $device->device_name;
+            $device->device_type = $regusternew['device_type'] ?? $device->device_type;
             $device->activate_at = now();
             $device->validator_id = auth()->user()->id_user;
+            $device->register_new = null;
+            $device->reason_blocked = null;
+            $device->blocked_at = null;
+            $device->status = 'active';
             $device->save();
 
             return response()->json([

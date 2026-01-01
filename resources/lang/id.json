@@ -1,0 +1,65 @@
+{
+    "gps.invalid": "Presensi tidak dapat dilakukan di perangkat yang di manipulasi lokasinya",
+    "attendance.unset": "Peta presensi belum diatur",
+    "attendance.office.unset": "Lokasi Kantor presensi belum diatur",
+    "attendance.outside_office": "Anda berada di luar area kantor",
+    "attendance.warn.checkin": "Anda terlambat masuk, apakah tetap ingin check-in?",
+    "attendance.warn.checkout": "Saat ini berada diluar waktu, apakah tetap ingin check-out?",
+    "attendance.warn.bap_required": "Berita acara harian belum dilengkapi, silahkan lengkapi terlebih dahulu sebelum check-out.",
+    "attendance.success.checkin": "Berhasil melakukan presensi masuk",
+    "attendance.success.checkout": "Berhasil melakukan presensi keluar",
+    "attendance.finish":  "Anda sudah melakukan presensi pulang hari ini",
+    "attendance.fail":  "Terjadi kesalahan saat melakukan presensi, silahkan coba beberapa saat lagi",
+    "attendance.bap.title": "Berita Acara Harian",
+    "attendance.bap.description": "Silahkan lengkapi berita acara harian Anda sebelum melakukan presensi pulang.",
+
+    "device.required" : "Perangkat tidak dikenali, silahkan gunakan perangkat yang terdaftar untuk melakukan presensi",
+    "device.unregistered" : "Perangkat tidak terdaftar, silahkan daftarkan perangkat Anda terlebih dahulu",
+    "device.inactive" : "Perangkat tidak aktif, silahkan hubungi Staff HRD untuk mengaktifkan perangkat Anda",
+    "device.blocked" : "Perangkat diblokir, silahkan hubungi Staff HRD untuk informasi lebih lanjut",
+
+    "apikey.invalid": "Kunci API tidak valid",
+    "apikey.missing": "Kunci API tidak ditemukan",
+
+    "notif_mobile.mark_all_as_read.success": "Semua notifikasi berhasil ditandai sebagai telah dibaca",
+    "notif_mobile.mark_all_as_read.invalid_data": "Data tidak valid, harap kirim array id notifikasi",
+
+    "profile.password_updated": "Password berhasil diperbarui",
+
+    "department.created": "Departemen berhasil ditambahkan.",
+    "department.updated": "Departemen berhasil diperbarui.",
+    "department.deleted": "Departemen berhasil dihapus.",
+
+    "division.created": "Divisi berhasil ditambahkan.",
+    "division.updated": "Divisi berhasil diperbarui.",
+    "division.deleted": "Divisi berhasil dihapus.",
+
+    "information.saved": "Data berhasil disimpan",
+    "information.updated": "Data berhasil diupdate",
+    "information.deleted": "Data berhasil dihapus",
+
+    "schedule.shift_changed": "Shift berhasil diubah untuk karyawan: :name",
+
+    "work_schedule.deleted": "Jadwal kerja berhasil dihapus.",
+    "work_schedule.synced": ":count jadwal karyawan berhasil disinkronkan.",
+    "work_schedule.created": "Jadwal kerja berhasil dibuat.",
+    "work_schedule.updated": "Jadwal kerja berhasil diperbarui.",
+
+    "work_type.created": "Jenis Kerja berhasil ditambahkan.",
+    "work_type.updated": "Jenis Kerja berhasil diperbarui.",
+    "work_type.deleted": "Jenis Kerja berhasil dihapus.",
+
+    "branch.created": "Kantor cabang berhasil ditambahkan!",
+    "branch.updated": "Kantor cabang berhasil diupdate!",
+    "branch.deleted": "Kantor cabang berhasil dihapus!",
+
+    "user.created": "Pengguna berhasil ditambahkan.",
+    "user.not_found": "Data tidak ditemukan",
+    "user.updated": "Pengguna berhasil diperbarui.",
+    "user.deleted": "Pengguna berhasil dihapus.",
+
+    "presensi.schedule_not_found": "Jadwal kerja untuk karyawan ini tidak ditemukan pada tanggal tersebut.",
+    "presensi.data_created": "Data presensi berhasil ditambahkan.",
+
+    "general.data_not_found": "Data tidak ditemukan"
+}
