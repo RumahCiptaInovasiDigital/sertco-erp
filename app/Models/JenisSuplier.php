@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Suplier extends Model
+class JenisSuplier extends Model
 {
     use HasFactory;
     use HasUuids;
@@ -15,10 +15,5 @@ class Suplier extends Model
 
     protected $guarded;
 
-    protected $primaryKey = 'id_suplier';
-
-    public function hasJenis()
-    {
-        return $this->hasOne(JenisSuplier::class, 'id_jenis_suplier', 'id_jenis_suplier');
-    }
+    protected $primaryKey = 'id_jenis_suplier';
 }

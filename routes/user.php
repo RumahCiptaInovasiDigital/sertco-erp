@@ -122,6 +122,16 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         });
     });
 
+    Route::prefix('jenis-suplier')->name('jenis-suplier.')->controller(App\Http\Controllers\Page\MasterData\Purchase\JenisSuplierController::class)->group(function () {
+        Route::get('get', 'getData')->name('getData');
+        Route::get('', 'index')->name('index');
+        Route::get('create', 'create')->name('create');
+        Route::post('store', 'store')->name('store');
+        Route::get('edit/{id}', 'edit')->name('edit');
+        Route::post('update/{id}', 'update')->name('update');
+        Route::post('destroy', 'destroy')->name('destroy');
+    });
+
     Route::prefix('suplier')->name('suplier.')->controller(App\Http\Controllers\Page\Logistik\SuplierController::class)->group(function () {
         Route::get('get', 'getData')->name('getData');
         Route::get('export', 'export')->name('export');

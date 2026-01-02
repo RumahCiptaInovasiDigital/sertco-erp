@@ -37,12 +37,12 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Jenis Suplier</th>
                             <th>Nama Suplier</th>
                             <th>Telp Suplier</th>
                             <th>Alamat Suplier</th>
                             <th>Email Suplier</th>
                             <th>Nomor Rekening</th>
-                            <th>Kontak Person</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -84,12 +84,12 @@
             },
             columns: [
                 { data: "DT_RowIndex" },
+                { data: "jenis" },
                 { data: "nama_suplier" },
                 { data: "telp_suplier" },
                 { data: "alamat_suplier" },
                 { data: "email_suplier" },
                 { data: "norek" },
-                { data: "cp" },
                 {
                     data: "action",
                     orderable: false,
