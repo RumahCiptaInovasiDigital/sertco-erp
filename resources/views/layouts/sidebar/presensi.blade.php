@@ -1,19 +1,22 @@
 @php
+
     $listmenu = [
+        'presensi.dashboard' => 'Dashboard Presensi',
         // Routes that point to @index only
-        'presensi.device.index' => 'Manajemen Perangkat',
-        'presensi.informasi.index' => 'Informasi',
-        'presensi.master.jadwal-karyawan' => 'Jadwal Karyawan',
-        'presensi.master.jadwal-kerja' => 'Jadwal Kerja',
-        'presensi.master.kalender-kerja' => 'Kalender Kerja',
-        'presensi.master.kantor' => 'Kantor',
-        'presensi.master.jenis-kerja' => 'Jenis Kerja',
-        'presensi.master.shift-kerja' => 'Shift Kerja',
-        'presensi.master.departemen' => 'Departemen',
-        'presensi.presensi.monitoring' => 'Monitoring Presensi',
-        'presensi.presensi-manual.index' => 'Presensi Manual',
-        'presensi.presensi-izin.index' => 'Izin & Cuti',
-        'presensi.resume-presensi.index' => 'Resume Presensi',
+        // 'presensi.device.index' => 'Manajemen Perangkat',
+        // 'presensi.device.approval' => 'Approval Perangkat',
+        // 'presensi.informasi.index' => 'Informasi',
+        // 'presensi.master.jadwal-karyawan' => 'Jadwal Karyawan',
+        // 'presensi.master.jadwal-kerja' => 'Jadwal Kerja',
+        // 'presensi.master.kalender-kerja' => 'Kalender Kerja',
+        // 'presensi.master.kantor' => 'Kantor',
+        // 'presensi.master.jenis-kerja' => 'Jenis Kerja',
+        // 'presensi.master.shift-kerja' => 'Shift Kerja',
+        // 'presensi.master.departemen' => 'Departemen',
+        // 'presensi.presensi.monitoring' => 'Monitoring Presensi',
+        // 'presensi.presensi-manual.index' => 'Presensi Manual',
+        // 'presensi.presensi-izin.index' => 'Izin & Cuti',
+        // 'presensi.resume-presensi.index' => 'Resume Presensi',
     ];
     $keymenu = array_keys($listmenu);
 @endphp

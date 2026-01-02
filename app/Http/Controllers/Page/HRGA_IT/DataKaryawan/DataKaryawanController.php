@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\UserCredential;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class DataKaryawanController extends Controller
@@ -34,7 +35,7 @@ class DataKaryawanController extends Controller
             ->addColumn('action', function ($row) {
                 return '<a href="'.route('v1.data-karyawan.edit', $row->id).'" class="btn btn-sm btn-warning me-2"><i class="fas fa-edit"></i></a>
                         <button class="btn btn-sm btn-danger" onclick="deleteData(\''.$row->id.'\')"><i class="fas fa-trash"></i></button>
-                        <a href="'.route('v1.data-karyawan.detail', $row->id).'" class="btn btn-sm btn-primary ms-2">Detail</a>';
+                        <a href="'.route('v1.data-karyawan.show', $row->id).'" class="btn btn-sm btn-primary ms-2">Detail</a>';
             })
             ->rawColumns([
                 'action',
@@ -43,11 +44,10 @@ class DataKaryawanController extends Controller
             ->make(true);
     }
 
-    public function detail($id)
+    public function show($id)
     {
-        $data = DataKaryawan::find($id);
-        dd($data);
-        // return view('page.v1.hrga_it.dataKaryawan.detail', compact('data'));
+        $karyawan = DataKaryawan::find($id);
+        return view('page.v1.hrga_it.dataKaryawan.show', compact('karyawan'));
     }
 
     public function index()
@@ -244,36 +244,81 @@ class DataKaryawanController extends Controller
 
     public function edit($id)
     {
-        $data = DataKaryawan::find($id);
+        $karyawan = DataKaryawan::find($id);
 
-        return view('page.v1.hrga_it.dataKaryawan.edit', compact('data'));
+        return view('page.v1.hrga_it.dataKaryawan.edit', compact('karyawan'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // Informasi Pribadi
+            'firstName'           => 'required|string|max:100',
+            'lastName'            => 'nullable|string|max:100',
+            'tempatLahir'         => 'nullable|string|max:100',
+            'tanggalLahir'        => 'nullable|date',
+            'agama'               => 'nullable|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
+            'alamat'              => 'nullable|string',
+
+            // Kepegawaian
+            'namaJabatan'         => 'required|string|max:100',
+            'namaDepartemen'      => 'nullable|string|max:100',
+            'grade'               => 'nullable|string|max:50',
+            'joinDate'            => 'required|date',
+
+            // Legal & Keuangan
+            'noKTP'               => 'nullable|string|max:30',
+            'noNPWP'              => 'nullable|string|max:30',
+            'noRekening'          => 'nullable|string|max:50',
+
+            // Kontak Darurat
+            'emergencyName'       => 'nullable|string|max:100',
+            'emergencyRelation'   => 'nullable|string|max:50',
+            'emergencyContact'    => 'nullable|string|max:30',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $data = DataKaryawan::find($id);
-            $data->update(['name' => $request->name]);
+            $karyawan = DataKaryawan::findOrFail($id);
+
+            // fullName diturunkan, bukan dari input
+            $validated['fullName'] = trim(
+                $validated['firstName'].' '.$validated['lastName']
+            );
+
+            if ($request->hasFile('foto')) {
+
+                // hapus foto lama (kalau ada)
+                if ($karyawan->foto && Storage::disk('public')->exists('foto/'.$karyawan->foto)) {
+                    Storage::disk('public')->delete('foto/'.$karyawan->foto);
+                }
+            
+                $file = $request->file('foto');
+                $filename = 'EMP_'.$karyawan->nik.'_'.time().'.'.$file->extension();
+            
+                $file->storeAs('foto', $filename, 'public');
+            
+                $validated['foto'] = $filename;
+            }            
+
+            $karyawan->update($validated);
 
             DB::commit();
 
             return response()->json([
-                'success' => true,
-                'message' => 'Service Type updated successfully',
-                'redirect' => route('v1.data-karyawan.index'),
+                'success'  => true,
+                'message'  => 'Data karyawan berhasil diperbarui',
+                'redirect' => route('v1.data-karyawan.show', $karyawan->id),
             ]);
         } catch (\Throwable $th) {
-            DB::rollBack();
+            \DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Something went wrong '.$th->getMessage(),
+                'message' => 'Something went wrong: '.$th->getMessage(),
             ], 500);
         }
     }

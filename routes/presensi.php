@@ -23,10 +23,17 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
         Route::get('/redirect', 'GoogleAuthController@redirect')->name('auth.google.redirect');
         Route::get('/callback', 'GoogleAuthController@callback')->name('auth.google.callback');
         Route::get('/imagenull.png', 'DashboardController@imagenull');
-
+        Route::get("/sso", 'LoginController@sso');
+        Route::get("/token", 'LoginController@token');
+        Route::get("/userinfo", 'LoginController@userinfo');
         Route::middleware(UserSession::class)->group(function () {
 
-            Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+            Route::get('/dashboard', function(){
+                return redirect("https://presensi.sertcoquality.com/sso/signin");
+            })->name('dashboard');
+
+
+
             Route::get('/dashboard/data', 'DashboardController@getData')->name('dashboard.data');
             Route::prefix('master')->group(function () {
                 //            Data Karyawan
