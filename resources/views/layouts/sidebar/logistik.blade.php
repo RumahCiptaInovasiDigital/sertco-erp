@@ -1,6 +1,20 @@
 <li class="nav-header">PURCHASING</li>
 <!-- Suplier -->
 @foreach ($relation ?? [] as $item)
+    @if (Str::is('v1.jenis-suplier.index', $item->url))
+        <li class="nav-item">
+            <a href="{{ route('v1.jenis-suplier.index') }}" class="nav-link {{ request()->is('v1/jenis-suplier*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>
+                    Data Jenis Suplier
+                </p>
+            </a>
+        </li>
+        @break
+    @endif
+@endforeach
+
+@foreach ($relation ?? [] as $item)
     @if (Str::is('v1.suplier.index', $item->url))
         <li class="nav-item">
             <a href="{{ route('v1.suplier.index') }}" class="nav-link {{ request()->is('v1/suplier*') ? 'active' : '' }}">

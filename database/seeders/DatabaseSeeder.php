@@ -24,8 +24,6 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             KategoriBarangSeeder::class,
             SatuanBarangSeeder::class,
-            SuplierSeeder::class,
-            VendorSeeder::class,
             JenisKerjaSeeder::class,
             ShiftKerjaSeeder::class,
             UserDeviceSeeder::class,
