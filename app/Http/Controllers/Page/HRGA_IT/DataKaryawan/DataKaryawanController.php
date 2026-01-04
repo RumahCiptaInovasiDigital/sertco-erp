@@ -234,7 +234,7 @@ class DataKaryawanController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service Type created successfully',
+                'message' => 'Data Karyawan Berhasil Ditambahkan!',
                 'redirect' => route('v1.data-karyawan.index'),
             ]);
         } catch (\Throwable $th) {
