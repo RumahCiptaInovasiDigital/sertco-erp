@@ -12,7 +12,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
     Route::prefix('presensi')->name('presensi.')->group(function () {
 
 
-     Route::get('/', 'LoginController@index')->name('login');
+        Route::get('/', 'LoginController@index')->name('login');
         Route::post('/validasi', 'LoginController@validasi')->name('login.validasi');
 
 
@@ -24,17 +24,34 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
         Route::get('/redirect', 'GoogleAuthController@redirect')->name('auth.google.redirect');
         Route::get('/callback', 'GoogleAuthController@callback')->name('auth.google.callback');
         Route::get('/imagenull.png', 'DashboardController@imagenull');
-        Route::get("/sso", 'LoginController@sso');
-        Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
+
+        Route::get("/token", 'LoginController@token');
         Route::get("/userinfo", 'LoginController@userinfo');
+
+        Route::middleware(['auth'])->group(function () {
+
+            Route::get("/sso", 'LoginController@sso');
+
+        });
         Route::middleware(UserSession::class)->group(function () {
 
             Route::get('/dashboard', function(){
-                return redirect("https://presensi.sertcoquality.com/sso/signin");
+                // $http = new \GuzzleHttp\Client();
+                // $response = $http->get('https://presensi.sertcoquality.com/private-signin', [
+                //     'headers' => [
+                //         'Authorization' => 'Bearer ' .base64_encode(auth()->user()->email . ':' . auth()->user()->id_user),
+                //         'Token'        => 'sis-sertco-token-2024-BF7E8A9C0D1E4F2A9B3C4D5E6F7A8B9C',
+                //         'Accept'        => 'application/json',
+                //     ],
+                // ]);
+                // if($response->getStatusCode() != 200){
+                //     return redirect()->back()->with('error', 'Gagal mengakses dashboard presensi!');
+                // }
+
+                return redirect('https://sis.sertcoquality.com/dashboard');
+
             })->name('dashboard');
 
-
-            Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
 
             Route::get('/dashboard/data', 'DashboardController@getData')->name('dashboard.data');
             Route::prefix('master')->group(function () {
