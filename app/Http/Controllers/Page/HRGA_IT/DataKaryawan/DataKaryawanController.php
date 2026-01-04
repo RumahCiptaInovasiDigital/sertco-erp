@@ -148,6 +148,7 @@ class DataKaryawanController extends Controller
 
             // Upload Foto
             $fotoPath = null;
+            $filename = '-';
             if ($request->hasFile('foto')) {
                 $foto = $request->file('foto');
                 $filename = $data->id.'.jpg';
@@ -163,6 +164,7 @@ class DataKaryawanController extends Controller
 
             // Upload Ijazah (PDF)
             $ijazahPath = null;
+            $ijazahFilename = '-';
             if ($request->hasFile('ijazah')) {
                 $ijazah = $request->file('ijazah');
                 $ijazahFilename = 'ijazah-'.$data->id.'.pdf';
@@ -177,6 +179,7 @@ class DataKaryawanController extends Controller
             }
 
             // Upload KTP
+            $ktpFilename = '-';
             if ($request->hasFile('fileKTP')) {
                 $ktp = $request->file('fileKTP');
                 $ktpFilename = $data->noKTP.'.jpg';
@@ -190,6 +193,7 @@ class DataKaryawanController extends Controller
             }
 
             // Upload SIM
+            $simFilename = '-';
             if ($request->hasFile('fileSIM')) {
                 $sim = $request->file('fileSIM');
                 $simFilename = $data->noSIM.'.jpg';
@@ -203,6 +207,7 @@ class DataKaryawanController extends Controller
             }
 
             // Upload NPWP
+            $npwpFilename = '-';
             if ($request->hasFile('fileNPWP')) {
                 $npwp = $request->file('fileNPWP');
                 $npwpFilename = $data->noNPWP.'.jpg';
