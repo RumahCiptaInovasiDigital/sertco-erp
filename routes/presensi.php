@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\UserSession;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
@@ -24,7 +25,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
         Route::get('/callback', 'GoogleAuthController@callback')->name('auth.google.callback');
         Route::get('/imagenull.png', 'DashboardController@imagenull');
         Route::get("/sso", 'LoginController@sso');
-        Route::get("/token", 'LoginController@token');
+        Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
         Route::get("/userinfo", 'LoginController@userinfo');
         Route::middleware(UserSession::class)->group(function () {
 
@@ -33,6 +34,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
             })->name('dashboard');
 
 
+            Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
 
             Route::get('/dashboard/data', 'DashboardController@getData')->name('dashboard.data');
             Route::prefix('master')->group(function () {
