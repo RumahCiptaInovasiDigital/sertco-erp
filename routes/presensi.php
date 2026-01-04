@@ -25,7 +25,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
         Route::get('/callback', 'GoogleAuthController@callback')->name('auth.google.callback');
         Route::get('/imagenull.png', 'DashboardController@imagenull');
 
-        Route::post("/token", 'LoginController@token');
+        Route::post("/token", 'LoginController@token')->withoutMiddleware([VerifyCsrfToken::class]);
         Route::get("/userinfo", 'LoginController@userinfo');
 
         Route::middleware(['auth'])->group(function () {
