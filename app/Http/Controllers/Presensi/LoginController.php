@@ -64,7 +64,10 @@ class LoginController extends Controller
 
         $code = Str::uuid();
         Cache::remember('sso_token_'.$code, 300, function() use ($code) {
-            return $code;
+            return [
+                'code' => $code,
+                'user' => auth()?->user(),
+            ];
         });
 
         return redirect()->away($redirecturi.'?code='.$code.'&client_id='.$clientid);
@@ -72,9 +75,9 @@ class LoginController extends Controller
 
     public function token(Request $request)
     {
-       $clientid = $request->post('client_id');
-       $clientSecret = $request->post('client_secret');
-       $code = $request->post('code');
+       $clientid = $request->client_id;
+       $clientSecret = $request->client_secret;
+       $code = $request->code;
 
         if(!in_array($clientid, $this->clientidWhitelist)){
             return response()->json(['error' => 'Client ID "'.$clientid.'" tidak valid!'], 400);
@@ -87,10 +90,10 @@ class LoginController extends Controller
             return response()->json(['error' => 'Kode tidak valid atau sudah kadaluarsa!'], 400);
         }
 
-        $user = auth()?->user();
-        if(!$user){
-            return response()->json(['error' => 'User tidak ditemukan!', 'user'=>$user], 404);
-        }
+        $data = Cache::get('sso_token_'.$code);
+        $user = $data['user'];
+        if(!$user)
+         return response()->json(['error' => 'User tidak ditemukan!', 'user'=>$user], 404);
 
         $accesstoken = Str::uuid();
 
@@ -110,6 +113,7 @@ class LoginController extends Controller
     }
 
     public function userinfo(){
+
         $accesstoken = request()->bearerToken();
         if(!Cache::has('sso_access_token_'.$accesstoken)){
             return response()->json(['error' => 'Access Token tidak valid atau sudah kadaluarsa!'], 400);
