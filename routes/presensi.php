@@ -48,7 +48,7 @@ Route::namespace('App\Http\Controllers\Presensi')->group(function () {
                 //     return redirect()->back()->with('error', 'Gagal mengakses dashboard presensi!');
                 // }
 
-                return redirect('https://sis.sertcoquality.com/dashboard');
+                return redirect('https://presensi.sertcoquality.com/dashboard');
 
             })->name('dashboard');
 
