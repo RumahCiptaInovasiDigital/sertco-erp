@@ -25,6 +25,58 @@
     @yield('head')
 </head>
 
+<style>
+    .feedback-wrapper {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1050;
+        display: flex;
+        align-items: center;
+    }
+    
+    .feedback-text {
+        background: #343a40;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin-right: 10px;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(10px);
+        transition: all .3s ease;
+        pointer-events: none;
+    }
+    
+    .feedback-wrapper:hover .feedback-text {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .feedback-btn {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,.3);
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    
+    .feedback-btn:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+    }
+    
+    .feedback-btn i {
+        font-size: 22px;
+    }
+</style>
+    
+    
 @yield('styles')
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
@@ -173,6 +225,16 @@
     <!-- ./wrapper -->
 
     @yield('modals')
+
+    <!-- Floating Feedback Button -->
+    <div class="feedback-wrapper">
+        <span class="feedback-text">Beri feedback untuk aplikasi ini</span>
+        <button id="feedbackBtn" class="feedback-btn">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+
     
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
@@ -438,6 +500,89 @@
         document.addEventListener('touchstart', resetIdleTime);
     </script>
 
+    <script>
+        $('#feedbackBtn').on('click', function () {
+            Swal.fire({
+                title: 'Send Feedback',
+                html: `
+                    <select id="feedbackType" class="form-control mb-2">
+                        <option value="">-- Pilih Jenis Feedback --</option>
+                        <option value="bug">🐞 Bug / Error</option>
+                        <option value="ui">🎨 Tampilan / UI</option>
+                        <option value="performance">⚡ Performa Lambat</option>
+                        <option value="other">📝 Lainnya</option>
+                    </select>
+
+                    <textarea id="feedbackMessage"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Jelaskan secara singkat dan jelas..."></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Send',
+                cancelButtonText: 'Cancel',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const type = $('#feedbackType').val();
+                    const message = $('#feedbackMessage').val();
+
+                    if (!type) {
+                        Swal.showValidationMessage('Pilih jenis feedback');
+                        return false;
+                    }
+
+                    if (!message) {
+                        Swal.showValidationMessage('Feedback tidak boleh kosong');
+                        return false;
+                    }
+
+                    return { type, message };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendFeedback(result.value);
+                }
+            });
+        });
+
+        function sendFeedback(data) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("v1.feedback.store") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    type: data.type,
+                    feedback: data.message,
+                    page: window.location.href
+                },
+                beforeSend: function () {
+                    Swal.fire({
+                        title: 'Sending...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+                },
+                success: function (res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thank you!',
+                        text: res.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: 'Unable to send feedback'
+                    });
+                }
+            });
+        }
+    </script>
+    
     @yield('scripts')
 </body>
 

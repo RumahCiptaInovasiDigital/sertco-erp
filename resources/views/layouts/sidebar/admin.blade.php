@@ -38,3 +38,14 @@
         @break
     @endif
 @endforeach
+{{-- Feedback Section --}}
+@if (auth()->user()->nik === 'SQ-ADM-999')
+    <li class="nav-item">
+        <a href="{{ route('admin.feedback.index') }}" class="nav-link {{ request()->is('admin/feedback*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-comment"></i>
+        <p>
+            User Feedback
+        </p>
+    </a>
+</li>
+@endif
