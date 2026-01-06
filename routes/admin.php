@@ -33,4 +33,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::get('', [App\Http\Controllers\System\Setting\PageSettingController::class, 'index'])->name('index');
         Route::post('store', [App\Http\Controllers\System\Setting\PageSettingController::class, 'store'])->name('store');
     });
+    
+    //Feedback
+    Route::prefix('feedback')->name('feedback.')->group(function () {
+        Route::get('', [App\Http\Controllers\System\Feedback\FeedbackAdminController::class, 'index'])->name('index');
+        Route::post('{feedback}/status', [App\Http\Controllers\System\Feedback\FeedbackAdminController::class, 'updateStatus'])->name('updateStatus');
+    });
 });

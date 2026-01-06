@@ -176,7 +176,7 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
         Route::get('edit/{id}', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'edit'])->name('edit');
         Route::post('update/{id}', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'update'])->name('update');
         Route::post('destroy', [App\Http\Controllers\Page\HRGA_IT\Role\RoleController::class, 'destroy'])->name('destroy');
-
+        
         Route::prefix('assign')->name('assign.')->group(function () {
             Route::get('{role}/{id}/get', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'getData'])->name('getData');
             Route::get('{role}/{id}', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'index'])->name('index');
@@ -184,6 +184,9 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
             Route::post('{role}/{id}/store', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'store'])->name('store');
             Route::delete('{id}/delete', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'destroy'])->name('destroy');
         });
+    });
+    Route::prefix('feedback')->name('feedback.')->group(function () {
+        Route::post('store', [App\Http\Controllers\System\Feedback\FeedbackController::class, 'store'])->name('store');
     });
 });
 

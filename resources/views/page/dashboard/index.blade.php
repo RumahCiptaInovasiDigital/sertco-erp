@@ -1,10 +1,62 @@
 @extends('layouts.master')
 @section('title', 'Dashboard')
-@section('PageTitle', 'Project Sheet Execution Dashboard')
+@section('PageTitle', 'Dashboard')
 
 @section('head')
 <!-- Chart.js -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
+@endsection
+
+@section('styles')
+<style>
+    .dashboard-wrapper {
+        position: relative;
+    }
+    
+    /* Konten dashboard di-blur */
+    .dashboard-content-blur {
+        filter: blur(4px);
+        pointer-events: none;
+        user-select: none;
+    }
+    
+    /* Overlay */
+    .dashboard-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(6px);
+        z-index: 10;
+    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Tengah overlay */
+    .overlay-content {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px 60px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    }
+    
+    .overlay-content i {
+        font-size: 40px;
+        color: #6c757d;
+    }
+    
+    .overlay-content h3 {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .overlay-content p {
+        color: #6c757d;
+        margin: 0;
+    }
+</style>
 @endsection
 
 @section('breadcrumb')
@@ -14,177 +66,200 @@
 @endsection
 
 @section('content')
-<div class="row">
-    {{-- Stat boxes --}}
-    <div class="col-lg col-6">
-        <div class="small-box bg-primary">
-            <div class="inner">
-                <h3>120</h3>
-                <p>Total Projects</p>
-            </div>
-            <div class="icon"><i class="fas fa-tasks"></i></div>
-        </div>
-    </div>
+<div class="dashboard-wrapper position-relative">
 
-    <div class="col-lg col-6">
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>25</h3>
-                <p>Draft</p>
-            </div>
-            <div class="icon"><i class="fas fa-edit"></i></div>
-        </div>
-    </div>
-
-    <div class="col-lg col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3>60</h3>
-                <p>In Progress</p>
-            </div>
-            <div class="icon"><i class="fas fa-spinner fa-spin"></i></div>
-        </div>
-    </div>
-
-    <div class="col-lg col-6">
-        <div class="small-box bg-success">
-            <div class="inner">
-                <h3>30</h3>
-                <p>Completed</p>
-            </div>
-            <div class="icon"><i class="fas fa-check-circle"></i></div>
-        </div>
-    </div>
-
-    <div class="col-lg col-6">
-        <div class="small-box bg-danger">
-            <div class="inner">
-                <h3>5</h3>
-                <p>Delayed</p>
-            </div>
-            <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    {{-- Line Chart --}}
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Project Created Per Day</h3>
-            </div>
-            <div class="card-body">
-                <canvas id="projectChart" style="height: 300px;"></canvas>
+    {{-- OVERLAY --}}
+    @if(auth()->user()->jabatan !== 'Administrator')
+        <div class="dashboard-overlay">
+            <div class="overlay-content">
+                <i class="fas fa-hourglass-half mb-3"></i>
+                <h3>Will Ready Soon</h3>
+                <p>Dashboard is under development</p>
             </div>
         </div>
-    </div>
+    @endif
 
-    {{-- Pie Chart --}}
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-light">
-                <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Project by Department</h3>
+    {{-- DASHBOARD CONTENT --}}
+    @php
+        $blur = '';
+        if(auth()->user()->jabatan !== 'Administrator') {
+            $blur = 'dashboard-content-blur';
+        }
+    @endphp
+    <div class="{{ $blur }}">
+        <div class="row">
+            {{-- Stat boxes --}}
+            <div class="col-lg col-6">
+                <div class="small-box bg-primary">
+                    <div class="inner">
+                        <h3>124</h3>
+                        <p>Total Projects</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-tasks"></i></div>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="deptChart" style="height: 300px;"></canvas>
-                <div class="text-center mt-2">
-                    <span class="badge badge-primary">Marketing</span>
-                    <span class="badge badge-success">Production</span>
-                    <span class="badge badge-warning">T&O</span>
-                    <span class="badge badge-info">Finance</span>
-                    <span class="badge badge-danger">HRGA IT</span>
+        
+            <div class="col-lg col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>25</h3>
+                        <p>Draft</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-edit"></i></div>
+                </div>
+            </div>
+        
+            <div class="col-lg col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>60</h3>
+                        <p>In Progress</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+        
+            <div class="col-lg col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>30</h3>
+                        <p>Completed</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                </div>
+            </div>
+        
+            <div class="col-lg col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>5</h3>
+                        <p>Delayed</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-{{-- Monitoring Table --}}
-<div class="card">
-    <div class="card-header bg-light">
-        <h3 class="card-title"><i class="fas fa-eye mr-2"></i>Project Monitoring</h3>
-    </div>
-    <div class="card-body p-0">
-        <table class="table table-hover table-striped">
-            <thead class="thead-light">
-                <tr>
-                    <th style="width: 10px">#</th>
-                    <th>Project Name</th>
-                    <th>Status</th>
-                    <th>Progress</th>
-                    <th>Department</th>
-                    <th>Last Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1.</td>
-                    <td>Punch n Dies Revamp</td>
-                    <td><span class="badge badge-info">In Progress</span></td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-info" style="width: 65%"></div>
+        
+        <div class="row">
+            {{-- Line Chart --}}
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h3 class="card-title"><i class="fas fa-chart-line mr-2"></i>Project Created Per Day</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="projectChart" style="height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            {{-- Pie Chart --}}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Project by Department</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="deptChart" style="height: 300px;"></canvas>
+                        <div class="text-center mt-2">
+                            <span class="badge badge-primary">Marketing</span>
+                            <span class="badge badge-success">Production</span>
+                            <span class="badge badge-warning">T&O</span>
+                            <span class="badge badge-info">Finance</span>
+                            <span class="badge badge-danger">HRGA IT</span>
                         </div>
-                        <small>65%</small>
-                    </td>
-                    <td>Engineering</td>
-                    <td>2025-10-19 09:12</td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>System Calibration</td>
-                    <td><span class="badge badge-success">Completed</span></td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-success" style="width: 100%"></div>
-                        </div>
-                        <small>100%</small>
-                    </td>
-                    <td>Production</td>
-                    <td>2025-10-18 16:40</td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>Facility Upgrade</td>
-                    <td><span class="badge badge-warning">At Risk</span></td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-warning" style="width: 45%"></div>
-                        </div>
-                        <small>45%</small>
-                    </td>
-                    <td>T&O</td>
-                    <td>2025-10-17 08:45</td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td>Quality Review</td>
-                    <td><span class="badge badge-danger">Delayed</span></td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-danger" style="width: 30%"></div>
-                        </div>
-                        <small>30%</small>
-                    </td>
-                    <td>HRGA IT</td>
-                    <td>2025-10-16 10:20</td>
-                </tr>
-                <tr>
-                    <td>5.</td>
-                    <td>Material Cost Control</td>
-                    <td><span class="badge badge-primary">Draft</span></td>
-                    <td>
-                        <div class="progress progress-xs">
-                            <div class="progress-bar bg-primary" style="width: 10%"></div>
-                        </div>
-                        <small>10%</small>
-                    </td>
-                    <td>Finance</td>
-                    <td>2025-10-15 14:33</td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {{-- Monitoring Table --}}
+        <div class="card">
+            <div class="card-header bg-light">
+                <h3 class="card-title"><i class="fas fa-eye mr-2"></i>Project Monitoring</h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Project Name</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Department</th>
+                            <th>Last Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1.</td>
+                            <td>Punch n Dies Revamp</td>
+                            <td><span class="badge badge-info">In Progress</span></td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-info" style="width: 65%"></div>
+                                </div>
+                                <small>65%</small>
+                            </td>
+                            <td>Engineering</td>
+                            <td>2025-10-19 09:12</td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td>System Calibration</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                                </div>
+                                <small>100%</small>
+                            </td>
+                            <td>Production</td>
+                            <td>2025-10-18 16:40</td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td>Facility Upgrade</td>
+                            <td><span class="badge badge-warning">At Risk</span></td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-warning" style="width: 45%"></div>
+                                </div>
+                                <small>45%</small>
+                            </td>
+                            <td>T&O</td>
+                            <td>2025-10-17 08:45</td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td>Quality Review</td>
+                            <td><span class="badge badge-danger">Delayed</span></td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-danger" style="width: 30%"></div>
+                                </div>
+                                <small>30%</small>
+                            </td>
+                            <td>HRGA IT</td>
+                            <td>2025-10-16 10:20</td>
+                        </tr>
+                        <tr>
+                            <td>5.</td>
+                            <td>Material Cost Control</td>
+                            <td><span class="badge badge-primary">Draft</span></td>
+                            <td>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-primary" style="width: 10%"></div>
+                                </div>
+                                <small>10%</small>
+                            </td>
+                            <td>Finance</td>
+                            <td>2025-10-15 14:33</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
