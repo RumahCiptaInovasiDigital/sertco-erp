@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('v1', [App\Http\Controllers\System\DashboardController::class, 'index'])->middleware(['auth', 'CheckMaintenance'])->name('v1.dashboard');
+Route::prefix('feedback')->name('v1.feedback.')->middleware(['auth'])->group(function () {
+    Route::post('store', [App\Http\Controllers\System\Feedback\FeedbackController::class, 'store'])->name('store');
+});
 
 Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'CheckRoleUser'])->group(function () {
     Route::prefix('service')->name('service.')->group(function () {
@@ -184,9 +187,6 @@ Route::prefix('v1')->name('v1.')->middleware(['auth', 'CheckMaintenance', 'Check
             Route::post('{role}/{id}/store', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'store'])->name('store');
             Route::delete('{id}/delete', [App\Http\Controllers\Page\HRGA_IT\Role\Assign\AssignRoleController::class, 'destroy'])->name('destroy');
         });
-    });
-    Route::prefix('feedback')->name('feedback.')->group(function () {
-        Route::post('store', [App\Http\Controllers\System\Feedback\FeedbackController::class, 'store'])->name('store');
     });
 });
 
