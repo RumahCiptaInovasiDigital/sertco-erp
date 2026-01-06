@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feedback extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory;
 
     protected $table = 'feedbacks';
     protected $fillable = [
@@ -21,9 +21,9 @@ class Feedback extends Model
         'ip_address'
     ];
 
-    public function user()
+    public function karyawan()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id_user');
+        return $this->belongsTo(DataKaryawan::class, 'user_id', 'id');
     }
 
     public function typeLabel()

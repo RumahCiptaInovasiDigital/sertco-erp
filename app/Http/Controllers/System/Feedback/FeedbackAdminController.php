@@ -10,7 +10,7 @@ class FeedbackAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Feedback::with('user')->latest();
+        $query = Feedback::latest();
 
         if ($request->type) {
             $query->where('type', $request->type);
@@ -21,7 +21,7 @@ class FeedbackAdminController extends Controller
         }
 
         return view('page.admin.feedback.index', [
-            'feedbacks' => $query->paginate(15)
+            'feedbacks' => $query->get()
         ]);
     }
 
