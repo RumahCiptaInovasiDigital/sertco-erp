@@ -31,8 +31,8 @@
             <tbody>
                 @foreach($feedbacks as $fb)
                 <tr>
-                    <td>{{ $fb->user->fullname ?? 'Guest' }}</td>
-                    <td>{{ $fb->user->jabatan ?? '-' }}</td>
+                    <td>{{ $fb->karyawan->fullName ?? 'Guest' }}</td>
+                    <td>{{ $fb->karyawan->jabatan->name ?? '-' }}</td>
                     <td>{{ $fb->typeLabel() }}</td>
                     <td>{{ Str::limit($fb->message, 80) }}</td>
                     <td><small>{{ $fb->page }}</small></td>
@@ -56,7 +56,6 @@
                 @endforeach
             </tbody>
         </table>
-        {{ $feedbacks->links() }}
     </div>
 </div>
 @endsection
