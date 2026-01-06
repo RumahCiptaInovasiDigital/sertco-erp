@@ -20,6 +20,7 @@
             <thead>
                 <tr>
                     <th>User</th>
+                    <th>Jabatan</th>
                     <th>Type</th>
                     <th>Message</th>
                     <th>Page</th>
@@ -31,6 +32,7 @@
                 @foreach($feedbacks as $fb)
                 <tr>
                     <td>{{ $fb->user->fullname ?? 'Guest' }}</td>
+                    <td>{{ $fb->user->jabatan ?? '-' }}</td>
                     <td>{{ $fb->typeLabel() }}</td>
                     <td>{{ Str::limit($fb->message, 80) }}</td>
                     <td><small>{{ $fb->page }}</small></td>
